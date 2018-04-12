@@ -1,0 +1,189 @@
+[{
+  "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1",
+  "@type": ["http://raml.org/vocabularies/document#Example", "http://raml.org/vocabularies/document#DomainElement"],
+  "http://schema.org/name": [{
+    "@value": "Example1"
+  }],
+  "http://raml.org/vocabularies/document#value": [{
+    "@value": "[\n  {\n    \"email\": \"bea3d5e8-4abf-11e7-a919-92ebcb67fe33-em-vbc@domain.com\",\n    \"message\": \"This is an example message. Hello.\",\n    \"timestamp\": 1496757380,\n    \"attachements\": [\n      \"https://attc.domain.com/01332c24-4ac0-11e7-a919-92ebcb67fe33\"\n    ]\n  }, {\n    \"email\": \"220ce9bc-4abf-11e7-a919-92ebcb67fe33-oa-vbc@domain.com\",\n    \"message\": \"Howdy?\",\n    \"timestamp\": 1496757498,\n    \"important\": true\n  }\n]"
+  }],
+  "http://raml.org/vocabularies/document#strict": [{
+    "@value": true
+  }],
+  "http://raml.org/vocabularies/document#structuredValue": [{
+    "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1",
+    "@type": ["http://raml.org/vocabularies/data#Array", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#member": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2",
+      "@type": ["http://raml.org/vocabularies/data#Object"],
+      "http://raml.org/vocabularies/data#attachements": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2/array_6",
+        "@type": ["http://raml.org/vocabularies/data#Array", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#member": [{
+          "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2/array_6/scalar_7",
+          "@type": ["http://raml.org/vocabularies/data#Scalar"],
+          "http://raml.org/vocabularies/data#value": [{
+            "@value": "https://attc.domain.com/01332c24-4ac0-11e7-a919-92ebcb67fe33",
+            "@type": "http://www.w3.org/2001/XMLSchema#string"
+          }]
+        }]
+      }],
+      "http://raml.org/vocabularies/data#email": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2/scalar_3",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "bea3d5e8-4abf-11e7-a919-92ebcb67fe33-em-vbc@domain.com",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#message": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2/scalar_4",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "This is an example message. Hello.",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#timestamp": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_2/scalar_5",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "1496757380",
+          "@type": "http://www.w3.org/2001/XMLSchema#integer"
+        }]
+      }]
+    }, {
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_8",
+      "@type": ["http://raml.org/vocabularies/data#Object"],
+      "http://raml.org/vocabularies/data#email": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_8/scalar_9",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "220ce9bc-4abf-11e7-a919-92ebcb67fe33-oa-vbc@domain.com",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#important": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_8/scalar_12",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "true",
+          "@type": "http://www.w3.org/2001/XMLSchema#boolean"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#message": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_8/scalar_10",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "Howdy?",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#timestamp": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fmessages%2Fbulk/post/request/application/json/array/schema/example/Example1/array_1/object_8/scalar_11",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "1496757498",
+          "@type": "http://www.w3.org/2001/XMLSchema#integer"
+        }]
+      }]
+    }]
+  }]
+}, {
+  "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null",
+  "@type": ["http://raml.org/vocabularies/document#Example", "http://raml.org/vocabularies/document#DomainElement"],
+  "http://raml.org/vocabularies/document#value": [{
+    "@value": "{\n  \"id\": \"R34fg663H9KW9MMSKISI\",\n  \"name\": \"Pawel Psztyc\",\n  \"birthday\": \"1983-10-20\",\n  \"gender\": \"male\",\n  \"url\": \"https://domain.com/profile/pawel.psztyc\",\n  \"image\": {\n    \"url\": \"https://domain.com/profile/pawel.psztyc/image\",\n    \"thumb\": \"https://domain.com/profile/pawel.psztyc/image/thumb\"\n  },\n  \"tagline\": \"Some text about me.\",\n  \"language\": \"en_GB\",\n  \"etag\": \"W\\\\244m4n5kj3gbn2nj4k4n4\"\n}"
+  }],
+  "http://raml.org/vocabularies/document#strict": [{
+    "@value": true
+  }],
+  "http://raml.org/vocabularies/document#structuredValue": [{
+    "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1",
+    "@type": ["http://raml.org/vocabularies/data#Object"],
+    "http://raml.org/vocabularies/data#birthday": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_4",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "1983-10-20",
+        "@type": "http://www.w3.org/2001/XMLSchema#date"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#etag": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_12",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "W\\244m4n5kj3gbn2nj4k4n4",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#gender": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_5",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "male",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#id": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_2",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "R34fg663H9KW9MMSKISI",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#image": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/object_7",
+      "@type": ["http://raml.org/vocabularies/data#Object"],
+      "http://raml.org/vocabularies/data#thumb": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/object_7/scalar_9",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "https://domain.com/profile/pawel.psztyc/image/thumb",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }],
+      "http://raml.org/vocabularies/data#url": [{
+        "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/object_7/scalar_8",
+        "@type": ["http://raml.org/vocabularies/data#Scalar"],
+        "http://raml.org/vocabularies/data#value": [{
+          "@value": "https://domain.com/profile/pawel.psztyc/image",
+          "@type": "http://www.w3.org/2001/XMLSchema#string"
+        }]
+      }]
+    }],
+    "http://raml.org/vocabularies/data#language": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_11",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "en_GB",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#name": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_3",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "Pawel Psztyc",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#tagline": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_10",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "Some text about me.",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }],
+    "http://raml.org/vocabularies/data#url": [{
+      "@id": "file://demo/api.raml#/web-api/end-points/%2Fpeople/put/request/application/json/schema/example/null/object_1/scalar_6",
+      "@type": ["http://raml.org/vocabularies/data#Scalar"],
+      "http://raml.org/vocabularies/data#value": [{
+        "@value": "https://domain.com/profile/pawel.psztyc",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      }]
+    }]
+  }]
+}]

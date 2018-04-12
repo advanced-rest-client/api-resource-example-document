@@ -1,0 +1,88 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/utils/render-status.html">
+<link rel="import" href="../prism-element/prism-theme-default.html">
+<dom-module id="api-json-example-render">
+  <template>
+    <style include="prism-theme-default"></style>
+    <style>
+    :host {
+      display: block;
+      background-color: var(--code-background-color, #f5f2f0);
+      @apply --api-json-example-render;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      @apply --code-block;
+    }
+    </style>
+    <code id="output" class="markdown-html" language-xml></code>
+  </template>
+  <script>
+  /**
+   * `api-json-example-render`
+   *
+   * Renders a JSON values using Prism highlighter.
+   *
+   * ## Styling
+   *
+   * `<api-resource-example-document>` provides the following custom properties and mixins for styling:
+   *
+   * Custom property | Description | Default
+   * ----------------|-------------|----------
+   * `--api-json-example-render` | Mixin applied to this elment | `{}`
+   * `--code-block` | Mixin applied to the output block | `{}`
+   *
+   * @customElement
+   * @polymer
+   * @demo demo/index.html
+   * @memberof ApiElements
+   */
+  class ApiJsonExampleEender extends Polymer.Element {
+    static get is() { return 'api-json-example-render'; }
+    static get properties() {
+      return {
+        /**
+         * Data to render.
+         */
+        code: {
+          type: String,
+          observer: '_codeChanged'
+        }
+      };
+    }
+    /**
+     * Handles highlighting when code changed.
+     * Note that the operation is async.
+     * @param {String} code
+     */
+    _codeChanged(code) {
+      if (!code) {
+        this.$.output.innerHTML = '';
+        return;
+      }
+      Polymer.RenderStatus.afterNextRender(this, () => {
+        this.$.output.innerHTML = this.highlight(code);
+      });
+    }
+    /**
+     * Dispatches `syntax-highlight` custom event
+     * @param {String} code Code to highlight
+     * @return {String} Highlighted code.
+     */
+    highlight(code) {
+      const ev = new CustomEvent('syntax-highlight', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          code: code,
+          lang: 'json'
+        }
+      });
+      this.dispatchEvent(ev);
+      return ev.detail.code;
+    }
+  }
+  window.customElements.define(ApiJsonExampleEender.is, ApiJsonExampleEender);
+  </script>
+</dom-module>

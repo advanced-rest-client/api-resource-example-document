@@ -1,0 +1,222 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../clipboard-copy/clipboard-copy.html">
+<link rel="import" href="../arc-icons/arc-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../json-table/json-table.html">
+<link rel="import" href="../prism-element/prism-highlighter.html">
+<link rel="import" href="api-json-example-render.html">
+
+<dom-module id="api-resource-example-document">
+  <template>
+    <style>
+    :host {
+      display: block;
+      @apply --api-resource-example-document;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    h6 {
+      @apply --arc-font-body1;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    paper-icon-button[active] {
+      background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
+      border-radius: 50%;
+    }
+    </style>
+    <prism-highlighter></prism-highlighter>
+    <template is="dom-repeat" items="[[examples]]">
+      <div class="example">
+        <template is="dom-if" if="[[_hasTitle(item)]]">
+          <h6>[[_computeTitle(item)]]</h6>
+        </template>
+        <div class="example-actions">
+          <paper-icon-button icon="arc:content-copy" data-action="copy" on-tap="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
+          <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-tap="toggleTable"></paper-icon-button>
+        </div>
+        <template is="dom-if" if="[[!table]]" restamp>
+          <api-json-example-render code="[[_getValue(item)]]"></api-json-example-render>
+        </template>
+        <template is="dom-if" if="[[table]]" restamp>
+          <json-table json="[[_getValue(item)]]"></json-table>
+        </template>
+      </div>
+    </template>
+    <clipboard-copy></clipboard-copy>
+  </template>
+  <script>
+  /**
+   * `api-resource-example-document`
+   *
+   * Renders list of examples defined in AMF model. It renders values that
+   * are structured examples (JSON, RAML type).
+   *
+   * ## Example
+   * ```html
+   * <api-resource-example-document examples="[...]"></api-resource-example-document>
+   * ```
+   *
+   * ## Styling
+   *
+   * `<api-resource-example-document>` provides the following custom properties and mixins for styling:
+   *
+   * Custom property | Description | Default
+   * ----------------|-------------|----------
+   * `--api-resource-example-document` | Mixin applied to this elment | `{}`
+   * `--api-resource-example-document-button-active-background-color` | Background color of active "tabble" button | `#e0e0e0`
+   *
+   * @customElement
+   * @polymer
+   * @demo demo/index.html
+   * @memberof ApiElements
+   */
+  class ApiResourceExampleDocument extends Polymer.Element {
+    static get is() { return 'api-resource-example-document'; }
+    static get properties() {
+      return {
+        /**
+         * AMF model for examples.
+         */
+        examples: Array,
+        /**
+         * If true it will display a table view instead of JSON code.
+         * `isJson` must be set to use this option.
+         */
+        table: {
+          type: Boolean,
+          value: false,
+          observer: '_tableChanged'
+        },
+      };
+    }
+
+    constructor() {
+      super();
+      this._onStorageChanged = this._onStorageChanged.bind(this);
+      this._onJsonTableStateChanged = this._onJsonTableStateChanged.bind(this);
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+      window.addEventListener('storage', this._onStorageChanged);
+      window.addEventListener('json-table-state-changed', this._onJsonTableStateChanged);
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      window.removeEventListener('storage', this._onStorageChanged);
+      window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
+    }
+
+    _hasTitle(item) {
+      return !!(item && 'http://schema.org/name' in item);
+    }
+
+    _computeTitle(item) {
+      const label = item && item['http://schema.org/name'];
+      return label ? label[0]['@value'] : undefined;
+    }
+
+    /**
+     * Coppies current response text value to clipboard.
+     */
+    _copyToClipboard(e) {
+      const button = e.target;
+      const copy = this.shadowRoot.querySelector('clipboard-copy');
+      copy.content = this._getValue(e.model.get('item'));
+      if (copy.copy()) {
+        button.icon = 'arc:done';
+      } else {
+        button.icon = 'arc:error';
+      }
+      setTimeout(() => this._resetCopyButtonState(button), 1000);
+    }
+
+    _resetCopyButtonState(button) {
+      button.icon = 'arc:content-copy';
+    }
+    // Toggles the JSON table view
+    toggleTable() {
+      this.table = !this.table;
+    }
+
+    // Handler to the `table` change, fires corresponding event and sets local storage.
+    _tableChanged(state) {
+      if (state === undefined) {
+        return;
+      }
+      if (localStorage.jsonTableEnabled !== String(state)) {
+        window.localStorage.setItem('jsonTableEnabled', state);
+      }
+      this.dispatchEvent(new CustomEvent('json-table-state-changed', {
+        bubbles: true,
+        detail: {
+          enabled: state
+        }
+      }));
+    }
+    /**
+     * Updates the value of the `isJsonTable` property when the corresponding localStorage
+     * property change.
+     */
+    _onStorageChanged(e) {
+      if (e.key !== 'jsonTableEnabled') {
+        return;
+      }
+      if (!e.newValue) {
+        return;
+      }
+      const v = this._localStorageValueToBoolean(e.newValue);
+      if (this.table !== v) {
+        this.table = v;
+      }
+    }
+    /**
+     * Reads the local value (always a string) as a boolean value.
+     *
+     * @param {String} value The value read from the local storage.
+     * @return {Boolean} Boolean value read from the value.
+     */
+    _localStorageValueToBoolean(value) {
+      if (!value) {
+        return false;
+      }
+      if (value === 'true') {
+        value = true;
+      } else {
+        value = false;
+      }
+      return value;
+    }
+    /**
+     * Handler to the incomming `json-table-state-changed` event.
+     * Sets the `table` property if it is different.
+     */
+    _onJsonTableStateChanged(e) {
+      if (e.target === this) {
+        return;
+      }
+      const enabled = e.detail.enabled;
+      if (enabled !== this.table) {
+        this.table = enabled;
+      }
+    }
+    /**
+     * Gets string value for example from AMF model.
+     *
+     * @param {Object} item Model item
+     * @return {String}
+     */
+    _getValue(item) {
+      const data = item && item['http://raml.org/vocabularies/document#value'];
+      return data ? data[0]['@value'] : undefined;
+    }
+  }
+  window.customElements.define(ApiResourceExampleDocument.is, ApiResourceExampleDocument);
+  </script>
+</dom-module>

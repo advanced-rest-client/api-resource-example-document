@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-resource-example-document test</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+  <script src="amf-loader.js"></script>
+  <link rel="import" href="../api-resource-example-document.html">
+</head>
+<body>
+  <test-fixture id="Basic">
+    <template>
+      <api-resource-example-document></api-resource-example-document>
+    </template>
+  </test-fixture>
+
+  <script>
+  /* global AmfLoader, MockInteractions */
+  suite('api-resource-example-document', () => {
+
+    suite('Basic', () => {
+      let element;
+      let examples;
+      suiteSetup(() => {
+        window.localStorage.setItem('jsonTableEnabled', false);
+        return AmfLoader.load()
+        .then((data) => {
+          examples = data;
+        });
+      });
+
+      setup((done) => {
+        element = fixture('Basic');
+        element.examples = examples;
+        flush(() => done());
+      });
+
+      test('Renders examples', () => {
+        const nodes = element.shadowRoot.querySelectorAll('.example');
+        assert.equal(nodes.length, 2);
+      });
+
+      test('Renders single title', () => {
+        const nodes = element.shadowRoot.querySelectorAll('h6');
+        assert.equal(nodes.length, 1);
+      });
+
+      test('Renders api-json-example-render', () => {
+        const node = element.shadowRoot.querySelector('api-json-example-render');
+        assert.ok(node);
+      });
+
+      test('Tablle button tap renders table instead of code', (done) => {
+        const button = element.shadowRoot.querySelector('[data-action="table"]');
+        MockInteractions.tap(button);
+        assert.equal(localStorage.jsonTableEnabled, 'true');
+        flush(() => {
+          const code = element.shadowRoot.querySelector('api-json-example-render');
+          assert.notOk(code);
+          const table = element.shadowRoot.querySelector('json-table');
+          assert.ok(table);
+          done();
+        });
+      });
+    });
+  });
+  </script>
+</body>
+</html>
