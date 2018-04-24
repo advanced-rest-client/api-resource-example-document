@@ -30,7 +30,7 @@
         fetch('./demo.json')
         .then((response) => response.json())
         .then((data) => {
-          app.examples = data;
+          app.examples = data[0];
         });
       };
       window.addEventListener('WebComponentsReady', () => app._load());

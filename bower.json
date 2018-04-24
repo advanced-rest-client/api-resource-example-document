@@ -17,7 +17,8 @@
     "clipboard-copy": "advanced-rest-client/clipboard-copy#^2.0.1",
     "arc-icons": "advanced-rest-client/arc-icons#^2.0.2",
     "json-table": "advanced-rest-client/json-table#2.0.0-preview",
-    "paper-icon-button": "PolymerElements/paper-icon-button#^2.2.0"
+    "paper-icon-button": "PolymerElements/paper-icon-button#^2.2.0",
+    "amf-helper-mixin": "advanced-rest-client/amf-helper-mixin#2.0.0-preview"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
