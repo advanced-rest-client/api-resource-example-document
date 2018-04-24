@@ -24,7 +24,8 @@
     "iron-component-page": "PolymerElements/iron-component-page#^3.0.1",
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11"
   },
   "repository": {
     "type": "git",
