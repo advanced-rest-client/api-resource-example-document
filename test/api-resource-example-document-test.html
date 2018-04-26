@@ -24,30 +24,83 @@
 
     suite('Basic', () => {
       let element;
-      let examples;
+      let amf;
       suiteSetup(() => {
         window.localStorage.setItem('jsonTableEnabled', false);
         return AmfLoader.load()
-        .then((data) => {
-          examples = data[0];
-        });
+        .then((data) => amf = data);
       });
+
+      function exampleFromPayloads(model) {
+        let result = [];
+        if (!model) {
+          return result;
+        }
+        const payloads = model['http://raml.org/vocabularies/http#payload'];
+        if (!payloads || !payloads.length) {
+          return result;
+        }
+        payloads.forEach((payload) => {
+          const schema = payload['http://raml.org/vocabularies/http#schema'];
+          if (!schema) {
+            return;
+          }
+          const examples = schema[0]['http://raml.org/vocabularies/document#examples'];
+          if (examples) {
+            result = result.concat(examples);
+          }
+        });
+        return result;
+      }
+
+      function examplesFromBody(method) {
+        const expects = method['http://www.w3.org/ns/hydra/core#expects'];
+        if (!expects) {
+          return [];
+        }
+        return exampleFromPayloads(expects[0]);
+      }
+
+      function examplesFromResponses(method) {
+        let result = [];
+        const returns = method['http://www.w3.org/ns/hydra/core#returns'];
+        if (!returns) {
+          return result;
+        }
+
+        returns.forEach((model) => {
+          const examples = exampleFromPayloads(model);
+          if (examples.length) {
+            result = result.concat(examples);
+          }
+        });
+        return result;
+      }
+
+      function computeExamples(model, endpointIndex, methodIndex) {
+        const encodes = amf[0]['http://raml.org/vocabularies/document#encodes'][0];
+        const endpoint = encodes['http://raml.org/vocabularies/http#endpoint'][endpointIndex];
+        const method = endpoint['http://www.w3.org/ns/hydra/core#supportedOperation'][methodIndex];
+        let examples = examplesFromBody(method);
+        return examples.concat(examplesFromResponses(method));
+      }
 
       setup((done) => {
         element = fixture('Basic');
-        element.examples = examples;
+        element.amfModel = amf;
+        element.examples = computeExamples(amf, 4, 1);
         flush(() => done());
       });
 
       test('Renders examples', () => {
         const nodes = element.shadowRoot.querySelectorAll('.example');
-        assert.equal(nodes.length, 1);
+        assert.equal(nodes.length, 2);
       });
 
-      test('Renders single title', () => {
-        const nodes = element.shadowRoot.querySelectorAll('h6');
-        assert.equal(nodes.length, 1);
-      });
+      // test('Renders single title', () => {
+      //   const nodes = element.shadowRoot.querySelectorAll('h6');
+      //   assert.equal(nodes.length, 1);
+      // });
 
       test('Renders api-json-example-render', () => {
         const node = element.shadowRoot.querySelector('api-json-example-render');
