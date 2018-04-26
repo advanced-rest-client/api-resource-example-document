@@ -247,6 +247,9 @@
     }
 
     _computeStructuredValue(model) {
+      if (!model) {
+        return;
+      }
       if (this._hasType(model, 'http://raml.org/vocabularies/data#Scalar')) {
         const mValue = model['http://raml.org/vocabularies/data#value'][0];
         const type = mValue['@type'];
