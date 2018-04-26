@@ -214,9 +214,10 @@
      * @return {String}
      */
     _getExampleValue(item) {
+      item = this._resolve(item);
       let data = this._getValue(item, 'http://www.w3.org/ns/shacl#raw');
       // This suppose to be a JSON data so lets test it.
-      if (data && !(data[0] === '{' || data[0] === '[')) {
+      if (!data || (data && !(data[0] === '{' || data[0] === '['))) {
         const structured = item['http://raml.org/vocabularies/document#structuredValue'];
         if (structured) {
           data = this._computeExampleValue(structured[0]);
