@@ -14,6 +14,7 @@
 /// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
 /// <reference path="../json-table/json-table.d.ts" />
 /// <reference path="../prism-element/prism-highlighter.d.ts" />
+/// <reference path="../amf-helper-mixin/amf-helper-mixin.d.ts" />
 /// <reference path="api-json-example-render.d.ts" />
 
 declare namespace ApiElements {
@@ -38,7 +39,9 @@ declare namespace ApiElements {
    * `--api-resource-example-document` | Mixin applied to this elment | `{}`
    * `--api-resource-example-document-button-active-background-color` | Background color of active "tabble" button | `#e0e0e0`
    */
-  class ApiResourceExampleDocument extends Polymer.Element {
+  class ApiResourceExampleDocument extends
+    ApiElements.AmfHelperMixin(
+    Polymer.Element) {
 
     /**
      * AMF model for examples.
@@ -90,13 +93,6 @@ declare namespace ApiElements {
      * Sets the `table` property if it is different.
      */
     _onJsonTableStateChanged(e: any): void;
-
-    /**
-     * Gets string value for example from AMF model.
-     *
-     * @param item Model item
-     */
-    _getValue(item: object|null): String|null;
   }
 }
 
