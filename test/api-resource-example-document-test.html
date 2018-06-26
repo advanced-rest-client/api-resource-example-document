@@ -36,16 +36,16 @@
         if (!model) {
           return result;
         }
-        const payloads = model['http://raml.org/vocabularies/http#payload'];
+        const payloads = model['http://a.ml/vocabularies/http#payload'];
         if (!payloads || !payloads.length) {
           return result;
         }
         payloads.forEach((payload) => {
-          const schema = payload['http://raml.org/vocabularies/http#schema'];
+          const schema = payload['http://a.ml/vocabularies/http#schema'];
           if (!schema) {
             return;
           }
-          const examples = schema[0]['http://raml.org/vocabularies/document#examples'];
+          const examples = schema[0]['http://a.ml/vocabularies/document#examples'];
           if (examples) {
             result = result.concat(examples);
           }
@@ -78,8 +78,8 @@
       }
 
       function computeExamples(model, endpointIndex, methodIndex) {
-        const encodes = amf[0]['http://raml.org/vocabularies/document#encodes'][0];
-        const endpoint = encodes['http://raml.org/vocabularies/http#endpoint'][endpointIndex];
+        const encodes = amf[0]['http://a.ml/vocabularies/document#encodes'][0];
+        const endpoint = encodes['http://a.ml/vocabularies/http#endpoint'][endpointIndex];
         const method = endpoint['http://www.w3.org/ns/hydra/core#supportedOperation'][methodIndex];
         let examples = examplesFromBody(method);
         return examples.concat(examplesFromResponses(method));

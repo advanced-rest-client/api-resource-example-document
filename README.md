@@ -6,17 +6,6 @@
 
 A viewer for examples in a resource based on AMF model
 
-<!---
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="api-resource-example-document.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
-
 ```html
 <api-resource-example-document examples='[{"http://schema.org/name":[{"@value":"Example1"}],"http://raml.org/vocabularies/document#value":[{"@value":"{{\n    \"value\":true}"}]}]'></api-resource-example-document>
 ```

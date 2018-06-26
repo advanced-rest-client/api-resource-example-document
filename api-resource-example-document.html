@@ -116,11 +116,11 @@
     }
 
     _hasTitle(item) {
-      return !!(item && 'http://schema.org/name' in item);
+      return !!(item && this.ns.schema.schemaName in item);
     }
 
     _computeTitle(item) {
-      return this._getValue(item, 'http://schema.org/name');
+      return this._getValue(item, this.ns.schema.schemaName);
     }
 
     /**
