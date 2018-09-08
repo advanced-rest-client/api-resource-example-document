@@ -1,7 +1,7 @@
 {
   "name": "api-resource-example-document",
   "description": "A viewer for examples in a resource based on AMF model",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "Apache-2.0",
   "main": "api-resource-example-document.html",
   "keywords": [
@@ -18,7 +18,8 @@
     "arc-icons": "advanced-rest-client/arc-icons#^2.0.2",
     "json-table": "advanced-rest-client/json-table#^2.0.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#^2.2.0",
-    "amf-helper-mixin": "advanced-rest-client/amf-helper-mixin#^2.0.1"
+    "amf-helper-mixin": "advanced-rest-client/amf-helper-mixin#^2.0.1",
+    "api-example-generator": "advanced-rest-client/api-example-generator#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
@@ -27,7 +28,12 @@
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
     "api-navigation": "advanced-rest-client/api-navigation#^2.0.0",
-    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11"
+    "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.3",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
+    "paper-item": "PolymerElements/paper-item#^2.1.0",
+    "web-animations-js": "web-animations/web-animations-js#^2.3",
+    "api-console-default-theme": "advanced-rest-client/api-console-default-theme#5.0.0-preview"
   },
   "repository": {
     "type": "git",

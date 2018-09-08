@@ -6,7 +6,7 @@
 <link rel="import" href="../prism-element/prism-highlighter.html">
 <link rel="import" href="../amf-helper-mixin/amf-helper-mixin.html">
 <link rel="import" href="api-json-example-render.html">
-
+<link rel="import" href="../api-example-generator/api-example-generator.html">
 <dom-module id="api-resource-example-document">
   <template>
     <style>
@@ -22,12 +22,17 @@
     h6 {
       @apply --arc-font-body1;
       font-size: 15px;
-      margin: 0;
+      margin: 0 0 4px 4px;
+      @apply --api-resource-example-document-title;
     }
 
     paper-icon-button[active] {
       background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
       border-radius: 50%;
+    }
+
+    .example:not(:last-of-type) {
+      margin-bottom: 24px;
     }
     </style>
     <prism-highlighter></prism-highlighter>
@@ -41,14 +46,15 @@
           <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-tap="toggleTable"></paper-icon-button>
         </div>
         <template is="dom-if" if="[[!table]]" restamp>
-          <api-json-example-render code="[[_getExampleValue(item, true)]]"></api-json-example-render>
+          <api-json-example-render code="[[_computeExample(item)]]"></api-json-example-render>
         </template>
         <template is="dom-if" if="[[table]]" restamp>
-          <json-table json="[[_getExampleValue(item, true)]]"></json-table>
+          <json-table json="[[_computeExample(item)]]"></json-table>
         </template>
       </div>
     </template>
     <clipboard-copy></clipboard-copy>
+    <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
   </template>
   <script>
   /**
@@ -69,6 +75,7 @@
    * Custom property | Description | Default
    * ----------------|-------------|----------
    * `--api-resource-example-document` | Mixin applied to this elment | `{}`
+   * `--api-resource-example-document-title` | Mixin applied to example title | `{}`
    * `--api-resource-example-document-button-active-background-color` | Background color of active "tabble" button | `#e0e0e0`
    *
    * @customElement
@@ -78,7 +85,7 @@
    * @appliesMixin ApiElements.AmfHelperMixin
    */
   class ApiResourceExampleDocument extends ApiElements.AmfHelperMixin(Polymer.Element) {
-    static get is() { return 'api-resource-example-document'; }
+    static get is() {return 'api-resource-example-document';}
     static get properties() {
       return {
         /**
@@ -206,6 +213,15 @@
       if (enabled !== this.table) {
         this.table = enabled;
       }
+    }
+    /**
+     * Computes example value for the type.
+     * It uses `api-example-generator` to compute the value.
+     * @param {Object} item Example value
+     * @return {String|undefined} Value of the example.
+     */
+    _computeExample(item) {
+      return this.$.exampleGenerator.computeExample('application/json', item);
     }
   }
   window.customElements.define(ApiResourceExampleDocument.is, ApiResourceExampleDocument);

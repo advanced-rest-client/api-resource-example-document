@@ -11,14 +11,14 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../api-navigation/api-navigation.html">
+    <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="../../paper-item/paper-item.html">
+    <link rel="import" href="../../paper-listbox/paper-listbox.html">
+    <link rel="import" href="../../neon-animation/web-animations.html">
     <link rel="import" href="../api-resource-example-document.html">
+    <link rel="import" href="../../api-console-default-theme/api-console-default-theme.html">
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
-      :root {
-        --primary-color: #00709a;
-        --accent-color: #cc143c;
-      }
-
       html,
       body {
         margin: 0;
@@ -41,6 +41,18 @@
         margin-left: 40px;
         @apply --layout-flex;
       }
+
+      header {
+        padding: 12px 24px;
+        background-color: #C5E1A5;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        --iron-icon-fill-color: #3E2723;
+        --paper-input-container-focus-color: #33691E;
+        --paper-input-container-label: {
+          color: #3E2723;
+        };
+      }
       </style>
     </custom-style>
   </head>
@@ -48,6 +60,15 @@
     <dom-bind id="demo">
       <template is="dom-bind">
         <raml-aware raml="{{amfModel}}" scope="model"></raml-aware>
+        <header>
+          <paper-dropdown-menu label="Select demo endpoint">
+            <paper-listbox slot="dropdown-content" id="enpointsList" on-selected-changed="_apiChanged">
+              <paper-item data-src="exchange-experience-api.json">Exchange api</paper-item>
+              <paper-item data-src="exchange-experience-api-compact.json">Exchange - compact model</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </header>
+
         <div class="vertical-section-container centered" role="main">
 
           <api-navigation aware="model" endpoints-opened></api-navigation>
@@ -59,37 +80,47 @@
             <p>Select an object that contains examples.</p>
           </template>
         </div>
+
+        <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
       </template>
     </dom-bind>
     <script>
     (function(app) {
+      const ns = ApiElements.Amf.ns;
+      class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
+      window.customElements.define('demo-element', DemoElement);
+
       app.hasData = false;
       app._load = function() {
-        fetch('./exchange-experience-api.json')
+        document.getElementById('enpointsList').selected = 0;
+      };
+
+      app._loadFile = function(file) {
+        fetch('./' + file)
         .then((response) => response.json())
         .then((data) => {
-          app.amfModel = data[0];
+          app.amfModel = data;
         });
       };
+
+      app._apiChanged = function(e) {
+        const file = e.target.selectedItem.dataset.src;
+        app._loadFile(file);
+      };
+
       app._navChanged = function(e) {
-        switch (e.detail.type) {
-          case 'method': app._examplesFromMethod(e.detail.selected); break;
-          default:
-            app.hasData = false;
+        const type = e.detail.type;
+        if (type === 'method') {
+          app.setData(e.detail.selected);
+          app.hasData = true;
+        } else {
+          app.hasData = false;
         }
       };
 
-      app._examplesFromMethod = function(selection) {
-        const amf = app.amfModel;
-        const encodes = amf['http://a.ml/vocabularies/document#encodes'][0];
-        const endpoints = encodes['http://a.ml/vocabularies/http#endpoint'];
-        let method;
-        for (let i = 0, len = endpoints.length; i < len; i++) {
-          method = app._matchMethod(endpoints[i], selection);
-          if (method) {
-            break;
-          }
-        }
+      app.setData = function(selection) {
+        const webApi = app.$.helper._computeWebApi(app.amfModel);
+        const method = app.$.helper._computeMethodModel(webApi, selection);
         if (!method) {
           app.hasData = false;
           return;
@@ -101,30 +132,34 @@
         app.examples = app.hasData ? examples : undefined;
       };
 
-      app._matchMethod = function(endpoint, selection) {
-        const methods = endpoint && endpoint['http://www.w3.org/ns/hydra/core#supportedOperation'];
-        if (!methods) {
-          return;
-        }
-        return methods.find((method) => method['@id'] === selection);
-      };
-
       app.exampleFromPayloads = function(model) {
         let result = [];
         if (!model) {
           return result;
         }
-        const payloads = model['http://a.ml/vocabularies/http#payload'];
-        if (!payloads || !payloads.length) {
+        const pKey = app.$.helper._getAmfKey(ns.raml.vocabularies.http + 'payload');
+        let payloads = model[pKey];
+        if (!payloads) {
           return result;
         }
+        if (!(payloads instanceof Array)) {
+          payloads = [payloads];
+        }
+        const sKey = app.$.helper._getAmfKey(ns.raml.vocabularies.http + 'schema');
+        const eKey = app.$.helper._getAmfKey(ns.raml.vocabularies.document + 'examples');
         payloads.forEach((payload) => {
-          const schema = payload['http://a.ml/vocabularies/http#schema'];
+          let schema = payload[sKey];
           if (!schema) {
             return;
           }
-          const examples = schema[0]['http://a.ml/vocabularies/document#examples'];
+          if (schema instanceof Array) {
+            schema = schema[0];
+          }
+          let examples = schema[eKey];
           if (examples) {
+            if (!(examples instanceof Array)) {
+              examples = [examples];
+            }
             result = result.concat(examples);
           }
         });
@@ -132,20 +167,27 @@
       };
 
       app._examplesFromBody = function(method) {
-        const expects = method['http://www.w3.org/ns/hydra/core#expects'];
-        if (!expects) {
+        const key = app.$.helper._getAmfKey(ns.w3.hydra.core + 'expects');
+        let expect = method[key];
+        if (!expect) {
           return [];
         }
-        return app.exampleFromPayloads(expects[0]);
+        if (expect instanceof Array) {
+          expect = expect[0];
+        }
+        return app.exampleFromPayloads(expect);
       };
 
       app._examplesFromResponses = function(method) {
         let result = [];
-        const returns = method['http://www.w3.org/ns/hydra/core#returns'];
+        const key = app.$.helper._getAmfKey(ns.w3.hydra.core + 'returns');
+        let returns = method[key];
         if (!returns) {
           return result;
         }
-
+        if (!(returns instanceof Array)) {
+          returns = [returns];
+        }
         returns.forEach((model) => {
           const examples = app.exampleFromPayloads(model);
           if (examples.length) {

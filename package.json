@@ -1,7 +1,7 @@
 {
   "name": "@api-components/api-resource-example-document",
   "description": "A viewer for examples in a resource based on AMF model",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "license": "Apache-2.0",
   "main": "api-resource-example-document.html",
   "authors": [
@@ -9,8 +9,8 @@
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.1.1",
-    "amf-client-js": "1.5.0"
+    "@api-components/api-model-generator": "^0.1.1",
+    "@polymer/gen-typescript-declarations": "^1.5.1"
   },
   "private": false,
   "scripts": {
