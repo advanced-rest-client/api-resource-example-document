@@ -1,14 +1,14 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../prism-element/prism-theme-default.html">
-<dom-module id="api-json-example-render">
+<dom-module id="api-example-render">
   <template>
     <style include="prism-theme-default"></style>
     <style>
     :host {
       display: block;
       background-color: var(--code-background-color, #f5f2f0);
-      @apply --api-json-example-render;
+      @apply --api-example-render;
     }
 
     #output {
@@ -20,7 +20,7 @@
   </template>
   <script>
   /**
-   * `api-json-example-render`
+   * `api-example-render`
    *
    * Renders a JSON values using Prism highlighter.
    *
@@ -30,7 +30,7 @@
    *
    * Custom property | Description | Default
    * ----------------|-------------|----------
-   * `--api-json-example-render` | Mixin applied to this elment | `{}`
+   * `--api-example-render` | Mixin applied to this elment | `{}`
    * `--code-block` | Mixin applied to the output block | `{}`
    *
    * @customElement
@@ -38,51 +38,77 @@
    * @demo demo/index.html
    * @memberof ApiElements
    */
-  class ApiJsonExampleEender extends Polymer.Element {
-    static get is() { return 'api-json-example-render'; }
+  class ApiExampleRender extends Polymer.Element {
+    static get is() {
+      return 'api-example-render';
+    }
     static get properties() {
       return {
         /**
          * Data to render.
          */
-        code: {
-          type: String,
-          observer: '_codeChanged'
-        }
+        code: String,
+        /**
+         * Examples media type
+         */
+        mediaType: String
       };
+    }
+
+    static get observers() {
+      return ['_dataChanged(code, mediaType)'];
+    }
+
+    _dataChanged(code, mediaType) {
+      if (this.__changeDebouncer) {
+        return;
+      }
+      this.__changeDebouncer = true;
+      Polymer.RenderStatus.afterNextRender(this, () => {
+        this.__changeDebouncer = false;
+        this._codeChanged(code, mediaType);
+      });
     }
     /**
      * Handles highlighting when code changed.
      * Note that the operation is async.
      * @param {String} code
+     * @param {String} mediaType
      */
-    _codeChanged(code) {
-      if (!code) {
+    _codeChanged(code, mediaType) {
+      if (!code || typeof code !== 'string') {
         this.$.output.innerHTML = '';
         return;
       }
-      Polymer.RenderStatus.afterNextRender(this, () => {
-        this.$.output.innerHTML = this.highlight(code);
-      });
+      this.$.output.innerHTML = this.highlight(code, mediaType);
     }
     /**
      * Dispatches `syntax-highlight` custom event
      * @param {String} code Code to highlight
+     * @param {String} type Mime type of the code
      * @return {String} Highlighted code.
      */
-    highlight(code) {
+    highlight(code, type) {
+      let lang;
+      if (type) {
+        if (type.indexOf('json') !== -1) {
+          lang = 'json';
+        } else if (type.indexOf('xml') !== -1) {
+          lang = 'xml';
+        }
+      }
       const ev = new CustomEvent('syntax-highlight', {
         bubbles: true,
         composed: true,
         detail: {
-          code: code,
-          lang: 'json'
+          code,
+          lang
         }
       });
       this.dispatchEvent(ev);
       return ev.detail.code;
     }
   }
-  window.customElements.define(ApiJsonExampleEender.is, ApiJsonExampleEender);
+  window.customElements.define(ApiExampleRender.is, ApiExampleRender);
   </script>
 </dom-module>

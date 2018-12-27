@@ -1,12 +1,13 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../clipboard-copy/clipboard-copy.html">
 <link rel="import" href="../arc-icons/arc-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../json-table/json-table.html">
 <link rel="import" href="../prism-element/prism-highlighter.html">
 <link rel="import" href="../amf-helper-mixin/amf-helper-mixin.html">
-<link rel="import" href="api-json-example-render.html">
 <link rel="import" href="../api-example-generator/api-example-generator.html">
+<link rel="import" href="api-example-render.html">
 <dom-module id="api-resource-example-document">
   <template>
     <style>
@@ -36,22 +37,26 @@
     }
     </style>
     <prism-highlighter></prism-highlighter>
-    <template is="dom-repeat" items="[[examples]]">
-      <div class="example">
-        <template is="dom-if" if="[[_hasTitle(item)]]">
-          <h6>[[_computeTitle(item)]]</h6>
-        </template>
-        <div class="example-actions">
-          <paper-icon-button icon="arc:content-copy" data-action="copy" on-tap="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
-          <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-tap="toggleTable"></paper-icon-button>
+    <template is="dom-if" if="[[hasExamples]]">
+      <template is="dom-repeat" items="[[renderedExamples]]">
+        <div class="example">
+          <template is="dom-if" if="[[item.hasTitle]]">
+            <h6>[[item.title]]</h6>
+          </template>
+          <div class="example-actions">
+            <paper-icon-button icon="arc:content-copy" data-action="copy" on-click="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
+            <template is="dom-if" if="[[isJson]]">
+              <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-click="toggleTable"></paper-icon-button>
+            </template>
+          </div>
+          <template is="dom-if" if="[[!_effectiveTable]]" restamp>
+            <api-example-render code="[[item.value]]" media-type="[[mediaType]]"></api-example-render>
+          </template>
+          <template is="dom-if" if="[[_effectiveTable]]" restamp>
+            <json-table json="[[item.value]]"></json-table>
+          </template>
         </div>
-        <template is="dom-if" if="[[!table]]" restamp>
-          <api-json-example-render code="[[_computeExample(item)]]"></api-json-example-render>
-        </template>
-        <template is="dom-if" if="[[table]]" restamp>
-          <json-table json="[[_computeExample(item)]]"></json-table>
-        </template>
-      </div>
+      </template>
     </template>
     <clipboard-copy></clipboard-copy>
     <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
@@ -85,13 +90,39 @@
    * @appliesMixin ApiElements.AmfHelperMixin
    */
   class ApiResourceExampleDocument extends ApiElements.AmfHelperMixin(Polymer.Element) {
-    static get is() {return 'api-resource-example-document';}
+    static get is() {
+      return 'api-resource-example-document';
+    }
     static get properties() {
       return {
         /**
          * AMF model for examples.
          */
         examples: Array,
+        /**
+         * Examples media type
+         */
+        mediaType: String,
+        /**
+         * Type (model) name for which examples are generated for.
+         * This is used by RAML to XML examples processor to wrap the example
+         * in type name. If missing this wrapping is omnited.
+         */
+        typeName: String,
+        /**
+         * Computed in a debouncer examples to render.
+         */
+        renderedExamples: {
+          type: Array,
+          readOnly: true
+        },
+        /**
+         * Computed value, true if there's any example to render.
+         */
+        hasExamples: {
+          type: Boolean,
+          computed: '_computeHasArrayValue(renderedExamples)'
+        },
         /**
          * If true it will display a table view instead of JSON code.
          * `isJson` must be set to use this option.
@@ -100,8 +131,25 @@
           type: Boolean,
           value: false,
           observer: '_tableChanged'
+        },
+        /**
+         * Computed value, true if selected media type is application/json
+         * or equivalent.
+         */
+        isJson: {
+          type: Boolean,
+          computed: '_computeIsJson(mediaType)'
+        },
+
+        _effectiveTable: {
+          type: Boolean,
+          computed: '_computeEffectiveTable(table, isJson)'
         }
       };
+    }
+
+    static get observers() {
+      return ['_computeExamples(examples, mediaType, typeName)'];
     }
 
     constructor() {
@@ -122,21 +170,24 @@
       window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
     }
 
-    _hasTitle(item) {
-      return !!(item && this.ns.schema.schemaName in item);
-    }
-
     _computeTitle(item) {
-      return this._getValue(item, this.ns.schema.schemaName);
+      let value = this._getValue(item, this.ns.schema.schemaName);
+      if (value && (value === 'schema' || value.indexOf('example_') === 0)) {
+        return;
+      }
+      return value;
     }
 
     /**
      * Coppies current response text value to clipboard.
+     *
+     * @param {Event} e
      */
     _copyToClipboard(e) {
-      const button = e.target;
+      const button = this.shadowRoot.querySelector('[data-action="copy"]');
       const copy = this.shadowRoot.querySelector('clipboard-copy');
-      copy.content = this._getExampleValue(e.model.get('item'), true);
+      const example = this.renderedExamples[e.model.get('index')];
+      copy.content = example.value;
       if (copy.copy()) {
         button.icon = 'arc:done';
       } else {
@@ -214,14 +265,50 @@
         this.table = enabled;
       }
     }
-    /**
-     * Computes example value for the type.
-     * It uses `api-example-generator` to compute the value.
-     * @param {Object} item Example value
-     * @return {String|undefined} Value of the example.
-     */
-    _computeExample(item) {
-      return this.$.exampleGenerator.computeExample('application/json', item);
+
+    _computeExamples() {
+      if (this._examplesDebouncer) {
+        return;
+      }
+      this._examplesDebouncer = true;
+      Polymer.RenderStatus.afterNextRender(this, () => {
+        this._examplesDebouncer = false;
+        this.__computeExamples(this.examples, this.mediaType, this.typeName);
+      });
+    }
+
+    __computeExamples(examples, mediaType, typeName) {
+      this._setRenderedExamples(undefined);
+      if (!examples || !examples.length || !mediaType) {
+        return;
+      }
+      const opts = {
+        typeName
+      };
+      const result = [];
+      for (let i = 0, len = examples.length; i < len; i++) {
+        const example = examples[i];
+        const value = this.$.exampleGenerator.computeExample(mediaType, example, opts);
+        if (value) {
+          const title = this._computeTitle(example);
+          result[result.length] = {
+            value,
+            title,
+            hasTitle: !!title
+          };
+        }
+      }
+      if (result.length) {
+        this._setRenderedExamples(result);
+      }
+    }
+
+    _computeIsJson(type) {
+      return !!(type && type.indexOf('json') !== -1);
+    }
+
+    _computeEffectiveTable(table, isJson) {
+      return !!(isJson && table);
     }
   }
   window.customElements.define(ApiResourceExampleDocument.is, ApiResourceExampleDocument);
