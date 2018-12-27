@@ -138,6 +138,7 @@
          */
         isJson: {
           type: Boolean,
+          value: false,
           computed: '_computeIsJson(mediaType)'
         },
 
@@ -184,9 +185,10 @@
      * @param {Event} e
      */
     _copyToClipboard(e) {
-      const button = this.shadowRoot.querySelector('[data-action="copy"]');
+      const index = e.model.get('index');
+      const button = e.target;
       const copy = this.shadowRoot.querySelector('clipboard-copy');
-      const example = this.renderedExamples[e.model.get('index')];
+      const example = this.renderedExamples[index];
       copy.content = example.value;
       if (copy.copy()) {
         button.icon = 'arc:done';
@@ -195,16 +197,26 @@
       }
       setTimeout(() => this._resetCopyButtonState(button), 1000);
     }
-
+    /**
+     * Resets button icon.
+     * @param {Element} button Button to reset.
+     */
     _resetCopyButtonState(button) {
       button.icon = 'arc:content-copy';
     }
-    // Toggles the JSON table view
+    /**
+     * Toggles the JSON table view
+     */
     toggleTable() {
       this.table = !this.table;
     }
 
-    // Handler to the `table` change, fires corresponding event and sets local storage.
+    /**
+     * Updates "table" state in localstorage and disaptches
+     * `json-table-state-changed` event.
+     *
+     * @param {Boolean} state Current "table" state.
+     */
     _tableChanged(state) {
       if (state === undefined) {
         return;
@@ -212,22 +224,35 @@
       if (localStorage.jsonTableEnabled !== String(state)) {
         window.localStorage.setItem('jsonTableEnabled', state);
       }
-      this.dispatchEvent(new CustomEvent('json-table-state-changed', {
+      this._dispatchTableState(state);
+    }
+    /**
+     * Dispatches `json-table-state-changed` custom event.
+     * @param {Boolean} enabled
+     * @return {CustomEvent}
+     */
+    _dispatchTableState(enabled) {
+      const e = new CustomEvent('json-table-state-changed', {
         bubbles: true,
+        composed: true,
         detail: {
-          enabled: state
+          enabled
         }
-      }));
+      });
+      this.dispatchEvent(e);
+      return e;
     }
     /**
      * Updates the value of the `isJsonTable` property when the corresponding localStorage
      * property change.
+     *
+     * @param {Event} e Storage event
      */
     _onStorageChanged(e) {
       if (e.key !== 'jsonTableEnabled') {
         return;
       }
-      if (!e.newValue) {
+      if (e.newValue === undefined) {
         return;
       }
       const v = this._localStorageValueToBoolean(e.newValue);
@@ -255,17 +280,21 @@
     /**
      * Handler to the incomming `json-table-state-changed` event.
      * Sets the `table` property if it is different.
+     *
+     * @param {CustomEvent} e
      */
     _onJsonTableStateChanged(e) {
-      if (e.target === this) {
+      if (e.composedPath()[0] === this) {
         return;
       }
-      const enabled = e.detail.enabled;
+      const {enabled} = e.detail;
       if (enabled !== this.table) {
         this.table = enabled;
       }
     }
-
+    /**
+     * Runs the debouncer to update examples list.
+     */
     _computeExamples() {
       if (this._examplesDebouncer) {
         return;
@@ -302,11 +331,20 @@
         this._setRenderedExamples(result);
       }
     }
-
+    /**
+     * Computes value for `isJson` property
+     * @param {String} type Current media type.
+     * @return {Boolean}
+     */
     _computeIsJson(type) {
       return !!(type && type.indexOf('json') !== -1);
     }
-
+    /**
+     * Computes value for `_effectiveTable`.
+     * @param {Boolean} table Current state of table view for JSON.
+     * @param {Boolean} isJson [description]
+     * @return {Boolean} True when current media type is JSON and table is enabled.
+     */
     _computeEffectiveTable(table, isJson) {
       return !!(isJson && table);
     }

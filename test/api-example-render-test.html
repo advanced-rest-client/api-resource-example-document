@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-example-render test</title>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
+  <link rel="import" href="../../prism-element/prism-highlighter.html">
+  <script src="amf-loader.js"></script>
+  <link rel="import" href="../api-example-render.html">
+</head>
+<body>
+  <test-fixture id="Basic">
+    <template>
+      <api-example-render></api-example-render>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="Json">
+    <template>
+      <api-example-render media-type="application/json"></api-example-render>
+    </template>
+  </test-fixture>
+
+  <prism-highlighter></prism-highlighter>
+  <script>
+  suite('Basics', () => {
+    let element;
+    setup(() => {
+      element = fixture('Json');
+    });
+
+    test('Clears output when no code', () => {
+      element.$.output.innerHTML = 'test';
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        assert.notEqual(element.$.output.innerHTML, 'test');
+      });
+    });
+
+    test('Calls highlight() when code change', () => {
+      element.code = '{}';
+      const spy = sinon.spy(element, 'highlight');
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        assert.isTrue(spy.called);
+      });
+    });
+  });
+
+  suite('_codeChanged()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Clears output when no code', () => {
+      element.$.output.innerHTML = 'test';
+      element._codeChanged();
+      assert.notEqual(element.$.output.innerHTML, 'test');
+    });
+
+    test('Clears output code is not a string', () => {
+      element.$.output.innerHTML = 'test';
+      element._codeChanged({});
+      assert.notEqual(element.$.output.innerHTML, 'test');
+    });
+
+    test('Updates output with code', () => {
+      element._codeChanged('{}', 'application/json');
+      assert.equal(element.$.output.innerHTML.trim(),
+        '<span class="token punctuation">{</span><span class="token punctuation">}</span>');
+    });
+  });
+
+  suite('highlight()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Dispatches syntax-highlight event', () => {
+      const spy = sinon.spy();
+      element.addEventListener('syntax-highlight', spy);
+      element.highlight('{}', 'application/json');
+      assert.isTrue(spy.called);
+    });
+
+    test('Event has "code" property', () => {
+      const spy = sinon.spy();
+      element.addEventListener('syntax-highlight', spy);
+      element.highlight('{}', 'application/json');
+      const e = spy.args[0][0];
+      assert.typeOf(e.detail.code, 'string');
+    });
+
+    test('Event has "lang" property set to json', () => {
+      const spy = sinon.spy();
+      element.addEventListener('syntax-highlight', spy);
+      element.highlight('{}', 'application/json');
+      const e = spy.args[0][0];
+      assert.equal(e.detail.lang, 'json');
+    });
+
+    test('Event has "lang" property set to xml', () => {
+      const spy = sinon.spy();
+      element.addEventListener('syntax-highlight', spy);
+      element.highlight('{}', 'application/xml');
+      const e = spy.args[0][0];
+      assert.equal(e.detail.lang, 'xml');
+    });
+
+    test('Event has no "lang" property', () => {
+      const spy = sinon.spy();
+      element.addEventListener('syntax-highlight', spy);
+      element.highlight('{}', 'application/other');
+      const e = spy.args[0][0];
+      assert.isUndefined(e.detail.lang);
+    });
+
+    test('Returns parsed code', () => {
+      const result = element.highlight('{}', 'application/json');
+      assert.equal(result, '<span class="token punctuation">{</span><span class="token punctuation">}</span>');
+    });
+  });
+  </script>
+</body>
+</html>
