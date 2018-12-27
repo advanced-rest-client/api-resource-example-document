@@ -8,15 +8,20 @@
  *   api-resource-example-document.html
  */
 
+
+// tslint:disable:variable-name Describing an API that's defined elsewhere.
+// tslint:disable:no-any describes the API as best we are able today
+
 /// <reference path="../polymer/types/polymer-element.d.ts" />
+/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
 /// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
 /// <reference path="../arc-icons/arc-icons.d.ts" />
 /// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
 /// <reference path="../json-table/json-table.d.ts" />
 /// <reference path="../prism-element/prism-highlighter.d.ts" />
 /// <reference path="../amf-helper-mixin/amf-helper-mixin.d.ts" />
-/// <reference path="api-json-example-render.d.ts" />
 /// <reference path="../api-example-generator/api-example-generator.d.ts" />
+/// <reference path="api-example-render.d.ts" />
 
 declare namespace ApiElements {
 
@@ -51,20 +56,54 @@ declare namespace ApiElements {
     examples: any[]|null|undefined;
 
     /**
+     * Examples media type
+     */
+    mediaType: string|null|undefined;
+
+    /**
+     * Type (model) name for which examples are generated for.
+     * This is used by RAML to XML examples processor to wrap the example
+     * in type name. If missing this wrapping is omnited.
+     */
+    typeName: string|null|undefined;
+
+    /**
+     * Computed in a debouncer examples to render.
+     */
+    readonly renderedExamples: any[]|null|undefined;
+
+    /**
+     * Computed value, true if there's any example to render.
+     */
+    readonly hasExamples: boolean|null|undefined;
+
+    /**
      * If true it will display a table view instead of JSON code.
      * `isJson` must be set to use this option.
      */
     table: boolean|null|undefined;
+
+    /**
+     * Computed value, true if selected media type is application/json
+     * or equivalent.
+     */
+    readonly isJson: boolean|null|undefined;
+    readonly _effectiveTable: boolean|null|undefined;
     connectedCallback(): void;
     disconnectedCallback(): void;
-    _hasTitle(item: any): any;
     _computeTitle(item: any): any;
 
     /**
      * Coppies current response text value to clipboard.
      */
-    _copyToClipboard(e: any): void;
-    _resetCopyButtonState(button: any): void;
+    _copyToClipboard(e: Event|null): void;
+
+    /**
+     * Resets button icon.
+     *
+     * @param button Button to reset.
+     */
+    _resetCopyButtonState(button: Element|null): void;
 
     /**
      * Toggles the JSON table view
@@ -72,15 +111,25 @@ declare namespace ApiElements {
     toggleTable(): void;
 
     /**
-     * Handler to the `table` change, fires corresponding event and sets local storage.
+     * Updates "table" state in localstorage and disaptches
+     * `json-table-state-changed` event.
+     *
+     * @param state Current "table" state.
      */
-    _tableChanged(state: any): void;
+    _tableChanged(state: Boolean|null): void;
+
+    /**
+     * Dispatches `json-table-state-changed` custom event.
+     */
+    _dispatchTableState(enabled: Boolean|null): CustomEvent|null;
 
     /**
      * Updates the value of the `isJsonTable` property when the corresponding localStorage
      * property change.
+     *
+     * @param e Storage event
      */
-    _onStorageChanged(e: any): void;
+    _onStorageChanged(e: Event|null): void;
 
     /**
      * Reads the local value (always a string) as a boolean value.
@@ -94,16 +143,28 @@ declare namespace ApiElements {
      * Handler to the incomming `json-table-state-changed` event.
      * Sets the `table` property if it is different.
      */
-    _onJsonTableStateChanged(e: any): void;
+    _onJsonTableStateChanged(e: CustomEvent|null): void;
 
     /**
-     * Computes example value for the type.
-     * It uses `api-example-generator` to compute the value.
-     *
-     * @param item Example value
-     * @returns Value of the example.
+     * Runs the debouncer to update examples list.
      */
-    _computeExample(item: object|null): String|null|undefined;
+    _computeExamples(): void;
+
+    /**
+     * Computes value for `isJson` property
+     *
+     * @param type Current media type.
+     */
+    _computeIsJson(type: String|null): Boolean|null;
+
+    /**
+     * Computes value for `_effectiveTable`.
+     *
+     * @param table Current state of table view for JSON.
+     * @param isJson [description]
+     * @returns True when current media type is JSON and table is enabled.
+     */
+    _computeEffectiveTable(table: Boolean|null, isJson: Boolean|null): Boolean|null;
   }
 }
 
