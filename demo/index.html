@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <title>api-request-editor demo</title>
+    <title>api-resource-example-document demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../shadycss/apply-shim.html">
     <link rel="import" href="../../polymer/lib/elements/custom-style.html">
@@ -53,6 +53,10 @@
           color: #3E2723;
         };
       }
+
+      .demo-container {
+        @apply --layout-flex;
+      }
       </style>
     </custom-style>
   </head>
@@ -63,35 +67,54 @@
         <header>
           <paper-dropdown-menu label="Select demo endpoint">
             <paper-listbox slot="dropdown-content" id="enpointsList" on-selected-changed="_apiChanged">
-              <paper-item data-src="exchange-experience-api.json">Exchange api</paper-item>
-              <paper-item data-src="exchange-experience-api-compact.json">Exchange - compact model</paper-item>
+              <paper-item data-src="demo-api.json">Demo api</paper-item>
+              <paper-item data-src="demo-api-compact.json">Demo api - compact model</paper-item>
+              <paper-item data-src="raml-types.json">RAML types with raml examples</paper-item>
+              <paper-item data-src="raml-types-compact.json">RAML types with raml examples - compact model</paper-item>
             </paper-listbox>
           </paper-dropdown-menu>
         </header>
 
-        <div class="vertical-section-container centered" role="main">
+        <section class="vertical-section-container centered" role="main">
 
           <api-navigation aware="model" endpoints-opened></api-navigation>
 
-          <template is="dom-if" if="[[hasData]]">
-            <api-resource-example-document amf-model="[[amfModel]]" examples="[[examples]]"></api-resource-example-document>
-          </template>
-          <template is="dom-if" if="[[!hasData]]">
-            <p>Select an object that contains examples.</p>
-          </template>
-        </div>
+          <div class="demo-container">
+            <template is="dom-if" if="[[hasData]]">
+
+              <template is="dom-if" if="[[!singlePayload]]">
+                <paper-dropdown-menu label="Select media type">
+                  <paper-listbox slot="dropdown-content" id="mediaList" on-selected-changed="_mediaChanged">
+                    <template is="dom-repeat" items="[[mediaTypes]]">
+                      <paper-item>[[item.label]]</paper-item>
+                    </template>
+                  </paper-listbox>
+                </paper-dropdown-menu>
+              </template>
+
+              <template is="dom-if" if="[[hasExampels]]">
+                <api-resource-example-document amf-model="[[amfModel]]" examples="[[examples]]" media-type="[[mediaType]]"></api-resource-example-document>
+              </template>
+
+              <template is="dom-if" if="[[!hasExampels]]">
+                <p>Examples not found in selected method</p>
+              </template>
+            </template>
+            <template is="dom-if" if="[[!hasData]]">
+              <p>Select an object that contains examples.</p>
+            </template>
+          </div>
+        </section>
 
         <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
       </template>
     </dom-bind>
     <script>
     (function(app) {
-      const ns = ApiElements.Amf.ns;
-      class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
-      window.customElements.define('demo-element', DemoElement);
-
       app.hasData = false;
       app._load = function() {
+        class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
+        window.customElements.define('demo-element', DemoElement);
         document.getElementById('enpointsList').selected = 0;
       };
 
@@ -119,82 +142,149 @@
       };
 
       app.setData = function(selection) {
+        const list = document.body.querySelector('#mediaList');
+        if (list) {
+          list.selected = -1;
+        }
         const webApi = app.$.helper._computeWebApi(app.amfModel);
         const method = app.$.helper._computeMethodModel(webApi, selection);
         if (!method) {
           app.hasData = false;
           return;
         }
-        // search in payload
-        let examples = app._examplesFromBody(method);
-        examples = examples.concat(app._examplesFromResponses(method));
-        app.hasData = !!examples.length;
-        app.examples = app.hasData ? examples : undefined;
+        const payloads = app.computePayloads(method);
+        app.hasData = !!(payloads && payloads.length);
+        app.singlePayload = app.hasData && payloads.length === 1;
+        app.mediaTypes = app.computeMediaTypes(payloads);
+        app.payloads = app.hasData ? payloads : undefined;
+        if (app.hasData) {
+          Polymer.RenderStatus.afterNextRender(app, () => {
+            const list = document.body.querySelector('#mediaList');
+            list.selected = 0;
+          });
+        }
       };
 
-      app.exampleFromPayloads = function(model) {
-        let result = [];
+      app.computePayloads = function(model) {
         if (!model) {
-          return result;
+          return;
         }
-        const pKey = app.$.helper._getAmfKey(ns.raml.vocabularies.http + 'payload');
-        let payloads = model[pKey];
+        const expects = app.$.helper._computeExpects(model);
+        if (!expects) {
+          return;
+        }
+        let payloads = app.$.helper._computePayload(expects);
         if (!payloads) {
-          return result;
+          return;
         }
         if (!(payloads instanceof Array)) {
           payloads = [payloads];
         }
-        const sKey = app.$.helper._getAmfKey(ns.raml.vocabularies.http + 'schema');
-        const eKey = app.$.helper._getAmfKey(ns.raml.vocabularies.document + 'examples');
-        payloads.forEach((payload) => {
-          let schema = payload[sKey];
-          if (!schema) {
-            return;
+        return payloads;
+      };
+
+      app.computeMediaTypes = function(payloads) {
+        if (!payloads) {
+          return;
+        }
+        const result = [];
+        payloads.forEach((item) => {
+          const label = app.$.helper._getValue(item, app.$.helper.ns.raml.vocabularies.http + 'mediaType');
+          if (label) {
+            result.push({label});
           }
-          if (schema instanceof Array) {
-            schema = schema[0];
+        });
+        return result.length ? result : undefined;
+      };
+
+      app._mediaChanged = function(e) {
+        app.hasExampels = false;
+        const index = e.detail.value;
+        if (isNaN(index) || index === -1) {
+          return;
+        }
+        const mediaType = app.mediaTypes[index].label;
+        const body = app.payloads[index];
+        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.http + 'schema');
+        let schema = body[key];
+        if (!schema) {
+          return;
+        }
+        if (schema instanceof Array) {
+          schema = schema[0];
+        }
+        app.$.helper._resolve(schema);
+        const examples = app._computeExamples(body, schema);
+        app.hasExampels = !!(examples && examples.length);
+        app.examples = examples;
+        app.mediaType = mediaType;
+      };
+
+      app._computeExamples = function(body, schema) {
+        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.document + 'examples');
+        let exs = schema[key];
+        if (!exs) {
+          if (app.$.helper._hasType(schema, app.$.helper.ns.raml.vocabularies.shapes + 'ArrayShape')) {
+            return app._computeArrayExample(body, schema);
           }
-          let examples = schema[eKey];
-          if (examples) {
-            if (!(examples instanceof Array)) {
-              examples = [examples];
+          return;
+        }
+        if (!(exs instanceof Array)) {
+          exs = [exs];
+        }
+        const id = body['@id'];
+        const example = app._computeExamplesBySourceId(id, exs);
+        if (example) {
+          return example;
+        }
+      };
+
+      app._computeExamplesBySourceId = function(id, examples) {
+        const sourceKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'sources');
+        const trackedKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'tracked-element');
+        const valueKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'value');
+        const longId = 'amf://id' + id;
+        const result = [];
+        for (let i = 0, len = examples.length; i < len; i++) {
+          let example = examples[i];
+          if (example instanceof Array) {
+            example = example[0];
+          }
+          let sm = example[sourceKey];
+          if (!sm) {
+            continue;
+          }
+          if (sm instanceof Array) {
+            sm = sm[0];
+          }
+          let tracked = sm[trackedKey];
+          if (!tracked) {
+            if (len === 1) {
+              return [example];
             }
-            result = result.concat(examples);
+            continue;
           }
-        });
-        return result;
+          if (tracked instanceof Array) {
+            tracked = tracked[0];
+          }
+          const value = app.$.helper._getValue(tracked, valueKey);
+          if (value && (value === id || value === longId)) {
+            result[result.length] = example;
+          }
+        }
+        return result.length ? result : undefined;
       };
 
-      app._examplesFromBody = function(method) {
-        const key = app.$.helper._getAmfKey(ns.w3.hydra.core + 'expects');
-        let expect = method[key];
-        if (!expect) {
-          return [];
+      app._computeArrayExample = function(body, shape) {
+        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.shapes + 'items');
+        let item = shape[key];
+        if (!item) {
+          return;
         }
-        if (expect instanceof Array) {
-          expect = expect[0];
+        if (item instanceof Array) {
+          item = item[0];
         }
-        return app.exampleFromPayloads(expect);
-      };
-
-      app._examplesFromResponses = function(method) {
-        let result = [];
-        const key = app.$.helper._getAmfKey(ns.w3.hydra.core + 'returns');
-        let returns = method[key];
-        if (!returns) {
-          return result;
-        }
-        if (!(returns instanceof Array)) {
-          returns = [returns];
-        }
-        returns.forEach((model) => {
-          const examples = app.exampleFromPayloads(model);
-          if (examples.length) {
-            result = result.concat(examples);
-          }
-        });
-        return result;
+        return app._computeExamples(body, item);
       };
       window.addEventListener('WebComponentsReady', () => app._load());
       window.addEventListener('api-navigation-selection-changed', app._navChanged);

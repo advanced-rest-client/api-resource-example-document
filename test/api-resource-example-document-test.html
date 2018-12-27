@@ -18,104 +18,531 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="Json">
+    <template>
+      <api-resource-example-document media-type="application/json"></api-resource-example-document>
+    </template>
+  </test-fixture>
+
   <script>
   /* global AmfLoader, MockInteractions */
-  suite('api-resource-example-document', () => {
-    suite('Basic', () => {
-      let element;
-      let amf;
-      suiteSetup(() => {
-        window.localStorage.setItem('jsonTableEnabled', false);
-        return AmfLoader.load()
-        .then((data) => amf = data);
+  suite('_computeTitle()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns undefined when no argument', () => {
+      const result = element._computeTitle();
+      assert.isUndefined(result);
+    });
+
+    test('Returns title', () => {
+      const param = {};
+      param[element.ns.schema.schemaName] = {
+        '@value': 'test'
+      };
+      const result = element._computeTitle(param);
+      assert.equal(result, 'test');
+    });
+
+    test('Ignores title "schema"', () => {
+      const param = {};
+      param[element.ns.schema.schemaName] = {
+        '@value': 'schema'
+      };
+      const result = element._computeTitle(param);
+      assert.isUndefined(result);
+    });
+
+    test('Ignores title starting with "example_"', () => {
+      const param = {};
+      param[element.ns.schema.schemaName] = {
+        '@value': 'example_1'
+      };
+      const result = element._computeTitle(param);
+      assert.isUndefined(result);
+    });
+  });
+
+  suite('_copyToClipboard()', () => {
+    let element;
+    setup((done) => {
+      element = fixture('Json');
+      flush(() => {
+        Polymer.RenderStatus.afterNextRender(element, () => done());
       });
+    });
 
-      function exampleFromPayloads(model) {
-        let result = [];
-        if (!model) {
-          return result;
-        }
-        const payloads = model['http://a.ml/vocabularies/http#payload'];
-        if (!payloads || !payloads.length) {
-          return result;
-        }
-        payloads.forEach((payload) => {
-          const schema = payload['http://a.ml/vocabularies/http#schema'];
-          if (!schema) {
-            return;
-          }
-          const examples = schema[0]['http://a.ml/vocabularies/document#examples'];
-          if (examples) {
-            result = result.concat(examples);
-          }
-        });
-        return result;
-      }
-
-      function examplesFromBody(method) {
-        const expects = method['http://www.w3.org/ns/hydra/core#expects'];
-        if (!expects) {
-          return [];
-        }
-        return exampleFromPayloads(expects[0]);
-      }
-
-      function examplesFromResponses(method) {
-        let result = [];
-        const returns = method['http://www.w3.org/ns/hydra/core#returns'];
-        if (!returns) {
-          return result;
-        }
-
-        returns.forEach((model) => {
-          const examples = exampleFromPayloads(model);
-          if (examples.length) {
-            result = result.concat(examples);
-          }
-        });
-        return result;
-      }
-
-      function computeExamples(model, endpointIndex, methodIndex) {
-        const encodes = amf[0]['http://a.ml/vocabularies/document#encodes'][0];
-        const endpoint = encodes['http://a.ml/vocabularies/http#endpoint'][endpointIndex];
-        const method = endpoint['http://www.w3.org/ns/hydra/core#supportedOperation'][methodIndex];
-        let examples = examplesFromBody(method);
-        return examples.concat(examplesFromResponses(method));
-      }
-
-      setup((done) => {
-        element = fixture('Basic');
-        element.amfModel = amf;
-        element.examples = computeExamples(amf, 4, 1);
-        flush(() => done());
+    test('Calls copy() in the `clipboard-copy` element', () => {
+      element._setRenderedExamples([{
+        value: '{}',
+        hasTitle: false
+      }, {
+        value: '{"test": true}',
+        hasTitle: false
+      }]);
+      flush(() => {
+        const copy = element.shadowRoot.querySelector('clipboard-copy');
+        const spy = sinon.spy(copy, 'copy');
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.isTrue(spy.called);
       });
+    });
 
-      test('Renders examples', () => {
-        const nodes = element.shadowRoot.querySelectorAll('.example');
-        assert.equal(nodes.length, 2);
+    test('Changes the icon', () => {
+      element._setRenderedExamples([{
+        value: '{}',
+        hasTitle: false
+      }, {
+        value: '{"test": true}',
+        hasTitle: false
+      }]);
+      flush(() => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.notEqual(button.icon, 'arc:content-copy');
       });
+    });
 
-      // test('Renders single title', () => {
-      //   const nodes = element.shadowRoot.querySelectorAll('h6');
-      //   assert.equal(nodes.length, 1);
-      // });
-
-      test('Renders api-json-example-render', () => {
-        const node = element.shadowRoot.querySelector('api-json-example-render');
-        assert.ok(node);
-      });
-
-      test('Tablle button tap renders table instead of code', (done) => {
-        const button = element.shadowRoot.querySelector('[data-action="table"]');
-        MockInteractions.tap(button);
-        assert.equal(localStorage.jsonTableEnabled, 'true');
-        flush(() => {
-          const code = element.shadowRoot.querySelector('api-json-example-render');
-          assert.notOk(code);
-          const table = element.shadowRoot.querySelector('json-table');
-          assert.ok(table);
+    test('Changes icon back', (done) => {
+      element._setRenderedExamples([{
+        value: '{}',
+        hasTitle: false
+      }, {
+        value: '{"test": true}',
+        hasTitle: false
+      }]);
+      flush(() => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        setTimeout(() => {
+          assert.equal(button.icon, 'arc:content-copy');
           done();
+        }, 1001);
+      });
+    });
+  });
+
+  suite('_resetCopyButtonState()', () => {
+    let element;
+    setup((done) => {
+      element = fixture('Json');
+      element._setRenderedExamples([{
+        value: '{}',
+        hasTitle: false
+      }, {
+        value: '{"test": true}',
+        hasTitle: false
+      }]);
+      flush(() => done());
+    });
+
+    test('Resets the button', () => {
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.icon = 'test';
+      element._resetCopyButtonState(button);
+      assert.equal(button.icon, 'arc:content-copy');
+    });
+  });
+
+  function clearTableStorage() {
+    localStorage.removeItem('jsonTableEnabled');
+  }
+
+  function getStorageValue() {
+    return localStorage.jsonTableEnabled;
+  }
+
+  suite('toggleTable()', () => {
+    let element;
+    setup((done) => {
+      clearTableStorage();
+      element = fixture('Json');
+      element._setRenderedExamples([{
+        value: '{}',
+        hasTitle: false
+      }, {
+        value: '{"test": true}',
+        hasTitle: false
+      }]);
+      flush(() => done());
+    });
+
+    test('Toggles "table" property', () => {
+      element.toggleTable();
+      assert.isTrue(element.table);
+    });
+
+    test('Toggles "table" causes _tableChanged()', () => {
+      const spy = sinon.spy(element, '_tableChanged');
+      element.toggleTable();
+      assert.isTrue(spy.called);
+    });
+  });
+
+  suite('_tableChanged()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Does noting when state is undefined', () => {
+      const spy = sinon.spy(element, '_dispatchTableState');
+      element._tableChanged();
+      assert.isFalse(spy.called);
+    });
+
+    test('Updates state of the local storage', () => {
+      element._tableChanged(true);
+      let result = getStorageValue();
+      assert.equal(result, 'true');
+      element._tableChanged(false);
+      result = getStorageValue();
+      assert.equal(result, 'false');
+    });
+
+    test('Calles _dispatchTableState()', () => {
+      const spy = sinon.spy(element, '_dispatchTableState');
+      element._tableChanged(false);
+      assert.isTrue(spy.called);
+    });
+  });
+
+  suite('_dispatchTableState()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Dispatches the event', () => {
+      const spy = sinon.spy();
+      element.addEventListener('json-table-state-changed', spy);
+      element._dispatchTableState(true);
+      assert.isTrue(spy.called);
+    });
+
+    test('Returns the event', () => {
+      const result = element._dispatchTableState(true);
+      assert.typeOf(result, 'customevent');
+    });
+
+    test('Event is not cancelable', () => {
+      const result = element._dispatchTableState(true);
+      assert.isFalse(result.cancelable);
+    });
+
+    test('Event bubbles', () => {
+      const result = element._dispatchTableState(true);
+      assert.isTrue(result.bubbles);
+    });
+
+    test('Event is composed', () => {
+      const result = element._dispatchTableState(true);
+      if (result.composed !== undefined) {
+        assert.isTrue(result.composed);
+      }
+    });
+
+    test('Has the sate on detail object', () => {
+      const result = element._dispatchTableState(true);
+      assert.isTrue(result.detail.enabled);
+    });
+  });
+
+  suite('_onStorageChanged()', () => {
+    let element;
+    setup(() => {
+      clearTableStorage();
+      element = fixture('Basic');
+    });
+
+    test('Does nothing when key is not jsonTableEnabled', () => {
+      element._onStorageChanged({
+        key: 'test'
+      });
+      assert.isFalse(element.table);
+    });
+
+    test('Does nothing when newValue is not set', () => {
+      element._onStorageChanged({
+        key: 'jsonTableEnabled'
+      });
+      assert.isFalse(element.table);
+    });
+
+    test('Updates table state', () => {
+      element._onStorageChanged({
+        key: 'jsonTableEnabled',
+        newValue: 'true'
+      });
+      assert.isTrue(element.table);
+    });
+  });
+
+  suite('_localStorageValueToBoolean()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns false when no argument', () => {
+      const result = element._localStorageValueToBoolean();
+      assert.isFalse(result);
+    });
+
+    test('Returns false', () => {
+      const result = element._localStorageValueToBoolean('false');
+      assert.isFalse(result);
+    });
+
+    test('Returns `true`', () => {
+      const result = element._localStorageValueToBoolean('true');
+      assert.isTrue(result);
+    });
+  });
+
+  suite('_onJsonTableStateChanged()', () => {
+    let element;
+    setup(() => {
+      clearTableStorage();
+      element = fixture('Basic');
+    });
+
+    test('Does nothing when dispatched by self', () => {
+      element._onJsonTableStateChanged({
+        composedPath: () => [element],
+        detail: {
+          enabled: true
+        }
+      });
+      assert.isFalse(element.table);
+    });
+
+    test('Does nothing when represents the same value', () => {
+      element._onJsonTableStateChanged({
+        composedPath: () => [],
+        detail: {
+          enabled: false
+        }
+      });
+      assert.isFalse(element.table);
+    });
+
+    test('Updates "table" value', () => {
+      element._onJsonTableStateChanged({
+        composedPath: () => [],
+        detail: {
+          enabled: true
+        }
+      });
+      assert.isTrue(element.table);
+    });
+  });
+
+  suite('_computeExamples()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Sets _examplesDebouncer property', () => {
+      element._computeExamples();
+      assert.isTrue(element._examplesDebouncer);
+    });
+
+    test('Does not schedule a task when debouncer is on', () => {
+      element._computeExamples();
+      const spy = sinon.spy(Polymer.RenderStatus, 'afterNextRender');
+      element._computeExamples();
+      Polymer.RenderStatus.afterNextRender.restore();
+      assert.isFalse(spy.called);
+    });
+
+    test('Eventually calls __computeExamples()', (done) => {
+      element._computeExamples();
+      const spy = sinon.spy(element, '__computeExamples');
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        setTimeout(() => {
+          assert.isTrue(spy.called);
+          done();
+        });
+      });
+    });
+
+    test('Clears _examplesDebouncer property', (done) => {
+      element._computeExamples();
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        setTimeout(() => {
+          assert.isFalse(element._examplesDebouncer);
+          done();
+        });
+      });
+    });
+  });
+
+  suite('_computeEffectiveTable()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns true when table and JSON', () => {
+      const result = element._computeEffectiveTable(true, true);
+      assert.isTrue(result);
+    });
+
+    test('Returns false when not a JSON', () => {
+      const result = element._computeEffectiveTable(true, false);
+      assert.isFalse(result);
+    });
+
+    test('Returns false when not table', () => {
+      const result = element._computeEffectiveTable(false, true);
+      assert.isFalse(result);
+    });
+
+    test('Returns false when not table and not JSON', () => {
+      const result = element._computeEffectiveTable(false, false);
+      assert.isFalse(result);
+    });
+  });
+
+  suite('_computeIsJson()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns false when no type', () => {
+      const result = element._computeIsJson();
+      assert.isFalse(result);
+    });
+
+    test('Returns false for non-json media type', () => {
+      const result = element._computeIsJson('application/xml');
+      assert.isFalse(result);
+    });
+
+    test('Returns true for json media type', () => {
+      const result = element._computeIsJson('application/json');
+      assert.isTrue(result);
+    });
+
+    test('Returns true for other json media type', () => {
+      const result = element._computeIsJson('application/x-json');
+      assert.isTrue(result);
+    });
+  });
+
+  suite('__computeExamples()', () => {
+    [
+      ['Regular model', false],
+      ['Compact model', true]
+    ].forEach((item) => {
+      suite(item[0], () => {
+        let amf;
+        suiteSetup(() => {
+          return AmfLoader.load(item[1])
+          .then((data) => amf = data);
+        });
+
+        let element;
+        setup((done) => {
+          element = fixture('Basic');
+          element.amfModel = amf;
+          flush(() => done());
+        });
+
+        function getPayload(element, amf, endpoint, method) {
+          const webApi = element._computeWebApi(amf);
+          const endPoint = element._computeEndpointByPath(webApi, endpoint);
+          const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
+          const ops = element._ensureArray(endPoint[opKey]);
+          const op = ops.find((item) => element._getValue(item, element.ns.w3.hydra.core + 'method') === method);
+          const expects = element._computeExpects(op);
+          return element._ensureArray(element._computePayload(expects));
+        }
+
+        function getPayloadSchema(element, amf, endpoint, method, payloadIndex) {
+          if (!payloadIndex) {
+            payloadIndex = 0;
+          }
+          const payload = getPayload(element, amf, endpoint, method)[payloadIndex];
+          const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
+          let schema = payload[sKey];
+          if (schema instanceof Array) {
+            schema = schema[0];
+          }
+          return element._resolve(schema);
+        }
+
+        function computeExamples(element, amf, endpoint, method, payloadIndex) {
+          const schema = getPayloadSchema(element, amf, endpoint, method, payloadIndex);
+          const key = element._getAmfKey(element.ns.raml.vocabularies.document + 'examples');
+          return element._ensureArray(schema[key]);
+        }
+
+        test('Clears renderedExamples when no examples', () => {
+          element._setRenderedExamples([{
+            value: '{}',
+            hasTitle: false
+          }]);
+          element.__computeExamples();
+          assert.isUndefined(element.renderedExamples);
+        });
+
+        test('Clears renderedExamples when examples empty', () => {
+          element._setRenderedExamples([{
+            value: '{}',
+            hasTitle: false
+          }]);
+          element.__computeExamples([]);
+          assert.isUndefined(element.renderedExamples);
+        });
+
+        test('Clears renderedExamples when no media type', () => {
+          element._setRenderedExamples([{
+            value: '{}',
+            hasTitle: false
+          }]);
+          element.__computeExamples([{}]);
+          assert.isUndefined(element.renderedExamples);
+        });
+
+        test('Computes examples', () => {
+          const examples = computeExamples(element, amf, '/people', 'post');
+          element.__computeExamples(examples, 'application/json');
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 1);
+        });
+
+        test('Example has value', () => {
+          const examples = computeExamples(element, amf, '/people', 'post');
+          element.__computeExamples(examples, 'application/json');
+          assert.typeOf(element.renderedExamples[0].value, 'string');
+        });
+
+        test('Example has no title when no example title', () => {
+          const examples = computeExamples(element, amf, '/people', 'post');
+          element.__computeExamples(examples, 'application/json');
+          assert.isFalse(element.renderedExamples[0].hasTitle);
+          assert.isUndefined(element.renderedExamples[0].title);
+        });
+
+        test('Computes multiple examples', () => {
+          const examples = computeExamples(element, amf, '/multiple', 'post');
+          element.__computeExamples(examples, 'application/json');
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 2);
+        });
+
+        test('Computes titles when set', () => {
+          const examples = computeExamples(element, amf, '/multiple', 'post');
+          element.__computeExamples(examples, 'application/json');
+          assert.isTrue(element.renderedExamples[0].hasTitle);
+          assert.equal(element.renderedExamples[0].title, 'ex1');
         });
       });
     });
