@@ -1,7 +1,7 @@
 {
   "name": "api-resource-example-document",
   "description": "A viewer for examples in a resource based on AMF model",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "license": "Apache-2.0",
   "main": "api-resource-example-document.html",
   "keywords": [
