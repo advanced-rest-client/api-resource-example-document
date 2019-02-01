@@ -4721,20 +4721,21 @@
         {
           "name": "hasExamples",
           "type": "boolean | null | undefined",
-          "description": "Computed value, true if there's any example to render.",
+          "description": "Computed value, true if there are examples to render.\nThis value is reflected to attribute so the element can be hidden\nvia CSS until examples are set.\n\n```css\napi-resource-example-document { display: none; }\napi-resource-example-document[has-examples] { display: block; }\n```",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 95,
+              "line": 102,
               "column": 8
             },
             "end": {
-              "line": 98,
+              "line": 107,
               "column": 9
             }
           },
           "metadata": {
             "polymer": {
+              "notify": true,
               "readOnly": true,
               "attributeType": "Boolean"
             }
@@ -4747,11 +4748,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 103,
+              "line": 112,
               "column": 8
             },
             "end": {
-              "line": 107,
+              "line": 116,
               "column": 9
             }
           },
@@ -4770,11 +4771,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 112,
+              "line": 121,
               "column": 8
             },
             "end": {
-              "line": 116,
+              "line": 125,
               "column": 9
             }
           },
@@ -4793,11 +4794,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 122,
+              "line": 131,
               "column": 8
             },
             "end": {
-              "line": 122,
+              "line": 131,
               "column": 23
             }
           },
@@ -4814,11 +4815,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 124,
+              "line": 133,
               "column": 8
             },
             "end": {
-              "line": 127,
+              "line": 136,
               "column": 9
             }
           },
@@ -6427,11 +6428,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 141,
+              "line": 150,
               "column": 4
             },
             "end": {
-              "line": 145,
+              "line": 154,
               "column": 5
             }
           },
@@ -6447,11 +6448,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 147,
+              "line": 156,
               "column": 4
             },
             "end": {
-              "line": 151,
+              "line": 160,
               "column": 5
             }
           },
@@ -6467,11 +6468,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 159,
+              "line": 168,
               "column": 4
             },
             "end": {
-              "line": 167,
+              "line": 176,
               "column": 5
             }
           },
@@ -6493,11 +6494,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 182,
               "column": 4
             },
             "end": {
-              "line": 183,
+              "line": 192,
               "column": 5
             }
           },
@@ -6518,11 +6519,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 190,
+              "line": 199,
               "column": 4
             },
             "end": {
-              "line": 201,
+              "line": 210,
               "column": 5
             }
           },
@@ -6544,11 +6545,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 208,
+              "line": 217,
               "column": 4
             },
             "end": {
-              "line": 218,
+              "line": 227,
               "column": 5
             }
           },
@@ -6571,11 +6572,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 225,
+              "line": 234,
               "column": 4
             },
             "end": {
-              "line": 233,
+              "line": 242,
               "column": 5
             }
           },
@@ -6596,11 +6597,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 237,
+              "line": 246,
               "column": 4
             },
             "end": {
-              "line": 246,
+              "line": 255,
               "column": 5
             }
           },
@@ -6616,11 +6617,11 @@
           "privacy": "private",
           "sourceRange": {
             "start": {
-              "line": 248,
+              "line": 257,
               "column": 4
             },
             "end": {
-              "line": 282,
+              "line": 291,
               "column": 5
             }
           },
@@ -6646,11 +6647,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 297,
               "column": 4
             },
             "end": {
-              "line": 290,
+              "line": 299,
               "column": 5
             }
           },
@@ -6672,11 +6673,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 297,
+              "line": 306,
               "column": 4
             },
             "end": {
-              "line": 299,
+              "line": 308,
               "column": 5
             }
           },
@@ -6713,7 +6714,7 @@
           "column": 2
         },
         "end": {
-          "line": 300,
+          "line": 309,
           "column": 3
         }
       },
@@ -6823,26 +6824,10 @@
         },
         {
           "name": "has-examples",
-          "description": "Computed value, true if there's any example to render.",
+          "description": "Computed value, true if there are examples to render.\nThis value is reflected to attribute so the element can be hidden\nvia CSS until examples are set.\n\n```css\napi-resource-example-document { display: none; }\napi-resource-example-document[has-examples] { display: block; }\n```",
           "sourceRange": {
             "start": {
-              "line": 95,
-              "column": 8
-            },
-            "end": {
-              "line": 98,
-              "column": 9
-            }
-          },
-          "metadata": {},
-          "type": "boolean | null | undefined"
-        },
-        {
-          "name": "table",
-          "description": "If true it will display a table view instead of JSON code.\n`isJson` must be set to use this option.",
-          "sourceRange": {
-            "start": {
-              "line": 103,
+              "line": 102,
               "column": 8
             },
             "end": {
@@ -6854,8 +6839,8 @@
           "type": "boolean | null | undefined"
         },
         {
-          "name": "is-json",
-          "description": "Computed value, true if selected media type is application/json\nor equivalent.",
+          "name": "table",
+          "description": "If true it will display a table view instead of JSON code.\n`isJson` must be set to use this option.",
           "sourceRange": {
             "start": {
               "line": 112,
@@ -6870,15 +6855,31 @@
           "type": "boolean | null | undefined"
         },
         {
+          "name": "is-json",
+          "description": "Computed value, true if selected media type is application/json\nor equivalent.",
+          "sourceRange": {
+            "start": {
+              "line": 121,
+              "column": 8
+            },
+            "end": {
+              "line": 125,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
           "name": "no-auto",
           "description": "Configuration passed to example generator.\nWhen set the generator only returns examples that are defined in API\nfile, without auto generating examples from object properties.",
           "sourceRange": {
             "start": {
-              "line": 122,
+              "line": 131,
               "column": 8
             },
             "end": {
-              "line": 122,
+              "line": 131,
               "column": 23
             }
           },
@@ -6886,7 +6887,14 @@
           "type": "boolean | null | undefined"
         }
       ],
-      "events": [],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "has-examples-changed",
+          "description": "Fired when the `hasExamples` property changes.",
+          "metadata": {}
+        }
+      ],
       "styling": {
         "cssVariables": [],
         "selectors": []

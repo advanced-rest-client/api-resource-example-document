@@ -287,6 +287,39 @@
     });
   });
 
+  function getPayloads(element, amf, endpoint) {
+    const webApi = element._computeWebApi(amf);
+    const endPoint = element._computeEndpointByPath(webApi, endpoint);
+    const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
+    return element._ensureArray(endPoint[opKey]);
+  }
+
+  function getPayload(element, amf, endpoint, method) {
+    const ops = getPayloads(element, amf, endpoint);
+    const op = ops.find((item) => element._getValue(item, element.ns.w3.hydra.core + 'method') === method);
+    const expects = element._computeExpects(op);
+    return element._ensureArray(element._computePayload(expects));
+  }
+
+  function getPayloadSchema(element, amf, endpoint, method, payloadIndex) {
+    if (!payloadIndex) {
+      payloadIndex = 0;
+    }
+    const payload = getPayload(element, amf, endpoint, method)[payloadIndex];
+    const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
+    let schema = payload[sKey];
+    if (schema instanceof Array) {
+      schema = schema[0];
+    }
+    return element._resolve(schema);
+  }
+
+  function computeExamples(element, amf, endpoint, method, payloadIndex) {
+    const schema = getPayloadSchema(element, amf, endpoint, method, payloadIndex);
+    const key = element._getAmfKey(element.ns.raml.vocabularies.document + 'examples');
+    return element._ensureArray(schema[key]);
+  }
+
   suite('__computeExamples()', () => {
     [
       ['Regular model', false],
@@ -305,39 +338,6 @@
           element.amfModel = amf;
           flush(() => done());
         });
-
-        function getPayloads(element, amf, endpoint) {
-          const webApi = element._computeWebApi(amf);
-          const endPoint = element._computeEndpointByPath(webApi, endpoint);
-          const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
-          return element._ensureArray(endPoint[opKey]);
-        }
-
-        function getPayload(element, amf, endpoint, method) {
-          const ops = getPayloads(element, amf, endpoint);
-          const op = ops.find((item) => element._getValue(item, element.ns.w3.hydra.core + 'method') === method);
-          const expects = element._computeExpects(op);
-          return element._ensureArray(element._computePayload(expects));
-        }
-
-        function getPayloadSchema(element, amf, endpoint, method, payloadIndex) {
-          if (!payloadIndex) {
-            payloadIndex = 0;
-          }
-          const payload = getPayload(element, amf, endpoint, method)[payloadIndex];
-          const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
-          let schema = payload[sKey];
-          if (schema instanceof Array) {
-            schema = schema[0];
-          }
-          return element._resolve(schema);
-        }
-
-        function computeExamples(element, amf, endpoint, method, payloadIndex) {
-          const schema = getPayloadSchema(element, amf, endpoint, method, payloadIndex);
-          const key = element._getAmfKey(element.ns.raml.vocabularies.document + 'examples');
-          return element._ensureArray(schema[key]);
-        }
 
         test('Clears renderedExamples when no examples', () => {
           element._setRenderedExamples([{
@@ -405,6 +405,57 @@
         test('Ignores unknown shapes', () => {
           element.__computeExamples({}, 'application/json');
           assert.isUndefined(element.renderedExamples);
+        });
+      });
+    });
+  });
+
+  suite('General tests', () => {
+    [
+      ['Regular model', false],
+      ['Compact model', true]
+    ].forEach((item) => {
+      suite(item[0], () => {
+        let amf;
+        suiteSetup(() => {
+          return AmfLoader.load(item[1])
+          .then((data) => amf = data);
+        });
+
+        let element;
+        setup((done) => {
+          element = fixture('Json');
+          element.amfModel = amf;
+          flush(() => done());
+        });
+
+        test('Sets has-examples attribute when examples are generated', (done) => {
+          const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          element.examples = payloads;
+          element.addEventListener('has-examples-changed', function f(e) {
+            if (!e.detail.value) {
+              return;
+            }
+            element.removeEventListener('has-examples-changed', f);
+            assert.isTrue(element.hasAttribute('has-examples'));
+            done();
+          });
+        });
+
+        test('Renders api-example-render for each example', (done) => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+          element.addEventListener('has-examples-changed', function f(e) {
+            if (!e.detail.value) {
+              return;
+            }
+            element.removeEventListener('has-examples-changed', f);
+            flush(() => {
+              const nodes = element.shadowRoot.querySelectorAll('api-example-render');
+              assert.lengthOf(nodes, 2);
+              done();
+            });
+          });
         });
       });
     });

@@ -80,7 +80,14 @@ declare namespace ApiElements {
     readonly renderedExamples: any[]|null|undefined;
 
     /**
-     * Computed value, true if there's any example to render.
+     * Computed value, true if there are examples to render.
+     * This value is reflected to attribute so the element can be hidden
+     * via CSS until examples are set.
+     *
+     * ```css
+     * api-resource-example-document { display: none; }
+     * api-resource-example-document[has-examples] { display: block; }
+     * ```
      */
     readonly hasExamples: boolean|null|undefined;
 
