@@ -14,10 +14,6 @@
 
 /// <reference path="../polymer/types/polymer-element.d.ts" />
 /// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../json-table/json-table.d.ts" />
 /// <reference path="../prism-element/prism-highlighter.d.ts" />
 /// <reference path="../amf-helper-mixin/amf-helper-mixin.d.ts" />
 /// <reference path="../api-example-generator/api-example-generator.d.ts" />
@@ -31,9 +27,19 @@ declare namespace ApiElements {
    * Renders list of examples defined in AMF model. It renders values that
    * are structured examples (JSON, RAML type).
    *
+   * This element uses `api-example-generator` to generate view model for examples.
+   * It can accept AMF's Payload shape, array of Payload shapes, or any other
+   * AMF shape. If the shape is compatible (has examples, properties, items, unions etc)
+   * then examples list is rendered.
+   *
+   * The mime type (`media-type`) must be set in order to compute examples.
+   *
    * ## Example
+   *
    * ```html
-   * <api-resource-example-document examples="[...]"></api-resource-example-document>
+   * <api-resource-example-document
+   *  payload="[...]"
+   *  media-type="application/json"></api-resource-example-document>
    * ```
    *
    * ## Styling
@@ -52,6 +58,7 @@ declare namespace ApiElements {
 
     /**
      * AMF model for examples.
+     * It can be Payload shape, list of Payload shapes, or any shape.
      */
     examples: any[]|null|undefined;
 
@@ -88,27 +95,16 @@ declare namespace ApiElements {
      * or equivalent.
      */
     readonly isJson: boolean|null|undefined;
+
+    /**
+     * Configuration passed to example generator.
+     * When set the generator only returns examples that are defined in API
+     * file, without auto generating examples from object properties.
+     */
+    noAuto: boolean|null|undefined;
     readonly _effectiveTable: boolean|null|undefined;
     connectedCallback(): void;
     disconnectedCallback(): void;
-    _computeTitle(item: any): any;
-
-    /**
-     * Coppies current response text value to clipboard.
-     */
-    _copyToClipboard(e: Event|null): void;
-
-    /**
-     * Resets button icon.
-     *
-     * @param button Button to reset.
-     */
-    _resetCopyButtonState(button: Element|null): void;
-
-    /**
-     * Toggles the JSON table view
-     */
-    toggleTable(): void;
 
     /**
      * Updates "table" state in localstorage and disaptches

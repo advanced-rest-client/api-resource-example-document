@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-  <xs:element name="resource">
+  <xs:element name="Person">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="id" type="xs:string"></xs:element>
@@ -18,9 +18,9 @@
         </xs:element>
         <xs:element name="tagline" type="xs:string"></xs:element>
         <xs:element name="language" type="xs:string"></xs:element>
+        <xs:element name="etag" type="xs:string"></xs:element>
       </xs:sequence>
       <xs:attribute name="error" type="xs:boolean" use="required"></xs:attribute>
-      <xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
     </xs:complexType>
   </xs:element>
 </xs:schema>

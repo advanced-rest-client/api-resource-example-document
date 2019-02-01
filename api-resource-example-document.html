@@ -1,9 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/utils/render-status.html">
-<link rel="import" href="../clipboard-copy/clipboard-copy.html">
-<link rel="import" href="../arc-icons/arc-icons.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../json-table/json-table.html">
 <link rel="import" href="../prism-element/prism-highlighter.html">
 <link rel="import" href="../amf-helper-mixin/amf-helper-mixin.html">
 <link rel="import" href="../api-example-generator/api-example-generator.html">
@@ -16,50 +12,17 @@
       @apply --api-resource-example-document;
     }
 
-    [hidden] {
-      display: none !important;
-    }
-
-    h6 {
-      @apply --arc-font-body1;
-      font-size: 15px;
-      margin: 0 0 4px 4px;
-      @apply --api-resource-example-document-title;
-    }
-
-    paper-icon-button[active] {
-      background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
-      border-radius: 50%;
-    }
-
     .example:not(:last-of-type) {
       margin-bottom: 24px;
     }
     </style>
     <prism-highlighter></prism-highlighter>
+    <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
     <template is="dom-if" if="[[hasExamples]]">
       <template is="dom-repeat" items="[[renderedExamples]]">
-        <div class="example">
-          <template is="dom-if" if="[[item.hasTitle]]">
-            <h6>[[item.title]]</h6>
-          </template>
-          <div class="example-actions">
-            <paper-icon-button icon="arc:content-copy" data-action="copy" on-click="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
-            <template is="dom-if" if="[[isJson]]">
-              <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-click="toggleTable"></paper-icon-button>
-            </template>
-          </div>
-          <template is="dom-if" if="[[!_effectiveTable]]" restamp>
-            <api-example-render code="[[item.value]]" media-type="[[mediaType]]"></api-example-render>
-          </template>
-          <template is="dom-if" if="[[_effectiveTable]]" restamp>
-            <json-table json="[[item.value]]"></json-table>
-          </template>
-        </div>
+        <api-example-render class="example" example="[[item]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[_effectiveTable]]"></api-example-render>
       </template>
     </template>
-    <clipboard-copy></clipboard-copy>
-    <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
   </template>
   <script>
   /**
@@ -68,9 +31,19 @@
    * Renders list of examples defined in AMF model. It renders values that
    * are structured examples (JSON, RAML type).
    *
+   * This element uses `api-example-generator` to generate view model for examples.
+   * It can accept AMF's Payload shape, array of Payload shapes, or any other
+   * AMF shape. If the shape is compatible (has examples, properties, items, unions etc)
+   * then examples list is rendered.
+   *
+   * The mime type (`media-type`) must be set in order to compute examples.
+   *
    * ## Example
+   *
    * ```html
-   * <api-resource-example-document examples="[...]"></api-resource-example-document>
+   * <api-resource-example-document
+   *  payload="[...]"
+   *  media-type="application/json"></api-resource-example-document>
    * ```
    *
    * ## Styling
@@ -97,6 +70,7 @@
       return {
         /**
          * AMF model for examples.
+         * It can be Payload shape, list of Payload shapes, or any shape.
          */
         examples: Array,
         /**
@@ -141,6 +115,12 @@
           value: false,
           computed: '_computeIsJson(mediaType)'
         },
+        /**
+         * Configuration passed to example generator.
+         * When set the generator only returns examples that are defined in API
+         * file, without auto generating examples from object properties.
+         */
+        noAuto: Boolean,
 
         _effectiveTable: {
           type: Boolean,
@@ -169,46 +149,6 @@
       super.disconnectedCallback();
       window.removeEventListener('storage', this._onStorageChanged);
       window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
-    }
-
-    _computeTitle(item) {
-      let value = this._getValue(item, this.ns.schema.schemaName);
-      if (value && (value === 'schema' || value.indexOf('example_') === 0)) {
-        return;
-      }
-      return value;
-    }
-
-    /**
-     * Coppies current response text value to clipboard.
-     *
-     * @param {Event} e
-     */
-    _copyToClipboard(e) {
-      const index = e.model.get('index');
-      const button = e.target;
-      const copy = this.shadowRoot.querySelector('clipboard-copy');
-      const example = this.renderedExamples[index];
-      copy.content = example.value;
-      if (copy.copy()) {
-        button.icon = 'arc:done';
-      } else {
-        button.icon = 'arc:error';
-      }
-      setTimeout(() => this._resetCopyButtonState(button), 1000);
-    }
-    /**
-     * Resets button icon.
-     * @param {Element} button Button to reset.
-     */
-    _resetCopyButtonState(button) {
-      button.icon = 'arc:content-copy';
-    }
-    /**
-     * Toggles the JSON table view
-     */
-    toggleTable() {
-      this.table = !this.table;
     }
 
     /**
@@ -308,26 +248,36 @@
 
     __computeExamples(examples, mediaType, typeName) {
       this._setRenderedExamples(undefined);
-      if (!examples || !examples.length || !mediaType) {
+      if (!examples || !mediaType) {
         return;
       }
       const opts = {
-        typeName
+        typeName,
+        noAuto: this.noAuto
       };
-      const result = [];
-      for (let i = 0, len = examples.length; i < len; i++) {
-        const example = examples[i];
-        const value = this.$.exampleGenerator.computeExample(mediaType, example, opts);
-        if (value) {
-          const title = this._computeTitle(example);
-          result[result.length] = {
-            value,
-            title,
-            hasTitle: !!title
-          };
+      let result;
+      if (examples instanceof Array) {
+        if (this._hasType(examples[0], this.ns.raml.vocabularies.http + 'Payload')) {
+          result = this.$.exampleGenerator.generatePayloadsExamples(examples, mediaType, opts);
+        } else {
+          for (let i = 0, len = examples.length; i < len; i++) {
+            const item = this.$.exampleGenerator.computeExamples(examples[i], mediaType, opts);
+            if (item) {
+              if (result) {
+                result = result.concat(item);
+              } else {
+                result = item;
+              }
+            }
+          }
         }
+      } else if (this._hasType(examples, this.ns.raml.vocabularies.http + 'Payload')) {
+        result = this.$.exampleGenerator.generatePayloadExamples(examples, mediaType, opts);
+      } else {
+        // try anything...
+        result = this.$.exampleGenerator.computeExamples(examples, mediaType, opts);
       }
-      if (result.length) {
+      if (result && result.length) {
         this._setRenderedExamples(result);
       }
     }

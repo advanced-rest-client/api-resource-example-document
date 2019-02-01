@@ -1,191 +1,305 @@
 #%RAML 1.0
-title: API body demo
+title: API demo
 version: v1
 baseUri: http://api.domain.com/
 
-annotationTypes:
-  deprecated: string
-uses:
-  ExampleType: resourceTypes/example-types.raml
 types:
-  Image: !include resourceTypes/image.raml
-  Resource: !include resourceTypes/resource.raml
-  AppPerson: !include resourceTypes/app-person.raml
-  Product: !include resourceTypes/product.raml
-  Message: !include message-type.raml
-  ErrorResource:
-    description: A response that is errored
+  ScalarType: string
+  ScalarArray: string[]
+  ArrayType:
+    type: array
+    items: Image
+  UnionType: Image | Imgs
+  ScalarWithExample:
+    type: number
+    example: 5
+  ScalarArrayWithExample:
+    type: number[]
+    example: [1, 5]
+  SimpleInlineExample:
     type: object
     properties:
-      error:
+      testProperty: boolean
+    example:
+      testProperty: true
+  Image:
+    type: object
+    properties:
+      url: string
+      thumb: string
+  Imgs:
+    properties:
+      something: string
+      images:
+        type: Image[]
+        xml:
+          wrapped: true
+  Person:
+    properties:
+      error?:
         type: boolean
-        required: true
-        example: true
-        default: true
-        description: Indicate that the response is errored.
-      message:
+        xml:
+          attribute: true
+      id:
+        type: string | number
+      name: string
+      birthday: date-only
+      gender:
         type: string
-        description: The error message associated with the error.
-        example: <<example>>
-        required: true
-  Feature:
-    description: A feature to test enum values in the URI parameters.
-    type: string
-    enum:
-      - A
-      - B
-      - C
-resourceTypes:
-  ErrorredResource:
-    patch:
-  ResourceNotFound:
-    type: ErrorredResource
-    patch:
-      body:
-        application/json:
-          displayName: Not found response
-          type: ErrorResource
-        application/xml:
-          displayName: Not found response
-          type: !include schemas/error-response.xsd
-          example: !include examples/e404.xml
-  UnauthorizedResponse:
-    type: ErrorredResource
-    get:
-      responses:
-        404:
-          body:
-            application/json:
-              displayName: Unauthorized response
-              type: ErrorResource
-            application/xml:
-              displayName: Unauthorized response
-              type: !include schemas/error-response.xsd
-              example: !include examples/e401.xml
-  RequestErrorResponse:
-    type: ErrorredResource
-    patch:
-      body:
-        application/json:
-          displayName: Invalid request
-          type: ErrorResource
-          example: !include examples/e400.json
-        application/xml:
-          displayName: Invalid request
-          type: !include schemas/error-response.xsd
-          example: !include examples/e400.xml
-
-/people:
-  displayName: People
-  type: RequestErrorResponse
-  post:
-    displayName: Create a person
-    description: Use this method to add new person
-    body:
-      application/json:
-        (deprecated): This response type is deprecated and soon will be replaced.
-        type: AppPerson
-        example:
-          id: "R34fg663H9KW9MMSKISI"
-          name: "Pawel Psztyc"
-          birthday: "1983-10-20"
-          gender: male
-          url: "https://domain.com/profile/pawel.psztyc"
-          image:
-            url: https://domain.com/profile/pawel.psztyc/image
-            thumb: https://domain.com/profile/pawel.psztyc/image/thumb
-          tagline: Some text about me.
-          language: en_GB
-          etag: "W\\244m4n5kj3gbn2nj4k4n4"
-      application/xml:
-        type: !include schemas/person.xsd
-        example: !include examples/person.xml
-  put:
-    displayName: Update a person
-    description: Updates the person in the datastore.
-    body:
-      application/json:
-        schema: !include schemas/person.json
-        example: !include examples/person.json
-      application/xml:
-        type: !include schemas/person.xsd
-        example: !include examples/person.xml
-/products:
-  displayName: Products
-  post:
-    displayName: Create product
-    body:
-      application/json:
-        type: Product
         examples:
-          Product:
-            id: d697f5cea85011e680f576304dec7eb7
-            name: Super product
-            quantity: 125
-            unit: ml
-            upc: "123456789101"
-            available: true
-            etag: "W/\"686897696a7c876b7e\""
-          OtherProduct:
-            id: 123e4567e89b12d3a456426655440000
-            name: Acme Product
-            quantity: 1
-            unit: kg
-            upc: "223456789101"
-            available: true
-            etag: "W/\"123456789\""
+          Male: male
+          Female: female
+      url: string
+      tagline: string
+      language:
+        type: string
+        default: PL
+      etag:
+        type: string
+        example: etag example
+      image:
+        type: object
+        properties:
+          url: string
+          thumb: string
+      opt?: Image | string
+    example:
+      error: false
+      id: 1234
+      name: Pawel Psztyc
+      birthday: 20-10-1983
+      tagline: Test example
+      url: https://domain.com
+      language: PL
+      etag: test
+      image:
+        url: https://image.com
+        thumb: https://image.com/thumb
+  JsonExampleInclude:
+    type: Person
+    example: !include example.json
+  XmlExampleInclude:
+    type: Person
+    example: !include example.xml
+  PropertyExamples:
+    properties:
+      xtra:
+        type: string
+        xml:
+          attribute: true
+      firstName:
+        type: string
+        example: Pawel
+      lastName:
+        type: string
+        example: Psztyc
+      address: Address
+      num: number
+      int: integer
+      bool: boolean
+      defVal:
+        type: integer
+        default: 10
+        example: 1
+  Address:
+    properties:
+      street: string
+      zip:
+        type: string
+        example: "94100"
+        default: "00000"
+      house:
+        type: number
+        example: 1
+  TypeExamples:
+    properties:
+      firstName: string
+      lastName: string
+    example:
+      firstName: Pawel
+      lastName: Psztyc
+  ArrayTypeWithExample:
+    type: array
+    items: Image
+    example: [{"url": "url 1", "thumb": "thumb 1"}]
+
+/IncludedInType:
+  post:
+    body:
+      application/json:
+        type: Person
       application/xml:
-        type: !include schemas/product.xsd
-        example: !include examples/product.xml
-/messages:
+        type: Person
+/IncludedInline:
+  post:
+    body:
+      application/json:
+        type: Person
+        example:
+          error: false
+          id: 1234
+          name: Inline person
+          birthday: 01-01-1990
+          tagline: Test example
+          url: https://domain.com
+          language: PL
+          etag: test
+          image:
+            url: https://image.com
+            thumb: https://image.com/thumb
+      application/xml:
+        type: !include example.xsd
+        example: !include example.xml
+/IncludedInlineJson:
+  post:
+    body:
+      application/json:
+        type: !include user.raml
+        example: !include user.json
+/typeExamples:
+  post:
+    body:
+      application/json:
+        type: TypeExamples
+      application/xml:
+        type: TypeExamples
+/propertyExamples:
+  post:
+    body:
+      application/json:
+        type: PropertyExamples
+      application/xml:
+        type: PropertyExamples
+/arrayTypeExample:
+  post:
+    body:
+      application/json:
+        type: TypeExamples[]
+/arrayPropertyExamples:
+  post:
+    body:
+      application/json:
+        type: PropertyExamples[]
+      application/xml:
+        type: PropertyExamples[]
+/arrayPropertyGeneratedExamples:
   post:
     body:
       application/json:
         type: array
-        items: !include resourceTypes/message-sent-type.raml
-        example: !include examples/messages-sent-example.json
-/multiple:
+        items:
+          properties:
+            test: boolean
+            other: string
+      application/xml:
+        type: array
+        items:
+          properties:
+            test: boolean
+            other: string
+/wrappedXml:
+  post:
+    body:
+      application/xml:
+        type: Imgs
+/inline-property-example:
   post:
     body:
       application/json:
-        type: Message
+        type: object
+        properties:
+          limit: number
+          items:
+            type: string[]
+            example: [test, other]
+      application/xml:
+        type: object
+        properties:
+          limit: number
+          items:
+            type: string[]
+            example: [test, other]
+/union:
+  post:
+    body:
+      application/json:
+        type: Person | PropertyExamples
+      application/xml:
+        type: Person | PropertyExamples
+/scalar:
+  post:
+    body:
+      application/json:
+        type: integer
+/scalarWithExample:
+  post:
+    body:
+      application/json:
+        type: integer
+        example: 1
+/arrayScalar:
+  post:
+    body:
+      application/json:
+        type: array
+        items: [number]
+/arrayScalarWithExample:
+  post:
+    body:
+      application/json:
+        type: array
+        items: [number]
+        example: [1, 2, 3]
+/user-raml-example:
+  post:
+    body:
+      application/json:
+        type: !include user-raml-example.raml
         examples:
-          ex1:
-            from:
-              uid: example-1
-              name: Example 1
-              email: ex1@mulesoft.com
-            message: Hi, this is message from EX1
-            timestamp: 123456789
-            important: false
-            attachements:
-              - Attachment URL no 1
-              - Attachment URL no 2
-          ex2:
-            from:
-              uid: example-2
-              name: Example 2
-              email: ex2@mulesoft.com
-            message: Hi, this is message from EX2
-            timestamp: 123456789
-            important: false
-            attachements:
-              - Attachment URL no 1
-              - Attachment URL no 2
-/unionBody:
+          User 3:
+            id: uid3
+            username: ppsztyc
+            firstName: Pawel
+            lastName: Psztyc
+            profilePhoto: https://img/domain.com/ppsztyc
+            email: ppsztyc@domain.com
+          User 4:
+            id: uid4
+            username: jdoe
+            firstName: John
+            lastName: Does
+            profilePhoto: https://img/domain.com/jdoe
+            email: jdoe@domain.com
+      application/xml:
+        type: !include user-raml-example.raml
+/user-json-example:
   post:
     body:
       application/json:
-        type: AppPerson | Product
-        example:
-          id: "R34fg663H9KW9MMSKISI"
-          name: "Pawel Psztyc"
-          birthday: "1983-10-20"
-          gender: male
-          url: "https://domain.com/profile/pawel.psztyc"
-          image:
-            url: https://domain.com/profile/pawel.psztyc/image
-            thumb: https://domain.com/profile/pawel.psztyc/image/thumb
-          tagline: Some text about me.
-          language: en_GB
-          etag: "W\\244m4n5kj3gbn2nj4k4n4"
+        type: !include user-json-example.raml
+/users-raml-example:
+  post:
+    body:
+      application/json:
+        type: !include users-raml-example.raml
+      application/xml:
+        type: !include users-raml-example.raml
+/users-json-example:
+  post:
+    body:
+      application/json:
+        type: !include users-json-example.raml
+/named-example:
+  post:
+    body:
+      application/json:
+        example: !include named-example.raml
+      application/xml:
+        example: !include named-example.raml
+/named-linked-example:
+  post:
+    body:
+      application/json:
+        example: !include named-example-with-link.raml
+      application/xml:
+        example: !include named-example-with-link.raml

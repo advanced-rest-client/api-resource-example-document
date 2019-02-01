@@ -6,7 +6,6 @@
   <title>api-resource-example-document test</title>
   <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../iron-test-helpers/mock-interactions.js"></script>
   <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
   <script src="amf-loader.js"></script>
   <link rel="import" href="../api-resource-example-document.html">
@@ -25,128 +24,7 @@
   </test-fixture>
 
   <script>
-  /* global AmfLoader, MockInteractions */
-  suite('_computeTitle()', () => {
-    let element;
-    setup(() => {
-      element = fixture('Basic');
-    });
-
-    test('Returns undefined when no argument', () => {
-      const result = element._computeTitle();
-      assert.isUndefined(result);
-    });
-
-    test('Returns title', () => {
-      const param = {};
-      param[element.ns.schema.schemaName] = {
-        '@value': 'test'
-      };
-      const result = element._computeTitle(param);
-      assert.equal(result, 'test');
-    });
-
-    test('Ignores title "schema"', () => {
-      const param = {};
-      param[element.ns.schema.schemaName] = {
-        '@value': 'schema'
-      };
-      const result = element._computeTitle(param);
-      assert.isUndefined(result);
-    });
-
-    test('Ignores title starting with "example_"', () => {
-      const param = {};
-      param[element.ns.schema.schemaName] = {
-        '@value': 'example_1'
-      };
-      const result = element._computeTitle(param);
-      assert.isUndefined(result);
-    });
-  });
-
-  suite('_copyToClipboard()', () => {
-    let element;
-    setup((done) => {
-      element = fixture('Json');
-      flush(() => {
-        Polymer.RenderStatus.afterNextRender(element, () => done());
-      });
-    });
-
-    test('Calls copy() in the `clipboard-copy` element', () => {
-      element._setRenderedExamples([{
-        value: '{}',
-        hasTitle: false
-      }, {
-        value: '{"test": true}',
-        hasTitle: false
-      }]);
-      flush(() => {
-        const copy = element.shadowRoot.querySelector('clipboard-copy');
-        const spy = sinon.spy(copy, 'copy');
-        const button = element.shadowRoot.querySelector('[data-action="copy"]');
-        button.click();
-        assert.isTrue(spy.called);
-      });
-    });
-
-    test('Changes the icon', () => {
-      element._setRenderedExamples([{
-        value: '{}',
-        hasTitle: false
-      }, {
-        value: '{"test": true}',
-        hasTitle: false
-      }]);
-      flush(() => {
-        const button = element.shadowRoot.querySelector('[data-action="copy"]');
-        button.click();
-        assert.notEqual(button.icon, 'arc:content-copy');
-      });
-    });
-
-    test('Changes icon back', (done) => {
-      element._setRenderedExamples([{
-        value: '{}',
-        hasTitle: false
-      }, {
-        value: '{"test": true}',
-        hasTitle: false
-      }]);
-      flush(() => {
-        const button = element.shadowRoot.querySelector('[data-action="copy"]');
-        button.click();
-        setTimeout(() => {
-          assert.equal(button.icon, 'arc:content-copy');
-          done();
-        }, 1001);
-      });
-    });
-  });
-
-  suite('_resetCopyButtonState()', () => {
-    let element;
-    setup((done) => {
-      element = fixture('Json');
-      element._setRenderedExamples([{
-        value: '{}',
-        hasTitle: false
-      }, {
-        value: '{"test": true}',
-        hasTitle: false
-      }]);
-      flush(() => done());
-    });
-
-    test('Resets the button', () => {
-      const button = element.shadowRoot.querySelector('[data-action="copy"]');
-      button.icon = 'test';
-      element._resetCopyButtonState(button);
-      assert.equal(button.icon, 'arc:content-copy');
-    });
-  });
-
+  /* global AmfLoader */
   function clearTableStorage() {
     localStorage.removeItem('jsonTableEnabled');
   }
@@ -154,33 +32,6 @@
   function getStorageValue() {
     return localStorage.jsonTableEnabled;
   }
-
-  suite('toggleTable()', () => {
-    let element;
-    setup((done) => {
-      clearTableStorage();
-      element = fixture('Json');
-      element._setRenderedExamples([{
-        value: '{}',
-        hasTitle: false
-      }, {
-        value: '{"test": true}',
-        hasTitle: false
-      }]);
-      flush(() => done());
-    });
-
-    test('Toggles "table" property', () => {
-      element.toggleTable();
-      assert.isTrue(element.table);
-    });
-
-    test('Toggles "table" causes _tableChanged()', () => {
-      const spy = sinon.spy(element, '_tableChanged');
-      element.toggleTable();
-      assert.isTrue(spy.called);
-    });
-  });
 
   suite('_tableChanged()', () => {
     let element;
@@ -455,11 +306,15 @@
           flush(() => done());
         });
 
-        function getPayload(element, amf, endpoint, method) {
+        function getPayloads(element, amf, endpoint) {
           const webApi = element._computeWebApi(amf);
           const endPoint = element._computeEndpointByPath(webApi, endpoint);
           const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
-          const ops = element._ensureArray(endPoint[opKey]);
+          return element._ensureArray(endPoint[opKey]);
+        }
+
+        function getPayload(element, amf, endpoint, method) {
+          const ops = getPayloads(element, amf, endpoint);
           const op = ops.find((item) => element._getValue(item, element.ns.w3.hydra.core + 'method') === method);
           const expects = element._computeExpects(op);
           return element._ensureArray(element._computePayload(expects));
@@ -511,38 +366,45 @@
           assert.isUndefined(element.renderedExamples);
         });
 
-        test('Computes examples', () => {
-          const examples = computeExamples(element, amf, '/people', 'post');
-          element.__computeExamples(examples, 'application/json');
+        test('Computes examples from array of Payloads', () => {
+          const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          element.__computeExamples(payloads, 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Example has value', () => {
-          const examples = computeExamples(element, amf, '/people', 'post');
-          element.__computeExamples(examples, 'application/json');
-          assert.typeOf(element.renderedExamples[0].value, 'string');
+        test('Computes examples from a single payload', () => {
+          const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          element.__computeExamples(payloads[0], 'application/json');
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Example has no title when no example title', () => {
-          const examples = computeExamples(element, amf, '/people', 'post');
-          element.__computeExamples(examples, 'application/json');
-          assert.isFalse(element.renderedExamples[0].hasTitle);
-          assert.isUndefined(element.renderedExamples[0].title);
+        test('Computes payload from an Example', () => {
+          const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
+          element.__computeExamples(examples[0], 'application/json');
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Computes multiple examples', () => {
-          const examples = computeExamples(element, amf, '/multiple', 'post');
+        test('Computes payload from multiple Examples', () => {
+          const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           element.__computeExamples(examples, 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 2);
         });
 
-        test('Computes titles when set', () => {
-          const examples = computeExamples(element, amf, '/multiple', 'post');
+        test('Ignores unknown array items', () => {
+          const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
+          examples.push({});
           element.__computeExamples(examples, 'application/json');
-          assert.isTrue(element.renderedExamples[0].hasTitle);
-          assert.equal(element.renderedExamples[0].title, 'ex1');
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 2);
+        });
+
+        test('Ignores unknown shapes', () => {
+          element.__computeExamples({}, 'application/json');
+          assert.isUndefined(element.renderedExamples);
         });
       });
     });

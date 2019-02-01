@@ -8,6 +8,7 @@
   <script src="../../web-component-tester/browser.js"></script>
   <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
   <link rel="import" href="../../prism-element/prism-highlighter.html">
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
   <script src="amf-loader.js"></script>
   <link rel="import" href="../api-example-render.html">
 </head>
@@ -20,7 +21,7 @@
 
   <test-fixture id="Json">
     <template>
-      <api-example-render media-type="application/json"></api-example-render>
+      <api-example-render media-type="application/json" is-json></api-example-render>
     </template>
   </test-fixture>
 
@@ -28,47 +29,31 @@
   <script>
   suite('Basics', () => {
     let element;
-    setup(() => {
+    setup((done) => {
       element = fixture('Json');
+      element.example = {
+        value: ''
+      };
+      flush(() => done());
     });
 
     test('Clears output when no code', () => {
-      element.$.output.innerHTML = 'test';
+      const output = element.shadowRoot.querySelector('#output');
+      output.innerHTML = 'test';
       Polymer.RenderStatus.afterNextRender(element, () => {
-        assert.notEqual(element.$.output.innerHTML, 'test');
+        assert.notEqual(output.innerHTML, 'test');
       });
     });
 
-    test('Calls highlight() when code change', () => {
-      element.code = '{}';
+    test('Calls highlight() when code change', (done) => {
+      element.example = {
+        value: 'test'
+      };
       const spy = sinon.spy(element, 'highlight');
       Polymer.RenderStatus.afterNextRender(element, () => {
         assert.isTrue(spy.called);
+        done();
       });
-    });
-  });
-
-  suite('_codeChanged()', () => {
-    let element;
-    setup(() => {
-      element = fixture('Basic');
-    });
-
-    test('Clears output when no code', () => {
-      element.$.output.innerHTML = 'test';
-      element._codeChanged();
-      assert.notEqual(element.$.output.innerHTML, 'test');
-    });
-
-    test('Clears output code is not a string', () => {
-      element.$.output.innerHTML = 'test';
-      element._codeChanged({});
-      assert.notEqual(element.$.output.innerHTML, 'test');
-    });
-
-    test('Updates output with code', () => {
-      element._codeChanged('{}', 'application/json');
-      assert.equal(element.$.output.innerHTML.trim().indexOf('<span'), 0);
     });
   });
 
@@ -120,6 +105,277 @@
     test('Returns parsed code', () => {
       const result = element.highlight('{}', 'application/json');
       assert.equal(result, '<span class="token punctuation">{</span><span class="token punctuation">}</span>');
+    });
+  });
+
+  function clearTableStorage() {
+    localStorage.removeItem('jsonTableEnabled');
+  }
+
+  suite('_toggleTable()', () => {
+    let element;
+    setup((done) => {
+      clearTableStorage();
+      element = fixture('Json');
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      flush(() => done());
+    });
+
+    test('Toggles "table" property', () => {
+      const button = element.shadowRoot.querySelector('[data-action="table"]');
+      button.click();
+      assert.isTrue(element.table);
+    });
+
+    test('Deactivates sourceOpened', () => {
+      element.sourceOpened = true;
+      const button = element.shadowRoot.querySelector('[data-action="table"]');
+      button.click();
+      assert.isFalse(element.sourceOpened);
+    });
+  });
+
+  suite('_toggleSourceOpened()', () => {
+    let element;
+    setup((done) => {
+      clearTableStorage();
+      element = fixture('Json');
+      element.example = {
+        value: '{}',
+        hasTitle: false,
+        hasRaw: true,
+        raw: 'test'
+      };
+      flush(() => done());
+    });
+
+    test('Toggles "sourceOpened" property', () => {
+      const button = element.shadowRoot.querySelector('[data-action="code"]');
+      button.click();
+      assert.isTrue(element.sourceOpened);
+    });
+
+    test('Deactivates table', () => {
+      element.table = true;
+      const button = element.shadowRoot.querySelector('[data-action="code"]');
+      button.click();
+      assert.isFalse(element.table);
+    });
+  });
+
+  suite('_computeUnions', () => {
+    let example;
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+      example = {
+        hasUnion: true,
+        values: [{
+          hasTitle: true,
+          title: 'test-title'
+        }]
+      };
+    });
+
+    test('Returns undefined when not isUnion', () => {
+      const result = element._computeUnions(false, example);
+      assert.isUndefined(result);
+    });
+
+    test('Returns undefined when no example', () => {
+      const result = element._computeUnions(true);
+      assert.isUndefined(result);
+    });
+
+    test('Returns undefined when no example.values', () => {
+      delete example.values;
+      const result = element._computeUnions(true, example);
+      assert.isUndefined(result);
+    });
+
+    test('Returns array of titles', () => {
+      const result = element._computeUnions(true, example);
+      assert.deepEqual(result, ['test-title']);
+    });
+  });
+
+  suite('_computeRenderTitle()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns false when no hasTitle', () => {
+      const result = element._computeRenderTitle(false, false);
+      assert.isFalse(result);
+    });
+
+    test('Returns false when noTitle is set', () => {
+      const result = element._computeRenderTitle(true, true);
+      assert.isFalse(result);
+    });
+
+    test('Returns true when no noTitle and hasTitle', () => {
+      const result = element._computeRenderTitle(true, false);
+      assert.isTrue(result);
+    });
+  });
+
+  suite('_unionTypesChanged()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Does nothing when no argument', () => {
+      element.selectedUnion = 1;
+      element._unionTypesChanged();
+      assert.equal(element.selectedUnion, 1);
+    });
+
+    test('Re-sets selected union index', () => {
+      element.selectedUnion = 1;
+      element._unionTypesChanged([]);
+      assert.equal(element.selectedUnion, 0);
+    });
+  });
+
+  suite('_unionTypeActive()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+    test('Returns false when index does not match', () => {
+      const result = element._unionTypeActive(1, 2);
+      assert.isFalse(result);
+    });
+    test('Returns true when index matches', () => {
+      const result = element._unionTypeActive(1, 1);
+      assert.isTrue(result);
+    });
+  });
+
+  suite('_selectUnion()', () => {
+    let element;
+    setup((done) => {
+      element = fixture('Basic');
+      element.example = {
+        hasUnion: true,
+        values: [{
+          hasTitle: true,
+          title: 'test-title',
+          value: 'a'
+        }, {
+          hasTitle: true,
+          title: 'other-title',
+          value: 'b'
+        }]
+      };
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        flush(() => done());
+      });
+    });
+
+    test('selectedUnion is 0', () => {
+      assert.equal(element.selectedUnion, 0);
+    });
+
+    test('unions is computed', () => {
+      assert.typeOf(element.unions, 'array');
+    });
+
+    test('Sets event target as active when selecting current selection', (done) => {
+      flush(() => {
+        const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
+        nodes[0].active = false;
+        MockInteractions.tap(nodes[0]);
+        assert.isTrue(nodes[0].active);
+        done();
+      });
+    });
+
+    test('Changes the selection', (done) => {
+      flush(() => {
+        const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
+        MockInteractions.tap(nodes[1]);
+        assert.equal(element.selectedUnion, 1);
+        done();
+      });
+    });
+  });
+
+  suite('_copyToClipboard()', () => {
+    let element;
+    setup((done) => {
+      element = fixture('Basic');
+      flush(() => {
+        Polymer.RenderStatus.afterNextRender(element, () => done());
+      });
+    });
+
+    test('Calls copy() in the `clipboard-copy` element', (done) => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      flush(() => {
+        const copy = element.shadowRoot.querySelector('clipboard-copy');
+        const spy = sinon.spy(copy, 'copy');
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.isTrue(spy.called);
+        done();
+      });
+    });
+
+    test('Changes the icon', (done) => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      flush(() => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        assert.notEqual(button.icon, 'arc:content-copy');
+        done();
+      });
+    });
+
+    test('Changes icon back', (done) => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      flush(() => {
+        const button = element.shadowRoot.querySelector('[data-action="copy"]');
+        button.click();
+        setTimeout(() => {
+          assert.equal(button.icon, 'arc:content-copy');
+          done();
+        }, 1001);
+      });
+    });
+  });
+
+  suite('_resetCopyButtonState()', () => {
+    let element;
+    setup((done) => {
+      element = fixture('Json');
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      flush(() => done());
+    });
+
+    test('Resets the button', () => {
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.icon = 'test';
+      element._resetCopyButtonState(button);
+      assert.equal(button.icon, 'arc:content-copy');
     });
   });
   </script>

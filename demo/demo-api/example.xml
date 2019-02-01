@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource error="false" type="AppPerson">
+<Person error="false">
   <id>Qawer63J73HJ6khjswuqyq62382jG21s</id>
   <name>John Smith</name>
   <birthday>1990-10-12</birthday>
@@ -11,4 +11,5 @@
   </image>
   <tagline>Hi, I'm John!</tagline>
   <language>en_US</language>
-</resource>
+  <etag>W\\244m4n5kj3gbn2nj4k4n4</etag>
+</Person>

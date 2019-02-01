@@ -80,23 +80,20 @@
           <api-navigation aware="model" endpoints-opened></api-navigation>
 
           <div class="demo-container">
+            <paper-dropdown-menu label="Select media type" hidden$="[[singlePayload]]">
+              <paper-listbox slot="dropdown-content" id="mediaList" on-selected-changed="_mediaChanged">
+                <template is="dom-repeat" items="[[mediaTypes]]">
+                  <paper-item>[[item.label]]</paper-item>
+                </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+
             <template is="dom-if" if="[[hasData]]">
-
-              <template is="dom-if" if="[[!singlePayload]]">
-                <paper-dropdown-menu label="Select media type">
-                  <paper-listbox slot="dropdown-content" id="mediaList" on-selected-changed="_mediaChanged">
-                    <template is="dom-repeat" items="[[mediaTypes]]">
-                      <paper-item>[[item.label]]</paper-item>
-                    </template>
-                  </paper-listbox>
-                </paper-dropdown-menu>
-              </template>
-
-              <template is="dom-if" if="[[hasExampels]]">
+              <template is="dom-if" if="[[hasExamples]]">
                 <api-resource-example-document amf-model="[[amfModel]]" examples="[[examples]]" media-type="[[mediaType]]"></api-resource-example-document>
               </template>
 
-              <template is="dom-if" if="[[!hasExampels]]">
+              <template is="dom-if" if="[[!hasExamples]]">
                 <p>Examples not found in selected method</p>
               </template>
             </template>
@@ -112,6 +109,7 @@
     <script>
     (function(app) {
       app.hasData = false;
+      app.singlePayload = true;
       app._load = function() {
         class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
         window.customElements.define('demo-element', DemoElement);
@@ -160,7 +158,9 @@
         if (app.hasData) {
           Polymer.RenderStatus.afterNextRender(app, () => {
             const list = document.body.querySelector('#mediaList');
-            list.selected = 0;
+            if (list) {
+              list.selected = 0;
+            }
           });
         }
       };
@@ -198,93 +198,16 @@
       };
 
       app._mediaChanged = function(e) {
-        app.hasExampels = false;
+        app.hasExamples = false;
         const index = e.detail.value;
         if (isNaN(index) || index === -1) {
           return;
         }
         const mediaType = app.mediaTypes[index].label;
         const body = app.payloads[index];
-        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.http + 'schema');
-        let schema = body[key];
-        if (!schema) {
-          return;
-        }
-        if (schema instanceof Array) {
-          schema = schema[0];
-        }
-        app.$.helper._resolve(schema);
-        const examples = app._computeExamples(body, schema);
-        app.hasExampels = !!(examples && examples.length);
-        app.examples = examples;
+        app.hasExamples = true;
+        app.examples = body;
         app.mediaType = mediaType;
-      };
-
-      app._computeExamples = function(body, schema) {
-        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.document + 'examples');
-        let exs = schema[key];
-        if (!exs) {
-          if (app.$.helper._hasType(schema, app.$.helper.ns.raml.vocabularies.shapes + 'ArrayShape')) {
-            return app._computeArrayExample(body, schema);
-          }
-          return;
-        }
-        if (!(exs instanceof Array)) {
-          exs = [exs];
-        }
-        const id = body['@id'];
-        const example = app._computeExamplesBySourceId(id, exs);
-        if (example) {
-          return example;
-        }
-      };
-
-      app._computeExamplesBySourceId = function(id, examples) {
-        const sourceKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'sources');
-        const trackedKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'tracked-element');
-        const valueKey = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.docSourceMaps + 'value');
-        const longId = 'amf://id' + id;
-        const result = [];
-        for (let i = 0, len = examples.length; i < len; i++) {
-          let example = examples[i];
-          if (example instanceof Array) {
-            example = example[0];
-          }
-          let sm = example[sourceKey];
-          if (!sm) {
-            continue;
-          }
-          if (sm instanceof Array) {
-            sm = sm[0];
-          }
-          let tracked = sm[trackedKey];
-          if (!tracked) {
-            if (len === 1) {
-              return [example];
-            }
-            continue;
-          }
-          if (tracked instanceof Array) {
-            tracked = tracked[0];
-          }
-          const value = app.$.helper._getValue(tracked, valueKey);
-          if (value && (value === id || value === longId)) {
-            result[result.length] = example;
-          }
-        }
-        return result.length ? result : undefined;
-      };
-
-      app._computeArrayExample = function(body, shape) {
-        const key = app.$.helper._getAmfKey(app.$.helper.ns.raml.vocabularies.shapes + 'items');
-        let item = shape[key];
-        if (!item) {
-          return;
-        }
-        if (item instanceof Array) {
-          item = item[0];
-        }
-        return app._computeExamples(body, item);
       };
       window.addEventListener('WebComponentsReady', () => app._load());
       window.addEventListener('api-navigation-selection-changed', app._navChanged);
