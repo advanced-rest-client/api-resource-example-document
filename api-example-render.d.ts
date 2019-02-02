@@ -76,6 +76,7 @@ declare namespace ApiElements {
      * When true the example is a JSON type example.
      */
     isJson: boolean|null|undefined;
+    readonly _isJson: boolean|null|undefined;
 
     /**
      * Computed value whether the examples are generated for a union type.
@@ -118,6 +119,22 @@ declare namespace ApiElements {
      * When set the title won't be rendered event if the example has one.
      */
     noTitle: boolean|null|undefined;
+    readonly _hasRaw: boolean|null|undefined;
+
+    /**
+     * When set the actions row (copy, switch view type) is not rendered.
+     */
+    noActions: boolean|null|undefined;
+
+    /**
+     * Computes whether passed value is a valig JSON object, when component is
+     * marked to parse JSON data.
+     *
+     * @param isJson [description]
+     * @param value Current example value
+     */
+    _computeIsJson(isJson: Boolean|null, value: String|null): Boolean|null;
+    _computeHasRaw(value: any, raw: any): any;
     _dataChanged(mediaType: any, example: any): void;
     _renderCode(): void;
 

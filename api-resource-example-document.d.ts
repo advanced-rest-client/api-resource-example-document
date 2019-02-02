@@ -109,6 +109,21 @@ declare namespace ApiElements {
      * file, without auto generating examples from object properties.
      */
     noAuto: boolean|null|undefined;
+
+    /**
+     * When set the actions row (copy, switch view type) is not rendered.
+     */
+    noActions: boolean|null|undefined;
+
+    /**
+     * When set it only renders "raw" examples. To be used when media type context is unknown.
+     * This can happen if RAML type document is rendered outside method documentation
+     * (not in a request/response body when media type is known).
+     *
+     * Note, this can return JSON, XML, YAML or any other value
+     * depending on original source.
+     */
+    rawOnly: boolean|null|undefined;
     readonly _effectiveTable: boolean|null|undefined;
     connectedCallback(): void;
     disconnectedCallback(): void;

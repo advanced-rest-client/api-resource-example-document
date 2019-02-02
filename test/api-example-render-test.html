@@ -25,6 +25,12 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="NoActions">
+    <template>
+      <api-example-render media-type="application/json" is-json no-actions></api-example-render>
+    </template>
+  </test-fixture>
+
   <prism-highlighter></prism-highlighter>
   <script>
   suite('Basics', () => {
@@ -376,6 +382,86 @@
       button.icon = 'test';
       element._resetCopyButtonState(button);
       assert.equal(button.icon, 'arc:content-copy');
+    });
+  });
+
+  suite('_computeIsJson()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns false when isJson is false', () => {
+      const result = element._computeIsJson(false, '{}');
+      assert.isFalse(result);
+    });
+
+    test('Returns false when not no value', () => {
+      const result = element._computeIsJson(true, '');
+      assert.isFalse(result);
+    });
+
+    test('Returns false when invalid value', () => {
+      const result = element._computeIsJson(true, '{"test"}');
+      assert.isFalse(result);
+    });
+
+    test('Returns true when object', () => {
+      const result = element._computeIsJson(true, '{"test": true}');
+      assert.isTrue(result);
+    });
+
+    test('Returns true when array', () => {
+      const result = element._computeIsJson(true, '[{"test": true}]');
+      assert.isTrue(result);
+    });
+  });
+
+  suite('_computeHasRaw()', () => {
+    let element;
+    setup(() => {
+      element = fixture('Basic');
+    });
+
+    test('Returns false when no raw value', () => {
+      const result = element._computeHasRaw('a');
+      assert.isFalse(result);
+    });
+
+    test('Returns false when values are the same', () => {
+      const result = element._computeHasRaw('a', 'a');
+      assert.isFalse(result);
+    });
+
+    test('Returns true when values are not the same', () => {
+      const result = element._computeHasRaw('a', 'b');
+      assert.isTrue(result);
+    });
+  });
+
+  suite('Actions rendering', () => {
+    test('Renders actions bar', (done) => {
+      const element = fixture('Json');
+      element.example = {
+        value: ''
+      };
+      flush(() => {
+        const node = element.shadowRoot.querySelector('.example-actions');
+        assert.ok(node);
+        done();
+      });
+    });
+
+    test('Actions are not rendered when no-actions is set', (done) => {
+      const element = fixture('NoActions');
+      element.example = {
+        value: ''
+      };
+      flush(() => {
+        const node = element.shadowRoot.querySelector('.example-actions');
+        assert.notOk(node);
+        done();
+      });
     });
   });
   </script>

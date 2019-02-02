@@ -20,7 +20,7 @@
     <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
     <template is="dom-if" if="[[hasExamples]]">
       <template is="dom-repeat" items="[[renderedExamples]]">
-        <api-example-render class="example" example="[[item]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[_effectiveTable]]"></api-example-render>
+        <api-example-render class="example" example="[[item]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[_effectiveTable]]" no-actions="[[noActions]]"></api-example-render>
       </template>
     </template>
   </template>
@@ -88,6 +88,7 @@
          */
         renderedExamples: {
           type: Array,
+          notify: true,
           readOnly: true
         },
         /**
@@ -104,6 +105,7 @@
           type: Boolean,
           notify: true,
           reflectToAttribute: true,
+          value: false,
           computed: '_computeHasArrayValue(renderedExamples)'
         },
         /**
@@ -130,7 +132,19 @@
          * file, without auto generating examples from object properties.
          */
         noAuto: Boolean,
-
+        /**
+         * When set the actions row (copy, switch view type) is not rendered.
+         */
+        noActions: {type: Boolean, value: false},
+        /**
+         * When set it only renders "raw" examples. To be used when media type context is unknown.
+         * This can happen if RAML type document is rendered outside method documentation
+         * (not in a request/response body when media type is known).
+         *
+         * Note, this can return JSON, XML, YAML or any other value
+         * depending on original source.
+         */
+        rawOnly: Boolean,
         _effectiveTable: {
           type: Boolean,
           computed: '_computeEffectiveTable(table, isJson)'
@@ -139,7 +153,7 @@
     }
 
     static get observers() {
-      return ['_computeExamples(examples, mediaType, typeName)'];
+      return ['_computeExamples(examples, mediaType, rawOnly, typeName)'];
     }
 
     constructor() {
@@ -172,8 +186,8 @@
       }
       if (localStorage.jsonTableEnabled !== String(state)) {
         window.localStorage.setItem('jsonTableEnabled', state);
+        this._dispatchTableState(state);
       }
-      this._dispatchTableState(state);
     }
     /**
      * Dispatches `json-table-state-changed` custom event.
@@ -251,18 +265,19 @@
       this._examplesDebouncer = true;
       Polymer.RenderStatus.afterNextRender(this, () => {
         this._examplesDebouncer = false;
-        this.__computeExamples(this.examples, this.mediaType, this.typeName);
+        this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName);
       });
     }
 
-    __computeExamples(examples, mediaType, typeName) {
+    __computeExamples(examples, mediaType, rawOnly, typeName) {
       this._setRenderedExamples(undefined);
-      if (!examples || !mediaType) {
+      if (!examples || (!mediaType && !rawOnly)) {
         return;
       }
       const opts = {
         typeName,
-        noAuto: this.noAuto
+        noAuto: this.noAuto,
+        rawOnly: this.rawOnly
       };
       let result;
       if (examples instanceof Array) {

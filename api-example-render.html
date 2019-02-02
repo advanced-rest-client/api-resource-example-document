@@ -17,6 +17,10 @@
       @apply --api-example-render;
     }
 
+    .code-wrapper {
+      padding: 8px;
+    }
+
     #output {
       white-space: pre-wrap;
       @apply --code-block;
@@ -61,7 +65,7 @@
         </template>
       </div>
       <template is="dom-if" if="[[unionExample]]">
-        <api-example-render example="[[unionExample]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[renderTable]]" no-title></api-example-render>
+        <api-example-render example="[[unionExample]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[renderTable]]" no-title no-actions="[[noActions]]"></api-example-render>
       </template>
     </template>
     <template is="dom-if" if="[[!isUnion]]">
@@ -69,19 +73,23 @@
         <template is="dom-if" if="[[_computeRenderTitle(example.hasTitle, noTitle)]]">
           <h6>[[example.title]]</h6>
         </template>
-        <div class="example-actions">
-          <paper-icon-button icon="arc:content-copy" data-action="copy" on-click="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
-          <template is="dom-if" if="[[isJson]]">
-            <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-click="_toggleTable"></paper-icon-button>
-          </template>
-          <template is="dom-if" if="[[example.hasRaw]]">
-            <paper-icon-button icon="arc:code" data-action="code" active="[[sourceOpened]]" title="Toggle example source view" toggles on-click="_toggleSourceOpened"></paper-icon-button>
-          </template>
-        </div>
+        <template is="dom-if" if="[[!noActions]]">
+          <div class="example-actions">
+            <paper-icon-button icon="arc:content-copy" data-action="copy" on-click="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
+            <template is="dom-if" if="[[_isJson]]">
+              <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles on-click="_toggleTable"></paper-icon-button>
+            </template>
+            <template is="dom-if" if="[[_hasRaw]]">
+              <paper-icon-button icon="arc:code" data-action="code" active="[[sourceOpened]]" title="Toggle example source view" toggles on-click="_toggleSourceOpened"></paper-icon-button>
+            </template>
+          </div>
+        </template>
         <template is="dom-if" if="[[renderTable]]">
           <json-table json="[[example.value]]"></json-table>
         </template>
-        <code id="output" class="markdown-html" language-xml hidden="[[renderTable]]"></code>
+        <div class="code-wrapper" hidden="[[renderTable]]">
+          <code id="output" class="markdown-html" language-xml></code>
+        </div>
       </div>
     </template>
     <clipboard-copy content="[[example.value]]"></clipboard-copy>
@@ -147,6 +155,7 @@
          * When true the example is a JSON type example.
          */
         isJson: Boolean,
+        _isJson: {type: Boolean, value: false, computed: '_computeIsJson(isJson, example.value)'},
         /**
          * Computed value whether the examples are generated for a union type.
          */
@@ -195,16 +204,49 @@
         /**
          * When set the title won't be rendered event if the example has one.
          */
-        noTitle: Boolean
+        noTitle: Boolean,
+        _hasRaw: {type: Boolean, value: false, computed: '_computeHasRaw(example.value, example.raw)'},
+        /**
+         * When set the actions row (copy, switch view type) is not rendered.
+         */
+        noActions: {type: Boolean, value: false}
       };
     }
 
     static get observers() {
       return ['_dataChanged(mediaType, example, sourceOpened)'];
     }
+    /**
+     * Computes whether passed value is a valig JSON object, when component is
+     * marked to parse JSON data.
+     * @param {Boolean} isJson [description]
+     * @param {String} value Current example value
+     * @return {Boolean}
+     */
+    _computeIsJson(isJson, value) {
+      if (!isJson) {
+        return false;
+      }
+      if (!value) {
+        return false;
+      }
+      try {
+        const result = JSON.parse(value);
+        return typeof result === 'object';
+      } catch (_) {
+        return false;
+      }
+    }
+
+    _computeHasRaw(value, raw) {
+      if (!raw) {
+        return false;
+      }
+      return String(raw) !== String(value);
+    }
 
     _dataChanged(mediaType, example) {
-      if (this.__changeDebouncer || !mediaType || !example) {
+      if (this.__changeDebouncer || !example) {
         return;
       }
       this.__changeDebouncer = true;
