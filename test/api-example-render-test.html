@@ -3,16 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-  <title>api-example-render test</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
-  <link rel="import" href="../../prism-element/prism-highlighter.html">
-  <script src="../../iron-test-helpers/mock-interactions.js"></script>
-  <script src="amf-loader.js"></script>
-  <link rel="import" href="../api-example-render.html">
+  <title>api-resource-example-document test</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+
+  <script src="./amf-loader.js"></script>
+  <script type="module" src="../api-example-render.js"></script>
 </head>
 <body>
+  <prism-highlighter></prism-highlighter>
+
   <test-fixture id="Basic">
     <template>
       <api-example-render></api-example-render>
@@ -30,9 +35,10 @@
       <api-example-render media-type="application/json" is-json no-actions></api-example-render>
     </template>
   </test-fixture>
-
-  <prism-highlighter></prism-highlighter>
-  <script>
+  <script type="module">
+  import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
+  import {tap} from '@polymer/iron-test-helpers/mock-interactions.js';
+  import '@polymer/prism-element/prism-highlighter.js';
   suite('Basics', () => {
     let element;
     setup((done) => {
@@ -46,7 +52,7 @@
     test('Clears output when no code', () => {
       const output = element.shadowRoot.querySelector('#output');
       output.innerHTML = 'test';
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         assert.notEqual(output.innerHTML, 'test');
       });
     });
@@ -56,7 +62,7 @@
         value: 'test'
       };
       const spy = sinon.spy(element, 'highlight');
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         assert.isTrue(spy.called);
         done();
       });
@@ -280,7 +286,7 @@
           value: 'b'
         }]
       };
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         flush(() => done());
       });
     });
@@ -297,7 +303,7 @@
       flush(() => {
         const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
         nodes[0].active = false;
-        MockInteractions.tap(nodes[0]);
+        tap(nodes[0]);
         assert.isTrue(nodes[0].active);
         done();
       });
@@ -306,7 +312,7 @@
     test('Changes the selection', (done) => {
       flush(() => {
         const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
-        MockInteractions.tap(nodes[1]);
+        tap(nodes[1]);
         assert.equal(element.selectedUnion, 1);
         done();
       });
@@ -318,7 +324,7 @@
     setup((done) => {
       element = fixture('Basic');
       flush(() => {
-        Polymer.RenderStatus.afterNextRender(element, () => done());
+        afterNextRender(element, () => done());
       });
     });
 

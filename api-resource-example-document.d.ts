@@ -5,19 +5,20 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-resource-example-document.html
+ *   api-resource-example-document.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../prism-element/prism-highlighter.d.ts" />
-/// <reference path="../amf-helper-mixin/amf-helper-mixin.d.ts" />
-/// <reference path="../api-example-generator/api-example-generator.d.ts" />
-/// <reference path="api-example-render.d.ts" />
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
+
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+
+import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 
 declare namespace ApiElements {
 
@@ -186,6 +187,9 @@ declare namespace ApiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-resource-example-document": ApiElements.ApiResourceExampleDocument;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-resource-example-document": ApiElements.ApiResourceExampleDocument;
+  }
 }

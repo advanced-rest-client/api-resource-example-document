@@ -4,19 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>api-resource-example-document demo</title>
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../../shadycss/apply-shim.html">
-    <link rel="import" href="../../polymer/lib/elements/custom-style.html">
-    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../api-navigation/api-navigation.html">
-    <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
-    <link rel="import" href="../../paper-item/paper-item.html">
-    <link rel="import" href="../../paper-listbox/paper-listbox.html">
-    <link rel="import" href="../../neon-animation/web-animations.html">
-    <link rel="import" href="../api-resource-example-document.html">
-    <link rel="import" href="../../api-console-default-theme/api-console-default-theme.html">
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
+
+    <script type="module">
+      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+      import '@polymer/polymer/lib/elements/dom-bind.js';
+      import '@polymer/paper-toast/paper-toast.js';
+      import '@polymer/paper-styles/typography.js';
+      import '@api-components/raml-aware/raml-aware.js';
+      import '@api-components/api-navigation/api-navigation.js';
+      import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+      import '@polymer/paper-item/paper-item.js';
+      import '@polymer/paper-listbox/paper-listbox.js';
+      import '../api-resource-example-document.js';
+      import '@api-components/api-console-default-theme/api-console-default-theme.js';
+    </script>
+
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
       html,
@@ -77,7 +82,7 @@
 
         <section class="vertical-section-container centered" role="main">
 
-          <api-navigation aware="model" endpoints-opened></api-navigation>
+          <api-navigation aware="model" endpoints-opened=""></api-navigation>
 
           <div class="demo-container">
             <paper-dropdown-menu label="Select media type" hidden$="[[singlePayload]]">
@@ -106,12 +111,15 @@
         <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
       </template>
     </dom-bind>
-    <script>
+    <script type="module">
+    import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+    import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
+    import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
     (function(app) {
       app.hasData = false;
       app.singlePayload = true;
       app._load = function() {
-        class DemoElement extends ApiElements.AmfHelperMixin(Polymer.Element) {}
+        class DemoElement extends AmfHelperMixin(PolymerElement) {}
         window.customElements.define('demo-element', DemoElement);
         document.getElementById('enpointsList').selected = 0;
       };
@@ -156,7 +164,7 @@
         app.mediaTypes = app.computeMediaTypes(payloads);
         app.payloads = app.hasData ? payloads : undefined;
         if (app.hasData) {
-          Polymer.RenderStatus.afterNextRender(app, () => {
+          afterNextRender(app, () => {
             const list = document.body.querySelector('#mediaList');
             if (list) {
               list.selected = 0;
@@ -212,6 +220,6 @@
       window.addEventListener('WebComponentsReady', () => app._load());
       window.addEventListener('api-navigation-selection-changed', app._navChanged);
     })(document.getElementById('demo'));
-  </script>
+    </script>
   </body>
 </html>

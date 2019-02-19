@@ -5,21 +5,18 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-example-render.html
+ *   api-example-render.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../json-table/json-table.d.ts" />
-/// <reference path="../prism-element/prism-theme-default.d.ts" />
-/// <reference path="../paper-button/paper-button.d.ts" />
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
+
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
 
 declare namespace ApiElements {
 
@@ -60,7 +57,7 @@ declare namespace ApiElements {
    * `--api-example-render` | Mixin applied to this elment | `{}`
    * `--code-block` | Mixin applied to the output block | `{}`
    */
-  class ApiExampleRender extends Polymer.Element {
+  class ApiExampleRender extends PolymerElement {
 
     /**
      * Data to render.
@@ -185,6 +182,9 @@ declare namespace ApiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-example-render": ApiElements.ApiExampleRender;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-example-render": ApiElements.ApiExampleRender;
+  }
 }
