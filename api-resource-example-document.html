@@ -153,7 +153,7 @@
     }
 
     static get observers() {
-      return ['_computeExamples(examples, mediaType, rawOnly, typeName)'];
+      return ['_computeExamples(examples, mediaType, rawOnly, typeName, noAuto)'];
     }
 
     constructor() {
@@ -265,7 +265,7 @@
       this._examplesDebouncer = true;
       Polymer.RenderStatus.afterNextRender(this, () => {
         this._examplesDebouncer = false;
-        this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName);
+        this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.noAuto);
       });
     }
 
