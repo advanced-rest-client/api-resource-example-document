@@ -155,7 +155,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
   }
 
   static get observers() {
-    return ['_computeExamples(examples, mediaType, rawOnly, typeName)'];
+    return ['_computeExamples(examples, mediaType, rawOnly, typeName, noAuto)'];
   }
 
   constructor() {
@@ -267,7 +267,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     this._examplesDebouncer = true;
     afterNextRender(this, () => {
       this._examplesDebouncer = false;
-      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName);
+      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.noAuto);
     });
   }
 
