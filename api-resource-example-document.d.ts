@@ -125,8 +125,21 @@ declare namespace ApiElements {
      */
     rawOnly: boolean|null|undefined;
     readonly _effectiveTable: boolean|null|undefined;
+
+    /**
+     * True if current environment has localStorage suppport.
+     * Chrome apps do not have localStorage property.
+     */
+    readonly hasLocalStorage: boolean|null|undefined;
     connectedCallback(): void;
     disconnectedCallback(): void;
+
+    /**
+     * When response's content type is JSON the view renders the
+     * JSON table element. This function reads current state for the table
+     * (if it is turned on) and handles view change if needed.
+     */
+    _ensureJsonTable(): void;
 
     /**
      * Updates "table" state in localstorage and disaptches

@@ -5013,6 +5013,28 @@
               "attributeType": "Boolean"
             }
           }
+        },
+        {
+          "name": "hasLocalStorage",
+          "type": "boolean | null | undefined",
+          "description": "True if current environment has localStorage suppport.\nChrome apps do not have localStorage property.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 155,
+              "column": 8
+            },
+            "end": {
+              "line": 172,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true,
+              "attributeType": "Boolean"
+            }
+          }
         }
       ],
       "methods": [
@@ -6074,7 +6096,7 @@
               "column": 4
             },
             "end": {
-              "line": 671,
+              "line": 674,
               "column": 5
             }
           },
@@ -6104,11 +6126,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 679,
+              "line": 682,
               "column": 4
             },
             "end": {
-              "line": 690,
+              "line": 696,
               "column": 5
             }
           },
@@ -6138,11 +6160,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 698,
+              "line": 704,
               "column": 4
             },
             "end": {
-              "line": 704,
+              "line": 710,
               "column": 5
             }
           },
@@ -6172,11 +6194,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 711,
+              "line": 717,
               "column": 4
             },
             "end": {
-              "line": 718,
+              "line": 724,
               "column": 5
             }
           },
@@ -6206,11 +6228,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 725,
+              "line": 731,
               "column": 4
             },
             "end": {
-              "line": 746,
+              "line": 755,
               "column": 5
             }
           },
@@ -6240,11 +6262,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 755,
+              "line": 764,
               "column": 4
             },
             "end": {
-              "line": 762,
+              "line": 771,
               "column": 5
             }
           },
@@ -6274,11 +6296,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 771,
+              "line": 780,
               "column": 4
             },
             "end": {
-              "line": 788,
+              "line": 797,
               "column": 5
             }
           },
@@ -6313,11 +6335,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 795,
+              "line": 804,
               "column": 4
             },
             "end": {
-              "line": 810,
+              "line": 819,
               "column": 5
             }
           },
@@ -6347,11 +6369,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 818,
+              "line": 827,
               "column": 4
             },
             "end": {
-              "line": 823,
+              "line": 832,
               "column": 5
             }
           },
@@ -6381,11 +6403,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 831,
+              "line": 840,
               "column": 4
             },
             "end": {
-              "line": 838,
+              "line": 847,
               "column": 5
             }
           },
@@ -6415,11 +6437,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 845,
+              "line": 854,
               "column": 4
             },
             "end": {
-              "line": 894,
+              "line": 903,
               "column": 5
             }
           },
@@ -6444,11 +6466,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 896,
+              "line": 905,
               "column": 4
             },
             "end": {
-              "line": 918,
+              "line": 927,
               "column": 5
             }
           },
@@ -6470,11 +6492,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 920,
+              "line": 929,
               "column": 4
             },
             "end": {
-              "line": 937,
+              "line": 946,
               "column": 5
             }
           },
@@ -6496,11 +6518,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 939,
+              "line": 948,
               "column": 4
             },
             "end": {
-              "line": 950,
+              "line": 959,
               "column": 5
             }
           },
@@ -6522,11 +6544,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 959,
+              "line": 968,
               "column": 4
             },
             "end": {
-              "line": 972,
+              "line": 981,
               "column": 5
             }
           },
@@ -6555,11 +6577,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 979,
+              "line": 988,
               "column": 4
             },
             "end": {
-              "line": 1000,
+              "line": 1009,
               "column": 5
             }
           },
@@ -6584,11 +6606,11 @@
           "sourceRange": {
             "file": "../amf-helper-mixin/amf-helper-mixin.html",
             "start": {
-              "line": 1006,
+              "line": 1015,
               "column": 4
             },
             "end": {
-              "line": 1032,
+              "line": 1041,
               "column": 5
             }
           },
@@ -6612,11 +6634,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 187,
               "column": 4
             },
             "end": {
-              "line": 168,
+              "line": 191,
               "column": 5
             }
           },
@@ -6632,11 +6654,31 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 193,
               "column": 4
             },
             "end": {
-              "line": 174,
+              "line": 197,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_ensureJsonTable",
+          "description": "When response's content type is JSON the view renders the\nJSON table element. This function reads current state for the table\n(if it is turned on) and handles view change if needed.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 4
+            },
+            "end": {
+              "line": 211,
               "column": 5
             }
           },
@@ -6652,11 +6694,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 182,
+              "line": 218,
               "column": 4
             },
             "end": {
-              "line": 190,
+              "line": 230,
               "column": 5
             }
           },
@@ -6678,11 +6720,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 196,
+              "line": 236,
               "column": 4
             },
             "end": {
-              "line": 206,
+              "line": 246,
               "column": 5
             }
           },
@@ -6703,11 +6745,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 213,
+              "line": 253,
               "column": 4
             },
             "end": {
-              "line": 224,
+              "line": 264,
               "column": 5
             }
           },
@@ -6729,11 +6771,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 231,
+              "line": 271,
               "column": 4
             },
             "end": {
-              "line": 241,
+              "line": 281,
               "column": 5
             }
           },
@@ -6756,11 +6798,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 248,
+              "line": 288,
               "column": 4
             },
             "end": {
-              "line": 256,
+              "line": 296,
               "column": 5
             }
           },
@@ -6781,11 +6823,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 260,
+              "line": 300,
               "column": 4
             },
             "end": {
-              "line": 269,
+              "line": 309,
               "column": 5
             }
           },
@@ -6801,11 +6843,11 @@
           "privacy": "private",
           "sourceRange": {
             "start": {
-              "line": 271,
+              "line": 311,
               "column": 4
             },
             "end": {
-              "line": 306,
+              "line": 346,
               "column": 5
             }
           },
@@ -6834,11 +6876,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 312,
+              "line": 352,
               "column": 4
             },
             "end": {
-              "line": 314,
+              "line": 354,
               "column": 5
             }
           },
@@ -6860,11 +6902,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 321,
+              "line": 361,
               "column": 4
             },
             "end": {
-              "line": 323,
+              "line": 363,
               "column": 5
             }
           },
@@ -6901,7 +6943,7 @@
           "column": 2
         },
         "end": {
-          "line": 324,
+          "line": 364,
           "column": 3
         }
       },
@@ -7100,6 +7142,22 @@
             "end": {
               "line": 146,
               "column": 24
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "has-local-storage",
+          "description": "True if current environment has localStorage suppport.\nChrome apps do not have localStorage property.",
+          "sourceRange": {
+            "start": {
+              "line": 155,
+              "column": 8
+            },
+            "end": {
+              "line": 172,
+              "column": 9
             }
           },
           "metadata": {},
