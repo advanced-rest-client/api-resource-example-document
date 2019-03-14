@@ -150,6 +150,28 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
       _effectiveTable: {
         type: Boolean,
         computed: '_computeEffectiveTable(table, isJson)'
+      },
+      /**
+       * True if current environment has localStorage suppport.
+       * Chrome apps do not have localStorage property.
+       */
+      hasLocalStorage: {
+        type: Boolean,
+        readOnly: true,
+        value: function() {
+          /* global chrome */
+          if (typeof chrome !== 'undefined' && chrome.i18n) {
+            // Chrome apps have `chrome.i18n` property, regular website doesn't.
+            // This is to avoid annoying warning message in Chrome apps.
+            return false;
+          }
+          try {
+            localStorage.getItem('test');
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
       }
     };
   }
@@ -162,6 +184,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     super();
     this._onStorageChanged = this._onStorageChanged.bind(this);
     this._onJsonTableStateChanged = this._onJsonTableStateChanged.bind(this);
+    this._ensureJsonTable();
   }
 
   connectedCallback() {
@@ -175,7 +198,20 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     window.removeEventListener('storage', this._onStorageChanged);
     window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
   }
-
+  /**
+   * When response's content type is JSON the view renders the
+   * JSON table element. This function reads current state for the table
+   * (if it is turned on) and handles view change if needed.
+   */
+  _ensureJsonTable() {
+    if (!this.hasLocalStorage) {
+      return;
+    }
+    const isTable = this._localStorageValueToBoolean(localStorage.jsonTableEnabled);
+    if (this.table !== isTable) {
+      this.table = isTable;
+    }
+  }
   /**
    * Updates "table" state in localstorage and disaptches
    * `json-table-state-changed` event.
@@ -184,6 +220,10 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
    */
   _tableChanged(state) {
     if (state === undefined) {
+      return;
+    }
+    if (!this.hasLocalStorage) {
+      this._dispatchTableState(state);
       return;
     }
     if (localStorage.jsonTableEnabled !== String(state)) {
@@ -214,7 +254,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
    * @param {Event} e Storage event
    */
   _onStorageChanged(e) {
-    if (e.key !== 'jsonTableEnabled') {
+    if (e.key !== 'jsonTableEnabled' || !this.hasLocalStorage) {
       return;
     }
     if (e.newValue === undefined) {
