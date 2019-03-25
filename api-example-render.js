@@ -1,6 +1,6 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-import '@api-components/clipboard-copy/clipboard-copy.js';
+import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/arc-icons/arc-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@advanced-rest-client/json-table/json-table.js';
