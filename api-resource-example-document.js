@@ -1,9 +1,9 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '@polymer/prism-element/prism-highlighter.js';
-import '@api-components/api-example-generator/api-example-generator.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {AmfHelperMixin} from '../../@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import '../../@polymer/prism-element/prism-highlighter.js';
+import '../../@api-components/api-example-generator/api-example-generator.js';
 import './api-example-render.js';
 /**
  * `api-resource-example-document`

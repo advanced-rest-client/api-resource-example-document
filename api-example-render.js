@@ -1,12 +1,12 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
-import '@advanced-rest-client/arc-icons/arc-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@advanced-rest-client/json-table/json-table.js';
-import '@polymer/prism-element/prism-theme-default.js';
-import '@polymer/paper-button/paper-button.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
+import '../../@advanced-rest-client/clipboard-copy/clipboard-copy.js';
+import '../../@advanced-rest-client/arc-icons/arc-icons.js';
+import '../../@polymer/paper-icon-button/paper-icon-button.js';
+import '../../@advanced-rest-client/json-table/json-table.js';
+import '../../@polymer/prism-element/prism-theme-default.js';
+import '../../@polymer/paper-button/paper-button.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
 /**
  * `api-example-render`
  *
