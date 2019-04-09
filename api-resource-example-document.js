@@ -86,6 +86,10 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        */
       typeName: String,
       /**
+       * Rendered payload ID (if any) to associate examples with the paylaod.
+       */
+      payloadId: String,
+      /**
        * Computed in a debouncer examples to render.
        */
       renderedExamples: {
@@ -177,7 +181,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
   }
 
   static get observers() {
-    return ['_computeExamples(examples, mediaType, rawOnly, typeName, noAuto)'];
+    return ['_computeExamples(examples, mediaType, rawOnly, typeName, noAuto, payloadId)'];
   }
 
   constructor() {
@@ -307,19 +311,20 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     this._examplesDebouncer = true;
     afterNextRender(this, () => {
       this._examplesDebouncer = false;
-      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.noAuto);
+      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.payloadId, this.noAuto);
     });
   }
 
-  __computeExamples(examples, mediaType, rawOnly, typeName) {
+  __computeExamples(examples, mediaType, rawOnly, typeName, payloadId, noAuto) {
     this._setRenderedExamples(undefined);
     if (!examples || (!mediaType && !rawOnly)) {
       return;
     }
     const opts = {
       typeName,
-      noAuto: this.noAuto,
-      rawOnly: this.rawOnly
+        typeId: payloadId,
+        noAuto,
+        rawOnly
     };
     let result;
     if (examples instanceof Array) {

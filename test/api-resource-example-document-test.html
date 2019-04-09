@@ -380,6 +380,19 @@
           assert.lengthOf(element.renderedExamples, 1);
         });
 
+        test('Computes examples from a payload\'s schema', () => {
+          const payload = getPayload(element, amf, '/IncludedInType', 'post')[0];
+          const id = payload['@id'];
+          const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
+          let schema = payload[sKey];
+          if (schema instanceof Array) {
+            schema = schema[0];
+          }
+          element.__computeExamples(schema, 'application/json', false, undefined, id);
+          assert.typeOf(element.renderedExamples, 'array');
+          assert.lengthOf(element.renderedExamples, 1);
+        });
+
         test('Computes payload from an Example', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           element.__computeExamples(examples[0], 'application/json');
