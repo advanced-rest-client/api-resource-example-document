@@ -550,7 +550,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(81,33)-(81,35)]"
+"@value": "[(11,17)-(11,19)]"
 }
 ]
 }
@@ -579,7 +579,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(79,22)-(79,28)]"
+"@value": "[(9,6)-(9,12)]"
 }
 ]
 }
@@ -593,7 +593,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(81,22)-(81,33)]"
+"@value": "[(11,6)-(11,17)]"
 }
 ]
 },
@@ -605,7 +605,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(79,22)-(79,30)]"
+"@value": "[(9,6)-(9,14)]"
 }
 ]
 },
@@ -617,7 +617,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(77,20)-(77,26)]"
+"@value": "[(7,4)-(7,10)]"
 }
 ]
 },
@@ -629,7 +629,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(80,22)-(80,31)]"
+"@value": "[(10,6)-(10,15)]"
 }
 ]
 }
@@ -663,7 +663,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(77,20)-(77,26)]"
+"@value": "[(7,4)-(7,10)]"
 }
 ]
 }
@@ -734,7 +734,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(90,33)-(90,35)]"
+"@value": "[(20,17)-(20,19)]"
 }
 ]
 }
@@ -763,7 +763,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(88,22)-(88,28)]"
+"@value": "[(18,6)-(18,12)]"
 }
 ]
 }
@@ -777,7 +777,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(90,22)-(90,33)]"
+"@value": "[(20,6)-(20,17)]"
 }
 ]
 },
@@ -789,7 +789,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(88,22)-(88,30)]"
+"@value": "[(18,6)-(18,14)]"
 }
 ]
 },
@@ -801,7 +801,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(86,20)-(86,28)]"
+"@value": "[(16,4)-(16,12)]"
 }
 ]
 },
@@ -813,7 +813,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(89,22)-(89,31)]"
+"@value": "[(19,6)-(19,15)]"
 }
 ]
 }
@@ -847,7 +847,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(86,20)-(86,28)]"
+"@value": "[(16,4)-(16,12)]"
 }
 ]
 }
@@ -918,7 +918,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(99,33)-(99,35)]"
+"@value": "[(29,17)-(29,19)]"
 }
 ]
 }
@@ -947,7 +947,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(97,22)-(97,28)]"
+"@value": "[(27,6)-(27,12)]"
 }
 ]
 }
@@ -961,7 +961,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(99,22)-(99,33)]"
+"@value": "[(29,6)-(29,17)]"
 }
 ]
 },
@@ -973,7 +973,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(97,22)-(97,30)]"
+"@value": "[(27,6)-(27,14)]"
 }
 ]
 },
@@ -985,7 +985,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(95,20)-(95,32)]"
+"@value": "[(25,4)-(25,16)]"
 }
 ]
 },
@@ -997,7 +997,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(98,22)-(98,31)]"
+"@value": "[(28,6)-(28,15)]"
 }
 ]
 }
@@ -1031,7 +1031,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(95,20)-(95,32)]"
+"@value": "[(25,4)-(25,16)]"
 }
 ]
 }
@@ -1102,7 +1102,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(108,33)-(108,35)]"
+"@value": "[(38,17)-(38,19)]"
 }
 ]
 }
@@ -1131,7 +1131,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(106,22)-(106,28)]"
+"@value": "[(36,6)-(36,12)]"
 }
 ]
 }
@@ -1145,7 +1145,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(108,22)-(108,33)]"
+"@value": "[(38,6)-(38,17)]"
 }
 ]
 },
@@ -1157,7 +1157,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(106,22)-(106,30)]"
+"@value": "[(36,6)-(36,14)]"
 }
 ]
 },
@@ -1169,7 +1169,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(104,20)-(104,30)]"
+"@value": "[(34,4)-(34,14)]"
 }
 ]
 },
@@ -1181,7 +1181,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(107,22)-(107,31)]"
+"@value": "[(37,6)-(37,15)]"
 }
 ]
 }
@@ -1215,7 +1215,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(104,20)-(104,30)]"
+"@value": "[(34,4)-(34,14)]"
 }
 ]
 }
@@ -1286,7 +1286,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(117,33)-(117,35)]"
+"@value": "[(47,17)-(47,19)]"
 }
 ]
 }
@@ -1315,7 +1315,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(115,22)-(115,28)]"
+"@value": "[(45,6)-(45,12)]"
 }
 ]
 }
@@ -1329,7 +1329,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(117,22)-(117,33)]"
+"@value": "[(47,6)-(47,17)]"
 }
 ]
 },
@@ -1341,7 +1341,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(115,22)-(115,30)]"
+"@value": "[(45,6)-(45,14)]"
 }
 ]
 },
@@ -1353,7 +1353,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(113,20)-(113,27)]"
+"@value": "[(43,4)-(43,11)]"
 }
 ]
 },
@@ -1365,7 +1365,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(116,22)-(116,31)]"
+"@value": "[(46,6)-(46,15)]"
 }
 ]
 }
@@ -1399,7 +1399,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(113,20)-(113,27)]"
+"@value": "[(43,4)-(43,11)]"
 }
 ]
 }
@@ -1497,7 +1497,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(130,37)-(130,39)]"
+"@value": "[(60,21)-(60,23)]"
 }
 ]
 }
@@ -1526,7 +1526,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(128,26)-(128,32)]"
+"@value": "[(58,10)-(58,16)]"
 }
 ]
 }
@@ -1540,7 +1540,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(130,26)-(130,37)]"
+"@value": "[(60,10)-(60,21)]"
 }
 ]
 },
@@ -1552,7 +1552,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(128,26)-(128,34)]"
+"@value": "[(58,10)-(58,18)]"
 }
 ]
 },
@@ -1564,7 +1564,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(126,24)-(126,31)]"
+"@value": "[(56,8)-(56,15)]"
 }
 ]
 },
@@ -1576,7 +1576,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(129,26)-(129,35)]"
+"@value": "[(59,10)-(59,19)]"
 }
 ]
 }
@@ -1610,7 +1610,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(126,24)-(126,31)]"
+"@value": "[(56,8)-(56,15)]"
 }
 ]
 }
@@ -1681,7 +1681,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(139,37)-(139,39)]"
+"@value": "[(69,21)-(69,23)]"
 }
 ]
 }
@@ -1710,7 +1710,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(137,26)-(137,32)]"
+"@value": "[(67,10)-(67,16)]"
 }
 ]
 }
@@ -1724,7 +1724,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(139,26)-(139,37)]"
+"@value": "[(69,10)-(69,21)]"
 }
 ]
 },
@@ -1736,7 +1736,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(137,26)-(137,34)]"
+"@value": "[(67,10)-(67,18)]"
 }
 ]
 },
@@ -1748,7 +1748,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(135,24)-(135,33)]"
+"@value": "[(65,8)-(65,17)]"
 }
 ]
 },
@@ -1760,7 +1760,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(138,26)-(138,35)]"
+"@value": "[(68,10)-(68,19)]"
 }
 ]
 }
@@ -1794,7 +1794,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(135,24)-(135,33)]"
+"@value": "[(65,8)-(65,17)]"
 }
 ]
 }
@@ -1823,7 +1823,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(124,22)-(124,28)]"
+"@value": "[(54,6)-(54,12)]"
 }
 ]
 }
@@ -1837,7 +1837,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(122,20)-(122,29)]"
+"@value": "[(52,4)-(52,13)]"
 }
 ]
 }
@@ -1871,7 +1871,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(122,20)-(122,29)]"
+"@value": "[(52,4)-(52,13)]"
 }
 ]
 }
@@ -1942,7 +1942,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(150,33)-(150,35)]"
+"@value": "[(80,17)-(80,19)]"
 }
 ]
 }
@@ -1971,7 +1971,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(148,22)-(148,28)]"
+"@value": "[(78,6)-(78,12)]"
 }
 ]
 }
@@ -1985,7 +1985,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(150,22)-(150,33)]"
+"@value": "[(80,6)-(80,17)]"
 }
 ]
 },
@@ -1997,7 +1997,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(148,22)-(148,30)]"
+"@value": "[(78,6)-(78,14)]"
 }
 ]
 },
@@ -2009,7 +2009,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(146,20)-(146,31)]"
+"@value": "[(76,4)-(76,15)]"
 }
 ]
 },
@@ -2021,7 +2021,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(149,22)-(149,31)]"
+"@value": "[(79,6)-(79,15)]"
 }
 ]
 }
@@ -2055,7 +2055,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(146,20)-(146,31)]"
+"@value": "[(76,4)-(76,15)]"
 }
 ]
 }
@@ -2126,7 +2126,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(159,33)-(159,35)]"
+"@value": "[(89,17)-(89,19)]"
 }
 ]
 }
@@ -2155,7 +2155,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(157,22)-(157,28)]"
+"@value": "[(87,6)-(87,12)]"
 }
 ]
 }
@@ -2169,7 +2169,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(159,22)-(159,33)]"
+"@value": "[(89,6)-(89,17)]"
 }
 ]
 },
@@ -2181,7 +2181,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(157,22)-(157,30)]"
+"@value": "[(87,6)-(87,14)]"
 }
 ]
 },
@@ -2193,7 +2193,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(155,20)-(155,32)]"
+"@value": "[(85,4)-(85,16)]"
 }
 ]
 },
@@ -2205,7 +2205,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(158,22)-(158,31)]"
+"@value": "[(88,6)-(88,15)]"
 }
 ]
 }
@@ -2239,7 +2239,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(155,20)-(155,32)]"
+"@value": "[(85,4)-(85,16)]"
 }
 ]
 }
@@ -2310,7 +2310,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(168,33)-(168,35)]"
+"@value": "[(98,17)-(98,19)]"
 }
 ]
 }
@@ -2339,7 +2339,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(166,22)-(166,28)]"
+"@value": "[(96,6)-(96,12)]"
 }
 ]
 }
@@ -2353,7 +2353,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(168,22)-(168,33)]"
+"@value": "[(98,6)-(98,17)]"
 }
 ]
 },
@@ -2365,7 +2365,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(166,22)-(166,30)]"
+"@value": "[(96,6)-(96,14)]"
 }
 ]
 },
@@ -2377,7 +2377,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(164,20)-(164,28)]"
+"@value": "[(94,4)-(94,12)]"
 }
 ]
 },
@@ -2389,7 +2389,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(167,22)-(167,31)]"
+"@value": "[(97,6)-(97,15)]"
 }
 ]
 }
@@ -2423,7 +2423,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(164,20)-(164,28)]"
+"@value": "[(94,4)-(94,12)]"
 }
 ]
 }
@@ -2701,12 +2701,36 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:url"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(8,11)-(8,58)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#136"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(7,11)-(10,3)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:thumb"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(9,13)-(9,66)]"
 }
 ]
 }
@@ -2883,6 +2907,18 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:image"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "url->[(8,4)-(8,11)]#thumb->[(9,4)-(9,13)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#131"
 }
 ],
@@ -2897,12 +2933,120 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:url"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(6,9)-(6,50)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(3,10)-(3,24)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:image"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(7,11)-(10,3)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:gender"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(5,12)-(5,18)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:birthday"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(4,14)-(4,26)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#131"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(1,0)-(14,1)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:etag"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(13,10)-(13,36)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:id"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(2,8)-(2,30)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:language"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(12,14)-(12,21)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:tagline"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(11,13)-(11,34)]"
 }
 ]
 }
@@ -2997,7 +3141,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(1,0)-(174,17)]"
+"@value": "[(1,0)-(104,1)]"
 }
 ]
 }
@@ -3011,7 +3155,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(73,18)-(73,24)]"
+"@value": "[(3,2)-(3,8)]"
 }
 ]
 }
@@ -6141,12 +6285,48 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:uid"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(16,17)-(16,26)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:email"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(18,19)-(18,44)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#33"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(16,0)-(19,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(17,18)-(17,30)]"
 }
 ]
 }
@@ -6273,6 +6453,42 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:timestamp"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(20,21)-(20,30)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:important"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(21,21)-(21,26)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:attachements"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(22,23)-(25,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#29"
 }
 ],
@@ -6281,9 +6497,45 @@
 "@value": "[(15,0)-(25,0)]"
 }
 ]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(16,0)-(19,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:message"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(19,19)-(19,38)]"
+}
+]
 }
 ],
 "sourcemaps:data-node-properties": [
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "uid->[(16,12)-(17,0)]#name->[(17,12)-(18,0)]#email->[(18,12)-(19,0)]"
+}
+]
+},
 {
 "sourcemaps:element": [
 {
@@ -6303,7 +6555,7 @@
 ],
 "shacl:raw": [
 {
-"@value": "          from:\n            uid: 123456abc\n            name: Pawel Psztyc\n            email: pawel.psztyc@mulesoft.com\n          message: Hi, this is message\n          timestamp: 123456789\n          important: false\n          attachements:\n            - Attachment URL no 1\n            - Attachment URL no 2\n"
+"@value": "\n          from:\n            uid: 123456abc\n            name: Pawel Psztyc\n            email: pawel.psztyc@mulesoft.com\n          message: Hi, this is message\n          timestamp: 123456789\n          important: false\n          attachements:\n            - Attachment URL no 1\n            - Attachment URL no 2\n"
 }
 ],
 "sourcemaps:sources": [
@@ -6347,7 +6599,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(15,0)-(25,0)]"
+"@value": "[(14,8)-(25,0)]"
 }
 ]
 }
@@ -6654,12 +6906,48 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:uid"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,17)-(29,53)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:email"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(31,19)-(31,32)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#45"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(29,0)-(32,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(30,18)-(30,32)]"
 }
 ]
 }
@@ -6786,6 +7074,42 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:timestamp"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(33,21)-(33,34)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:important"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(34,21)-(34,26)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:attachements"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(35,23)-(38,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#41"
 }
 ],
@@ -6794,9 +7118,45 @@
 "@value": "[(28,0)-(38,0)]"
 }
 ]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(29,0)-(32,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:message"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(32,19)-(32,107)]"
+}
+]
 }
 ],
 "sourcemaps:data-node-properties": [
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "uid->[(29,12)-(30,0)]#name->[(30,12)-(31,0)]#email->[(31,12)-(32,0)]"
+}
+]
+},
 {
 "sourcemaps:element": [
 {
@@ -6816,7 +7176,7 @@
 ],
 "shacl:raw": [
 {
-"@value": "          from:\n            uid: 2f101b0e-40bb-4a2c-a686-c1ace840a5fd\n            name: Tyler McKinney\n            email: tono@medfu.cn\n          message: Guowo gakiw lilo nuggedjil tarpezdo zug abacaz torhic nuzvupbap ica luguvi ife dujer he.\n          timestamp: 2374110741252\n          important: false\n          attachements:\n            - \"http://eziciheg.tm/ge\"\n            - \"http://iragazvit.la/vak\"\n"
+"@value": "\n          from:\n            uid: 2f101b0e-40bb-4a2c-a686-c1ace840a5fd\n            name: Tyler McKinney\n            email: tono@medfu.cn\n          message: Guowo gakiw lilo nuggedjil tarpezdo zug abacaz torhic nuzvupbap ica luguvi ife dujer he.\n          timestamp: 2374110741252\n          important: false\n          attachements:\n            - \"http://eziciheg.tm/ge\"\n            - \"http://iragazvit.la/vak\"\n"
 }
 ],
 "sourcemaps:sources": [
@@ -6860,7 +7220,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(28,0)-(38,0)]"
+"@value": "[(27,8)-(38,0)]"
 }
 ]
 }
@@ -7167,12 +7527,48 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:uid"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(45,27)-(45,38)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:email"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(47,29)-(47,56)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#57"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(44,26)-(48,19)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(46,28)-(46,42)]"
 }
 ]
 }
@@ -7313,6 +7709,18 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "uid->[(45,20)-(45,27)]#name->[(46,20)-(46,28)]#email->[(47,20)-(47,29)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#53"
 }
 ],
@@ -7327,12 +7735,72 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:timestamp"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(50,31)-(50,40)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:important"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(51,31)-(51,35)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:attachements"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(52,34)-(52,80)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#53"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(43,16)-(53,17)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(44,26)-(48,19)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:message"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(49,29)-(49,50)]"
 }
 ]
 }
@@ -7694,12 +8162,48 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:uid"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(83,19)-(83,28)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:email"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(85,21)-(85,37)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#69"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(83,0)-(86,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(84,20)-(84,29)]"
 }
 ]
 }
@@ -7826,6 +8330,42 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:timestamp"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(87,23)-(87,32)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:important"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(88,23)-(88,28)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:attachements"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(89,25)-(92,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#65"
 }
 ],
@@ -7834,9 +8374,45 @@
 "@value": "[(82,0)-(92,0)]"
 }
 ]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(83,0)-(86,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:message"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(86,21)-(86,49)]"
+}
+]
 }
 ],
 "sourcemaps:data-node-properties": [
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "uid->[(83,14)-(84,0)]#name->[(84,14)-(85,0)]#email->[(85,14)-(86,0)]"
+}
+]
+},
 {
 "sourcemaps:element": [
 {
@@ -7900,7 +8476,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(81,14)-(92,0)]"
+"@value": "[(81,10)-(92,0)]"
 }
 ]
 },
@@ -8219,12 +8795,48 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:uid"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(94,19)-(94,28)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:email"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(96,21)-(96,37)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#81"
 }
 ],
 "sourcemaps:value": [
 {
 "@value": "[(94,0)-(97,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:name"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(95,20)-(95,29)]"
 }
 ]
 }
@@ -8351,6 +8963,42 @@
 {
 "sourcemaps:element": [
 {
+"@value": "data:timestamp"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(98,23)-(98,32)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:important"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(99,23)-(99,28)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:attachements"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(100,25)-(103,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
 "@value": "amf://id#77"
 }
 ],
@@ -8359,9 +9007,45 @@
 "@value": "[(93,0)-(103,0)]"
 }
 ]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(94,0)-(97,0)]"
+}
+]
+},
+{
+"sourcemaps:element": [
+{
+"@value": "data:message"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(97,21)-(97,49)]"
+}
+]
 }
 ],
 "sourcemaps:data-node-properties": [
+{
+"sourcemaps:element": [
+{
+"@value": "data:from"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "uid->[(94,14)-(95,0)]#name->[(95,14)-(96,0)]#email->[(96,14)-(97,0)]"
+}
+]
+},
 {
 "sourcemaps:element": [
 {
@@ -8425,7 +9109,7 @@
 ],
 "sourcemaps:value": [
 {
-"@value": "[(92,14)-(103,0)]"
+"@value": "[(92,10)-(103,0)]"
 }
 ]
 },

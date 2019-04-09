@@ -17,7 +17,7 @@
   ],
   "devDependencies": {
     "@api-components/api-console-default-theme": "^3.0.0-preview.1",
-    "@api-components/api-model-generator": "^0.1.10",
+    "@api-components/api-model-generator": "^0.1.11",
     "@api-components/api-navigation": "^3.0.0-preview.1",
     "@polymer/gen-typescript-declarations": "^1.6.1",
     "@polymer/iron-component-page": "^4.0.0",
