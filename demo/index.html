@@ -169,18 +169,31 @@
         if (!model) {
           return;
         }
+        let result = [];
         const expects = app.$.helper._computeExpects(model);
-        if (!expects) {
-          return;
+        if (expects) {
+          let payloads = app.$.helper._computePayload(expects);
+          if (payloads) {
+            if (!(payloads instanceof Array)) {
+              payloads = [payloads];
+            }
+            result = payloads;
+          }
         }
-        let payloads = app.$.helper._computePayload(expects);
-        if (!payloads) {
-          return;
+        const returns = app.$.helper._computeReturns(model);
+        if (returns) {
+          for (let i = 0, len = returns.length; i < len; i++) {
+            let payloads = app.$.helper._computePayload(returns[i]);
+            if (payloads) {
+              if (!(payloads instanceof Array)) {
+                payloads = [payloads];
+              }
+              result = result.concat(payloads);
+            }
+          }
         }
-        if (!(payloads instanceof Array)) {
-          payloads = [payloads];
-        }
-        return payloads;
+
+        return result.length ? result : undefined;
       };
 
       app.computeMediaTypes = function(payloads) {
