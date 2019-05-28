@@ -61,13 +61,9 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
       <template is="dom-repeat" items="[[renderedExamples]]">
         <api-example-render class="example" example="[[item]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[_effectiveTable]]" no-actions="[[noActions]]"></api-example-render>
       </template>
-    </template>
-`;
+    </template>`;
   }
 
-  static get is() {
-    return 'api-resource-example-document';
-  }
   static get properties() {
     return {
       /**
@@ -370,4 +366,4 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     return !!(isJson && table);
   }
 }
-window.customElements.define(ApiResourceExampleDocument.is, ApiResourceExampleDocument);
+window.customElements.define('api-resource-example-document', ApiResourceExampleDocument);
