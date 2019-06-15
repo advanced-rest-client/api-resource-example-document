@@ -12,11 +12,7 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import {LitElement, html, css} from 'lit-element';
 
 import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 
@@ -51,11 +47,35 @@ declare namespace ApiElements {
    * ----------------|-------------|----------
    * `--api-resource-example-document` | Mixin applied to this elment | `{}`
    * `--api-resource-example-document-title` | Mixin applied to example title | `{}`
-   * `--api-resource-example-document-button-active-background-color` | Background color of active "tabble" button | `#e0e0e0`
+   * `--api-resource-example-document-button-active-background-color` | Background color of active button | `#e0e0e0`
    */
   class ApiResourceExampleDocument extends
     ApiElements.AmfHelperMixin(
     Object) {
+    readonly hasLocalStorage: any;
+    readonly renderedExamples: any;
+
+    /**
+     * Computed in a debouncer examples to render.
+     */
+    _renderedExamples: any[]|null|undefined;
+
+    /**
+     * If true it will display a table view instead of JSON code.
+     * `isJson` must be set to use this option.
+     */
+    table: boolean|null|undefined;
+
+    /**
+     * Examples media type
+     */
+    mediaType: string|null|undefined;
+
+    /**
+     * Computed value, true if selected media type is application/json
+     * or equivalent.
+     */
+    isJson: boolean|null|undefined;
 
     /**
      * AMF model for examples.
@@ -64,9 +84,14 @@ declare namespace ApiElements {
     examples: any[]|null|undefined;
 
     /**
-     * Examples media type
+     * When set it only renders "raw" examples. To be used when media type context is unknown.
+     * This can happen if RAML type document is rendered outside method documentation
+     * (not in a request/response body when media type is known).
+     *
+     * Note, this can return JSON, XML, YAML or any other value
+     * depending on original source.
      */
-    mediaType: string|null|undefined;
+    rawOnly: boolean|null|undefined;
 
     /**
      * Type (model) name for which examples are generated for.
@@ -76,9 +101,16 @@ declare namespace ApiElements {
     typeName: string|null|undefined;
 
     /**
-     * Computed in a debouncer examples to render.
+     * Configuration passed to example generator.
+     * When set the generator only returns examples that are defined in API
+     * file, without auto generating examples from object properties.
      */
-    readonly renderedExamples: any[]|null|undefined;
+    noAuto: boolean|null|undefined;
+
+    /**
+     * Rendered payload ID (if any) to associate examples with the paylaod.
+     */
+    payloadId: string|null|undefined;
 
     /**
      * Computed value, true if there are examples to render.
@@ -90,50 +122,23 @@ declare namespace ApiElements {
      * api-resource-example-document[has-examples] { display: block; }
      * ```
      */
-    readonly hasExamples: boolean|null|undefined;
-
-    /**
-     * If true it will display a table view instead of JSON code.
-     * `isJson` must be set to use this option.
-     */
-    table: boolean|null|undefined;
-
-    /**
-     * Computed value, true if selected media type is application/json
-     * or equivalent.
-     */
-    readonly isJson: boolean|null|undefined;
-
-    /**
-     * Configuration passed to example generator.
-     * When set the generator only returns examples that are defined in API
-     * file, without auto generating examples from object properties.
-     */
-    noAuto: boolean|null|undefined;
+    hasExamples: boolean|null|undefined;
 
     /**
      * When set the actions row (copy, switch view type) is not rendered.
      */
     noActions: boolean|null|undefined;
-
-    /**
-     * When set it only renders "raw" examples. To be used when media type context is unknown.
-     * This can happen if RAML type document is rendered outside method documentation
-     * (not in a request/response body when media type is known).
-     *
-     * Note, this can return JSON, XML, YAML or any other value
-     * depending on original source.
-     */
-    rawOnly: boolean|null|undefined;
-    readonly _effectiveTable: boolean|null|undefined;
+    _effectiveTable: boolean|null|undefined;
 
     /**
      * True if current environment has localStorage suppport.
      * Chrome apps do not have localStorage property.
      */
-    readonly hasLocalStorage: boolean|null|undefined;
+    _hasLocalStorage: boolean|null|undefined;
+    _setObservableProperty(prop: any, value: any): any;
     connectedCallback(): void;
     disconnectedCallback(): void;
+    _hasStorageSupport(): any;
 
     /**
      * When response's content type is JSON the view renders the
@@ -197,6 +202,9 @@ declare namespace ApiElements {
      * @returns True when current media type is JSON and table is enabled.
      */
     _computeEffectiveTable(table: Boolean|null, isJson: Boolean|null): Boolean|null;
+    _tableCHangedHandler(e: any): void;
+    _examplesTemplate(examples: any): any;
+    render(): any;
   }
 }
 
