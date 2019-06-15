@@ -1,12 +1,8 @@
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
-import '../../@advanced-rest-client/clipboard-copy/clipboard-copy.js';
-import '../../@advanced-rest-client/arc-icons/arc-icons.js';
-import '../../@polymer/paper-icon-button/paper-icon-button.js';
-import '../../@advanced-rest-client/json-table/json-table.js';
-import '../../@polymer/prism-element/prism-theme-default.js';
-import '../../@polymer/paper-button/paper-button.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import { LitElement, html, css, unsafeCSS } from 'lit-element';
+import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
+import '@advanced-rest-client/json-table/json-table.js';
+import '@polymer/prism-element/prism-theme-default.js';
+import '@polymer/paper-button/paper-button.js';
 /**
  * `api-example-render`
  *
@@ -49,16 +45,33 @@ import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
  * @demo demo/index.html
  * @memberof ApiElements
  */
-class ApiExampleRender extends PolymerElement {
-  static get template() {
-    return html`
-    <style include="prism-theme-default"></style>
-    <style>
-    :host {
+class ApiExampleRender extends LitElement {
+  /**
+   * This is rather dirty hack to import Polymer's `prism-theme-default`.
+   * The theme inserts `dom-module` with styles to the head section upon import.
+   * This method reads the content of the theme and creates CSSResult instance
+   * of it.
+   * @return {CSSResult}
+   */
+  static getPrismTheme() {
+    const theme = document.head.querySelector('dom-module#prism-theme-default');
+    if (!theme) {
+      return;
+    }
+    const tpl = theme.querySelector('template');
+    if (!tpl) {
+      return;
+    }
+    const clone = tpl.content.cloneNode(true);
+    const style = clone.querySelector('style');
+    return unsafeCSS(style.innerText);
+  }
+
+  static get styles() {
+    const styles = css`:host {
       display: block;
       padding: 4px;
       background-color: var(--code-background-color, #f5f2f0);
-      @apply --api-example-render;
     }
 
     .code-wrapper {
@@ -67,7 +80,8 @@ class ApiExampleRender extends PolymerElement {
 
     #output {
       white-space: pre-wrap;
-      @apply --code-block;
+      word-wrap: var(--code-block-word-wrap, break-word);
+      font-family: var(--arc-font-code-family);
     }
 
     [hidden] {
@@ -75,15 +89,14 @@ class ApiExampleRender extends PolymerElement {
     }
 
     h6 {
-      @apply --arc-font-body1;
+      font-weight: var(--arc-font-body1-font-weight);
+      line-height: var(--arc-font-body1-line-height);
       font-size: 15px;
-      margin: 0 0 4px 4px;
-      @apply --api-resource-example-document-title;
+      margin: 0 8px 4px 8px;
     }
 
-    paper-icon-button[active] {
+    paper-button[active] {
       background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
-      border-radius: 50%;
     }
 
     .union-toggle {
@@ -98,125 +111,119 @@ class ApiExampleRender extends PolymerElement {
     }
 
     .union-type-selector {
-      margin: 12px 0;
+      margin: 12px 8px;
     }
-    </style>
-    <template is="dom-if" if="[[isUnion]]" restamp="">
-      <div class="union-type-selector">
-        <span>Any of:</span>
-        <template is="dom-repeat" data-union-repeater="" items="[[unions]]">
-          <paper-button class="union-toggle" active="[[_unionTypeActive(selectedUnion, index)]]" on-click="_selectUnion" title\$="Select [[item]] type">[[item]]</paper-button>
-        </template>
-      </div>
-      <template is="dom-if" if="[[unionExample]]">
-        <api-example-render example="[[unionExample]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[renderTable]]" no-title="" no-actions="[[noActions]]"></api-example-render>
-      </template>
-    </template>
-    <template is="dom-if" if="[[!isUnion]]">
-      <div class="example">
-        <template is="dom-if" if="[[_computeRenderTitle(example.hasTitle, noTitle)]]">
-          <h6>[[example.title]]</h6>
-        </template>
-        <template is="dom-if" if="[[!noActions]]">
-          <div class="example-actions">
-            <paper-icon-button icon="arc:content-copy" data-action="copy" on-click="_copyToClipboard" title="Copy example to clipboard"></paper-icon-button>
-            <template is="dom-if" if="[[_isJson]]">
-              <paper-icon-button icon="arc:view-column" data-action="table" active="[[table]]" title="Toggle table view" toggles="" on-click="_toggleTable"></paper-icon-button>
-            </template>
-            <template is="dom-if" if="[[_hasRaw]]">
-              <paper-icon-button icon="arc:code" data-action="code" active="[[sourceOpened]]" title="Toggle example source view" toggles="" on-click="_toggleSourceOpened"></paper-icon-button>
-            </template>
-          </div>
-        </template>
-        <template is="dom-if" if="[[renderTable]]">
-          <json-table json="[[example.value]]"></json-table>
-        </template>
-        <div class="code-wrapper" hidden="[[renderTable]]">
-          <code id="output" class="markdown-html" language-xml=""></code>
-        </div>
-      </div>
-    </template>
-    <clipboard-copy content="[[example.value]]"></clipboard-copy>
-`;
+
+    json-table {
+      margin: 0 8px;
+    }
+    `;
+    const prism = ApiExampleRender.getPrismTheme();
+    const result = [styles];
+    if (prism) {
+      result[result.length] = prism;
+    }
+    return result;
   }
 
-  static get is() {
-    return 'api-example-render';
-  }
   static get properties() {
     return {
       /**
        * Data to render.
        */
-      example: Object,
+      example: { type: Object },
       /**
        * Examples media type
        */
-      mediaType: String,
+      mediaType: { type: String },
       /**
        * When true the example is a JSON type example.
        */
-      isJson: Boolean,
-      _isJson: {type: Boolean, value: false, computed: '_computeIsJson(isJson, example.value)'},
-      /**
-       * Computed value whether the examples are generated for a union type.
-       */
-      isUnion: {
-        type: Boolean,
-        computed: '_computeIsUnion(example)'
-      },
-      /**
-       * List of union type names.
-       * @type {Array<String>}
-       */
-      unions: {
-        type: Array,
-        computed: '_computeUnions(isUnion, example)',
-        observer: '_unionTypesChanged'
-      },
+      isJson: { type: Boolean },
       /**
        * Index of selected union.
        */
-      selectedUnion: Number,
-      /**
-       * Computed value of an example selected from union types.
-       */
-      unionExample: {
-        type: Object,
-        computed: '_computeUnionExamples(selectedUnion, example)'
-      },
+      selectedUnion: { type: Number },
       /**
        * Current state of "table" button. When tru the button is highlighted.
        * Note, this won't trigger rendering table/code view as this property is used
        * by `api-resource-example-document` to handle table state change.
        */
-      table: {
-        type: Boolean,
-        value: false,
-        notify: true
-      },
+      table: { type: Boolean },
       /**
        * When set it renders JSON table instead of code view.
        */
-      renderTable: Boolean,
+      renderTable: { type: Boolean },
       /**
        * Opens example source view (source from API spec file).
        */
-      sourceOpened: Boolean,
+      sourceOpened: { type: Boolean },
       /**
        * When set the title won't be rendered event if the example has one.
        */
-      noTitle: Boolean,
-      _hasRaw: {type: Boolean, value: false, computed: '_computeHasRaw(example.value, example.raw)'},
+      noTitle: { type: Boolean },
       /**
        * When set the actions row (copy, switch view type) is not rendered.
        */
-      noActions: {type: Boolean, value: false}
+      noActions: { type: Boolean }
     };
   }
 
-  static get observers() {
-    return ['_dataChanged(mediaType, example, sourceOpened)'];
+  get table() {
+    return this._table;
+  }
+
+  set table(value) {
+    if (this._setObservableProperty('table', value)) {
+      this.dispatchEvent(new CustomEvent('table-changed', {
+        composed: true,
+        detail: {
+          value
+        }
+      }));
+    }
+  }
+
+  get mediaType() {
+    return this._mediaType;
+  }
+
+  set mediaType(value) {
+    if (this._setObservableProperty('mediaType', value)) {
+      this._dataChanged(value, this._example, this._sourceOpened);
+    }
+  }
+
+  get example() {
+    return this._example;
+  }
+
+  set example(value) {
+    if (this._setObservableProperty('example', value)) {
+      this._dataChanged(this._mediaType, value, this._sourceOpened);
+      this.selectedUnion = 0;
+    }
+  }
+
+  get sourceOpened() {
+    return this._sourceOpened;
+  }
+
+  set sourceOpened(value) {
+    if (this._setObservableProperty('sourceOpened', value)) {
+      this._dataChanged(this._mediaType, this._example, value);
+    }
+  }
+
+  _setObservableProperty(prop, value) {
+    const key = '_' + prop;
+    const old = this[key];
+    if (old === value) {
+      return false;
+    }
+    this[key] = value;
+    this.requestUpdate(prop, old);
+    return true;
   }
   /**
    * Computes whether passed value is a valig JSON object, when component is
@@ -252,7 +259,7 @@ class ApiExampleRender extends PolymerElement {
       return;
     }
     this.__changeDebouncer = true;
-    afterNextRender(this, () => {
+    setTimeout(() => {
       this.__changeDebouncer = false;
       this._renderCode();
     });
@@ -265,14 +272,14 @@ class ApiExampleRender extends PolymerElement {
     }
     const output = this.shadowRoot.querySelector('#output');
     if (!output) {
-      afterNextRender(this, () => this._renderCode());
+      setTimeout(() => this._renderCode());
       return;
     }
     if (this.sourceOpened) {
       output.innerHTML = this.highlight(String(example.raw), 'yaml');
     } else {
       const value = String(example.value);
-      if (value) {
+      if (value !== undefined) {
         output.innerHTML = this.highlight(value, this.mediaType);
       } else {
         output.innerText = '(no value in example)';
@@ -306,7 +313,7 @@ class ApiExampleRender extends PolymerElement {
     return ev.detail.code;
   }
   /**
-   * Coppies current response text value to clipboard.
+   * Coppies current response text value to clipboard."tabble"
    *
    * @param {Event} e
    */
@@ -314,10 +321,11 @@ class ApiExampleRender extends PolymerElement {
     const button = e.target;
     const copy = this.shadowRoot.querySelector('clipboard-copy');
     if (copy.copy()) {
-      button.icon = 'arc:done';
+      button.innerText = 'Done';
     } else {
-      button.icon = 'arc:error';
+      button.innerText = 'Error';
     }
+    button.disabled = true;
     setTimeout(() => this._resetCopyButtonState(button), 1000);
   }
   /**
@@ -325,18 +333,8 @@ class ApiExampleRender extends PolymerElement {
    * @param {Element} button Button to reset.
    */
   _resetCopyButtonState(button) {
-    button.icon = 'arc:content-copy';
-  }
-
-  _computeIsUnion(example) {
-    return !!(example && example.hasUnion);
-  }
-
-  _computeUnions(isUnion, example) {
-    if (!isUnion || !example || !example.values) {
-      return;
-    }
-    return example.values.map((item) => item.title);
+    button.innerText = 'Copy';
+    button.disabled = false;
   }
 
   _computeUnionExamples(selectedUnion, example) {
@@ -365,43 +363,100 @@ class ApiExampleRender extends PolymerElement {
     }
   }
   /**
-   * Resets union selection when union types list changes.
-   *
-   * @param {?Array} types List of current union types.
-   */
-  _unionTypesChanged(types) {
-    if (!types) {
-      return;
-    }
-    this.selectedUnion = 0;
-  }
-  /**
    * Handler for union type button click.
    * Sets `selectedUnion` property.
    *
    * @param {ClickEvent} e
    */
   _selectUnion(e) {
-    const index = e.model.get('index');
+    const index = Number(e.target.dataset.index);
+    if (index !== index) {
+      return;
+    }
     if (this.selectedUnion === index) {
       e.target.active = true;
     } else {
       this.selectedUnion = index;
     }
   }
-  /**
-   * Computes if selectedUnion equals current item index.
-   *
-   * @param {Number} selectedUnion
-   * @param {Number} index
-   * @return {Boolean}
-   */
-  _unionTypeActive(selectedUnion, index) {
-    return selectedUnion === index;
-  }
 
   _computeRenderTitle(hasTitle, noTitle) {
     return !!(hasTitle && !noTitle);
   }
+
+  _renderUnion(example) {
+    const values = example.values;
+    if (!values) {
+      return;
+    }
+    const unions = example.values.map((item) => item.title);
+    const selectedUnion = this.selectedUnion;
+    const unionExample = this._computeUnionExamples(selectedUnion, example);
+    return html`
+      <div class="union-type-selector">
+        <span>Any of:</span>
+        ${unions.map((item, index) => html`
+          <paper-button class="union-toggle"
+            .active="${selectedUnion === index}"
+            @click="${this._selectUnion}"
+            data-index="${index}"
+            title="Select ${item} type">${item}</paper-button>`)}
+      </div>
+      ${unionExample ? html`
+        <api-example-render
+          .example="${unionExample}"
+          .isJson="${this.isJson}"
+          .mediaType="${this.mediaType}"
+          .table="${this.table}"
+          .renderTable="${this.renderTable}"
+          notitle
+          .noActions="${this.noActions}"></api-example-render>` : undefined}
+    `;
+  }
+
+  _renderExample(example) {
+    const renderTitle = !!(example.hasTitle && !this.noTitle);
+    const hasRaw = this._computeHasRaw(example.value, example.raw);
+    const isJson = this._computeIsJson(this.isJson, example.value);
+    return html`<div class="example">
+      ${renderTitle ? html`<h6>${example.title}</h6>`: undefined}
+      ${!this.noActions ? html`<div class="example-actions">
+        <paper-button
+          data-action="copy"
+          @click="${this._copyToClipboard}"
+          title="Copy example to clipboard">Copy</paper-button>
+        ${isJson ? html`
+          <paper-button
+            data-action="table"
+            toggles
+            .active="${this.table}"
+            @click="${this._toggleTable}"
+            title="Toggle between table and JSON view">Table view</paper-button>` : undefined}
+        ${hasRaw ? html`
+          <paper-button
+            data-action="code"
+            toggles
+            .active="${this.sourceOpened}"
+            @click="${this._toggleSourceOpened}"
+            title="Toggle between JSON and example source view">Source vierw</paper-button>` : undefined}
+      </div>` : undefined}
+      ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
+      <div class="code-wrapper" ?hidden="${this.renderTable}">
+        <code id="output" class="markdown-html" language-xml=""></code>
+      </div>
+    </div>`;
+  }
+
+  render() {
+    const example = this.example;
+    if (!example) {
+      return html``;
+    }
+    const isUnion = !!(example && example.hasUnion);
+    return html`
+    ${isUnion ? this._renderUnion(example) : this._renderExample(example)}
+    <clipboard-copy .content="${example.value}"></clipboard-copy>
+    `;
+  }
 }
-window.customElements.define(ApiExampleRender.is, ApiExampleRender);
+window.customElements.define('api-example-render', ApiExampleRender);

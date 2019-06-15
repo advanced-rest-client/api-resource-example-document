@@ -16,28 +16,29 @@
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "devDependencies": {
-    "@api-components/api-console-default-theme": "^3.0.0-preview.2",
+    "@advanced-rest-client/arc-demo-helper": "^1.0.3",
+    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
     "@api-components/api-model-generator": "^0.1.12",
-    "@api-components/api-navigation": "^3.0.0-preview.2",
+    "@api-components/api-navigation": "^3.0.1",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing-karma": "^2.0.0",
     "@polymer/gen-typescript-declarations": "^1.6.1",
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/iron-test-helpers": "^3.0.0",
     "@polymer/paper-dropdown-menu": "^3.0.0",
     "@polymer/paper-item": "^3.0.0",
     "@polymer/paper-listbox": "^3.0.0",
-    "@polymer/test-fixture": "^4.0.2",
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
+    "owc-dev-server": "^0.3.0",
     "sinon": "^7.3.2",
-    "wct-mocha": "^1.0.0",
     "web-animations-js": "^2.3.1"
   },
   "scripts": {
-    "lint": "polymer lint api-resource-example-document.html",
-    "test-sauce": "polymer test --plugin sauce --job-name \"api-resource-example-document:local-test\"",
-    "test": "polymer test --plugin local",
+    "start": "owc-dev-server --open demo",
+    "test": "karma start --coverage",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:sl": "karma start karma.sl.config.js --legacy --coverage",
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
   "bugs": {
@@ -49,14 +50,12 @@
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "dependencies": {
-    "@advanced-rest-client/arc-icons": "^3.0.0-preview.2",
-    "@advanced-rest-client/clipboard-copy": "^3.0.0-preview.1",
-    "@advanced-rest-client/json-table": "^3.0.0-preview.2",
-    "@api-components/amf-helper-mixin": "^3.0.0-preview.1",
-    "@api-components/api-example-generator": "^3.0.0-preview.7",
+    "@advanced-rest-client/clipboard-copy": "^3.0.0",
+    "@advanced-rest-client/json-table": "^3.0.2",
+    "@api-components/amf-helper-mixin": "^3.0.1",
+    "@api-components/api-example-generator": "^3.0.0",
     "@polymer/paper-button": "^3.0.0",
-    "@polymer/paper-icon-button": "^3.0.0",
-    "@polymer/polymer": "^3.2.0",
-    "@polymer/prism-element": "^3.0.0"
+    "@polymer/prism-element": "^3.0.0",
+    "lit-element": "^2.0.1"
   }
 }

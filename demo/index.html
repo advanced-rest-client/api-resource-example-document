@@ -7,33 +7,14 @@
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
+    <script type="module" src="../node_modules/@advanced-rest-client/arc-demo-helper/arc-demo-helper.js"></script>
 
-    <script type="module">
-      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-      import '@polymer/polymer/lib/elements/dom-bind.js';
-      import '@polymer/paper-toast/paper-toast.js';
-      import '@polymer/paper-styles/typography.js';
-      import '@api-components/raml-aware/raml-aware.js';
-      import '@api-components/api-navigation/api-navigation.js';
-      import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-      import '@polymer/paper-item/paper-item.js';
-      import '@polymer/paper-listbox/paper-listbox.js';
-      import '../api-resource-example-document.js';
-      import '@api-components/api-console-default-theme/api-console-default-theme.js';
-    </script>
-
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
+    <style>
       html,
       body {
-        margin: 0;
-        padding: 0;
-      }
-
-      [role="main"] {
-        max-width: 1100px;
-        @apply --layout-horizontal;
-        @apply --layout-start;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100%;
       }
 
       api-navigation {
@@ -42,16 +23,11 @@
         overflow: auto;
       }
 
-      api-method-documentation {
-        margin-left: 40px;
-        @apply --layout-flex;
-      }
-
       header {
         padding: 12px 24px;
         background-color: #C5E1A5;
-        @apply --layout-horizontal;
-        @apply --layout-center;
+        display: flex;
+        align-items: center;
         --iron-icon-fill-color: #3E2723;
         --paper-input-container-focus-color: #33691E;
         --paper-input-container-label: {
@@ -59,167 +35,21 @@
         };
       }
 
-      .demo-container {
-        @apply --layout-flex;
+      [role="main"].centered {
+        max-width: 1100px;
+        display: flex;
+        align-items: start;
       }
-      </style>
-    </custom-style>
+
+      .demo-container {
+        flex: 1;
+        flex-basis: 0.000000001px;
+      }
+    </style>
   </head>
   <body>
-    <dom-bind id="demo">
-      <template is="dom-bind">
-        <raml-aware raml="{{amfModel}}" scope="model"></raml-aware>
-        <header>
-          <paper-dropdown-menu label="Select demo endpoint">
-            <paper-listbox slot="dropdown-content" id="enpointsList" on-selected-changed="_apiChanged">
-              <paper-item data-src="demo-api.json">Demo api</paper-item>
-              <paper-item data-src="demo-api-compact.json">Demo api - compact model</paper-item>
-              <paper-item data-src="raml-types.json">RAML types with raml examples</paper-item>
-              <paper-item data-src="raml-types-compact.json">RAML types with raml examples - compact model</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-        </header>
+    <div id="demo"></div>
 
-        <section class="vertical-section-container centered" role="main">
-
-          <api-navigation aware="model" endpoints-opened=""></api-navigation>
-
-          <div class="demo-container">
-            <paper-dropdown-menu label="Select media type" hidden$="[[singlePayload]]">
-              <paper-listbox slot="dropdown-content" id="mediaList" on-selected-changed="_mediaChanged">
-                <template is="dom-repeat" items="[[mediaTypes]]">
-                  <paper-item>[[item.label]]</paper-item>
-                </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-
-            <template is="dom-if" if="[[hasData]]">
-              <template is="dom-if" if="[[hasExamples]]">
-                <api-resource-example-document amf-model="[[amfModel]]" examples="[[examples]]" media-type="[[mediaType]]"></api-resource-example-document>
-              </template>
-
-              <template is="dom-if" if="[[!hasExamples]]">
-                <p>Examples not found in selected method</p>
-              </template>
-            </template>
-            <template is="dom-if" if="[[!hasData]]">
-              <p>Select an object that contains examples.</p>
-            </template>
-          </div>
-        </section>
-
-        <demo-element id="helper" amf-model="{{amfModel}}"></demo-element>
-      </template>
-    </dom-bind>
-    <script type="module">
-    import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-    import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-    import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-    (function(app) {
-      app.hasData = false;
-      app.singlePayload = true;
-      app._load = function() {
-        class DemoElement extends AmfHelperMixin(PolymerElement) {}
-        window.customElements.define('demo-element', DemoElement);
-        document.getElementById('enpointsList').selected = 0;
-      };
-
-      app._loadFile = function(file) {
-        fetch('./' + file)
-        .then((response) => response.json())
-        .then((data) => {
-          app.amfModel = data;
-        });
-      };
-
-      app._apiChanged = function(e) {
-        const file = e.target.selectedItem.dataset.src;
-        app._loadFile(file);
-      };
-
-      app._navChanged = function(e) {
-        const type = e.detail.type;
-        if (type === 'method') {
-          app.setData(e.detail.selected);
-          app.hasData = true;
-        } else {
-          app.hasData = false;
-        }
-      };
-
-      app.setData = function(selection) {
-        const list = document.body.querySelector('#mediaList');
-        if (list) {
-          list.selected = -1;
-        }
-        const webApi = app.$.helper._computeWebApi(app.amfModel);
-        const method = app.$.helper._computeMethodModel(webApi, selection);
-        if (!method) {
-          app.hasData = false;
-          return;
-        }
-        const payloads = app.computePayloads(method);
-        app.hasData = !!(payloads && payloads.length);
-        app.singlePayload = app.hasData && payloads.length === 1;
-        app.mediaTypes = app.computeMediaTypes(payloads);
-        app.payloads = app.hasData ? payloads : undefined;
-        if (app.hasData) {
-          afterNextRender(app, () => {
-            const list = document.body.querySelector('#mediaList');
-            if (list) {
-              list.selected = 0;
-            }
-          });
-        }
-      };
-
-      app.computePayloads = function(model) {
-        if (!model) {
-          return;
-        }
-        const expects = app.$.helper._computeExpects(model);
-        if (!expects) {
-          return;
-        }
-        let payloads = app.$.helper._computePayload(expects);
-        if (!payloads) {
-          return;
-        }
-        if (!(payloads instanceof Array)) {
-          payloads = [payloads];
-        }
-        return payloads;
-      };
-
-      app.computeMediaTypes = function(payloads) {
-        if (!payloads) {
-          return;
-        }
-        const result = [];
-        payloads.forEach((item) => {
-          const label = app.$.helper._getValue(item, app.$.helper.ns.raml.vocabularies.http + 'mediaType');
-          if (label) {
-            result.push({label});
-          }
-        });
-        return result.length ? result : undefined;
-      };
-
-      app._mediaChanged = function(e) {
-        app.hasExamples = false;
-        const index = e.detail.value;
-        if (isNaN(index) || index === -1) {
-          return;
-        }
-        const mediaType = app.mediaTypes[index].label;
-        const body = app.payloads[index];
-        app.hasExamples = true;
-        app.examples = body;
-        app.mediaType = mediaType;
-      };
-      window.addEventListener('WebComponentsReady', () => app._load());
-      window.addEventListener('api-navigation-selection-changed', app._navChanged);
-    })(document.getElementById('demo'));
-    </script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>

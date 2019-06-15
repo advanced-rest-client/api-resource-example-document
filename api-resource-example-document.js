@@ -1,9 +1,7 @@
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
-import {AmfHelperMixin} from '../../@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '../../@polymer/prism-element/prism-highlighter.js';
-import '../../@api-components/api-example-generator/api-example-generator.js';
+import { LitElement, html, css } from 'lit-element';
+import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import '@polymer/prism-element/prism-highlighter.js';
+import '@api-components/api-example-generator/api-example-generator.js';
 import './api-example-render.js';
 /**
  * `api-resource-example-document`
@@ -34,7 +32,7 @@ import './api-example-render.js';
  * ----------------|-------------|----------
  * `--api-resource-example-document` | Mixin applied to this elment | `{}`
  * `--api-resource-example-document-title` | Mixin applied to example title | `{}`
- * `--api-resource-example-document-button-active-background-color` | Background color of active "tabble" button | `#e0e0e0`
+ * `--api-resource-example-document-button-active-background-color` | Background color of active button | `#e0e0e0`
  *
  * @customElement
  * @polymer
@@ -42,26 +40,16 @@ import './api-example-render.js';
  * @memberof ApiElements
  * @appliesMixin ApiElements.AmfHelperMixin
  */
-class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
-  static get template() {
-    return html`
-    <style>
+class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
+  static get styles() {
+    return css`
     :host {
       display: block;
-      @apply --api-resource-example-document;
     }
 
     .example:not(:last-of-type) {
       margin-bottom: 24px;
-    }
-    </style>
-    <prism-highlighter></prism-highlighter>
-    <api-example-generator amf-model="[[amfModel]]" id="exampleGenerator"></api-example-generator>
-    <template is="dom-if" if="[[hasExamples]]">
-      <template is="dom-repeat" items="[[renderedExamples]]">
-        <api-example-render class="example" example="[[item]]" is-json="[[isJson]]" media-type="[[mediaType]]" table="{{table}}" render-table="[[_effectiveTable]]" no-actions="[[noActions]]"></api-example-render>
-      </template>
-    </template>`;
+    }`;
   }
 
   static get properties() {
@@ -70,17 +58,17 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        * AMF model for examples.
        * It can be Payload shape, list of Payload shapes, or any shape.
        */
-      examples: Array,
+      examples: { type: Array },
       /**
        * Examples media type
        */
-      mediaType: String,
+      mediaType: { type: String },
       /**
        * Type (model) name for which examples are generated for.
        * This is used by RAML to XML examples processor to wrap the example
        * in type name. If missing this wrapping is omnited.
        */
-      typeName: String,
+      typeName: { type: String },
       /**
        * Rendered payload ID (if any) to associate examples with the paylaod.
        */
@@ -88,10 +76,8 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
       /**
        * Computed in a debouncer examples to render.
        */
-      renderedExamples: {
-        type: Array,
-        notify: true,
-        readOnly: true
+      _renderedExamples: {
+        type: Array
       },
       /**
        * Computed value, true if there are examples to render.
@@ -105,10 +91,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        */
       hasExamples: {
         type: Boolean,
-        notify: true,
-        reflectToAttribute: true,
-        value: false,
-        computed: '_computeHasArrayValue(renderedExamples)'
+        reflect: true
       },
       /**
        * If true it will display a table view instead of JSON code.
@@ -116,8 +99,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        */
       table: {
         type: Boolean,
-        value: false,
-        observer: '_tableChanged'
+        reflect: true
       },
       /**
        * Computed value, true if selected media type is application/json
@@ -125,19 +107,18 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        */
       isJson: {
         type: Boolean,
-        value: false,
-        computed: '_computeIsJson(mediaType)'
+        reflect: true
       },
       /**
        * Configuration passed to example generator.
        * When set the generator only returns examples that are defined in API
        * file, without auto generating examples from object properties.
        */
-      noAuto: Boolean,
+      noAuto: { type: Boolean, reflect: true },
       /**
        * When set the actions row (copy, switch view type) is not rendered.
        */
-      noActions: {type: Boolean, value: false},
+      noActions: { type: Boolean, reflect: true },
       /**
        * When set it only renders "raw" examples. To be used when media type context is unknown.
        * This can happen if RAML type document is rendered outside method documentation
@@ -146,44 +127,160 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
        * Note, this can return JSON, XML, YAML or any other value
        * depending on original source.
        */
-      rawOnly: Boolean,
+      rawOnly: { type: Boolean, reflect: true },
       _effectiveTable: {
-        type: Boolean,
-        computed: '_computeEffectiveTable(table, isJson)'
+        type: Boolean
       },
       /**
        * True if current environment has localStorage suppport.
        * Chrome apps do not have localStorage property.
        */
-      hasLocalStorage: {
-        type: Boolean,
-        readOnly: true,
-        value: function() {
-          /* global chrome */
-          if (typeof chrome !== 'undefined' && chrome.i18n) {
-            // Chrome apps have `chrome.i18n` property, regular website doesn't.
-            // This is to avoid annoying warning message in Chrome apps.
-            return false;
-          }
-          try {
-            localStorage.getItem('test');
-            return true;
-          } catch (_) {
-            return false;
-          }
-        }
+      _hasLocalStorage: {
+        type: Boolean
       }
     };
   }
 
-  static get observers() {
-    return ['_computeExamples(examples, mediaType, rawOnly, typeName, noAuto, payloadId)'];
+  get hasLocalStorage() {
+    return this._hasLocalStorage;
+  }
+
+  get renderedExamples() {
+    return this.__renderedExamples;
+  }
+
+  get _renderedExamples() {
+    return this.__renderedExamples;
+  }
+
+  set _renderedExamples(value) {
+    if (this._setObservableProperty('_renderedExamples', value)) {
+      this.dispatchEvent(new CustomEvent('rendered-examples-changed', {
+        composed: true,
+        detail: {
+          value
+        }
+      }));
+    }
+  }
+
+  get table() {
+    return this._table;
+  }
+
+  set table(value) {
+    if (this._setObservableProperty('table', value)) {
+      this._tableChanged(value);
+      this._effectiveTable = this._computeEffectiveTable(value, this._isJson);
+    }
+  }
+
+  get mediaType() {
+    return this._mediaType;
+  }
+
+  set mediaType(value) {
+    if (this._setObservableProperty('mediaType', value)) {
+      this.isJson = this._computeIsJson(value);
+      this._computeExamples(this.examples, value, this.rawOnly, this.typeName, this.noAuto, this.payloadId);
+    }
+  }
+
+  get isJson() {
+    return this._isJson;
+  }
+
+  set isJson(value) {
+    if (this._setObservableProperty('isJson', value)) {
+      this._effectiveTable = this._computeEffectiveTable(this._table, value);
+    }
+  }
+
+  get examples() {
+    return this._examples;
+  }
+
+  set examples(value) {
+    if (this._setObservableProperty('examples', value)) {
+      this._computeExamples(value, this._mediaType, this._rawOnly, this._typeName, this._noAuto, this._payloadId);
+    }
+  }
+
+  get rawOnly() {
+    return this._rawOnly;
+  }
+
+  set rawOnly(value) {
+    if (this._setObservableProperty('rawOnly', value)) {
+      this._computeExamples(this._examples, this._mediaType, value, this._typeName, this._noAuto, this._payloadId);
+    }
+  }
+
+  get typeName() {
+    return this._typeName;
+  }
+
+  set typeName(value) {
+    if (this._setObservableProperty('typeName', value)) {
+      this._computeExamples(this._examples, this._mediaType, this._rawOnly, value, this._noAuto, this._payloadId);
+    }
+  }
+
+  get noAuto() {
+    return this._noAuto;
+  }
+
+  set noAuto(value) {
+    if (this._setObservableProperty('noAuto', value)) {
+      this._computeExamples(this._examples, this._mediaType, this._rawOnly, this._typeName, value, this._payloadId);
+    }
+  }
+
+  get payloadId() {
+    return this._payloadId;
+  }
+
+  set payloadId(value) {
+    if (this._setObservableProperty('payloadId', value)) {
+      this._computeExamples(this._examples, this._mediaType, this._rawOnly, this._typeName, this._noAuto, value);
+    }
+  }
+
+  get hasExamples() {
+    return this._hasExamples;
+  }
+
+  set hasExamples(value) {
+    if (this._setObservableProperty('hasExamples', value)) {
+      this.dispatchEvent(new CustomEvent('has-examples-changed', {
+        composed: true,
+        detail: {
+          value
+        }
+      }));
+    }
+  }
+
+  _setObservableProperty(prop, value) {
+    const key = '_' + prop;
+    const old = this[key];
+    if (old === value) {
+      return false;
+    }
+    this[key] = value;
+    this.requestUpdate(prop, old);
+    return true;
   }
 
   constructor() {
     super();
     this._onStorageChanged = this._onStorageChanged.bind(this);
     this._onJsonTableStateChanged = this._onJsonTableStateChanged.bind(this);
+
+    this._hasLocalStorage = this._hasStorageSupport();
+    this.noActions = false;
+    this.isJson = false;
+    this.hasExamples = false;
     this._ensureJsonTable();
   }
 
@@ -197,6 +294,21 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
     super.disconnectedCallback();
     window.removeEventListener('storage', this._onStorageChanged);
     window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
+  }
+
+  _hasStorageSupport() {
+    /* global chrome */
+    if (typeof chrome !== 'undefined' && chrome.i18n) {
+      // Chrome apps have `chrome.i18n` property, regular website doesn't.
+      // This is to avoid annoying warning message in Chrome apps.
+      return false;
+    }
+    try {
+      localStorage.getItem('test');
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
   /**
    * When response's content type is JSON the view renders the
@@ -305,30 +417,32 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
       return;
     }
     this._examplesDebouncer = true;
-    afterNextRender(this, () => {
+    setTimeout(() => {
       this._examplesDebouncer = false;
       this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.payloadId, this.noAuto);
     });
   }
 
   __computeExamples(examples, mediaType, rawOnly, typeName, payloadId, noAuto) {
-    this._setRenderedExamples(undefined);
+    this._renderedExamples = undefined;
+    this.hasExamples = false;
     if (!examples || (!mediaType && !rawOnly)) {
       return;
     }
     const opts = {
       typeName,
-        typeId: payloadId,
-        noAuto,
-        rawOnly
+      typeId: payloadId,
+      noAuto,
+      rawOnly
     };
+    const generator = this.shadowRoot.querySelector('#exampleGenerator');
     let result;
     if (examples instanceof Array) {
       if (this._hasType(examples[0], this.ns.raml.vocabularies.http + 'Payload')) {
-        result = this.$.exampleGenerator.generatePayloadsExamples(examples, mediaType, opts);
+        result = generator.generatePayloadsExamples(examples, mediaType, opts);
       } else {
         for (let i = 0, len = examples.length; i < len; i++) {
-          const item = this.$.exampleGenerator.computeExamples(examples[i], mediaType, opts);
+          const item = generator.computeExamples(examples[i], mediaType, opts);
           if (item) {
             if (result) {
               result = result.concat(item);
@@ -339,13 +453,14 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
         }
       }
     } else if (this._hasType(examples, this.ns.raml.vocabularies.http + 'Payload')) {
-      result = this.$.exampleGenerator.generatePayloadExamples(examples, mediaType, opts);
+      result = generator.generatePayloadExamples(examples, mediaType, opts);
     } else {
       // try anything...
-      result = this.$.exampleGenerator.computeExamples(examples, mediaType, opts);
+      result = generator.computeExamples(examples, mediaType, opts);
     }
     if (result && result.length) {
-      this._setRenderedExamples(result);
+      this._renderedExamples = result;
+      this.hasExamples = true;
     }
   }
   /**
@@ -364,6 +479,31 @@ class ApiResourceExampleDocument extends AmfHelperMixin(PolymerElement) {
    */
   _computeEffectiveTable(table, isJson) {
     return !!(isJson && table);
+  }
+
+  _tableCHangedHandler(e) {
+    this.table = e.detail.value;
+  }
+
+  _examplesTemplate(examples) {
+    return examples.map((item) => html`
+      <api-example-render
+      class="example"
+      .example="${item}"
+      ?isjson="${this.isJson}"
+      ?mediatype="${this.mediaType}"
+      ?table="${this.table}"
+      ?rendertable="${this._effectiveTable}"
+      ?noactions="${this.noActions}"
+      @table-changed="${this._tableCHangedHandler}"></api-example-render>`);
+  }
+
+  render() {
+    const examples = this.renderedExamples;
+    return html`
+    <prism-highlighter></prism-highlighter>
+    <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
+    ${examples && examples.length ? this._examplesTemplate(examples) : undefined}`;
   }
 }
 window.customElements.define('api-resource-example-document', ApiResourceExampleDocument);
