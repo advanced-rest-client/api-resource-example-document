@@ -3,28 +3,37 @@ const createDefaultConfig = require('@open-wc/testing-karma/default-config');
 const merge = require('webpack-merge');
 
 module.exports = (config) => {
- config.set(
-   merge(createDefaultConfig(config), {
-     files: [
-       // runs all files ending with .test in the test folder,
-       // can be overwritten by passing a --grep flag. examples:
-       //
-       // npm run test -- --grep test/foo/bar.test.js
-       // npm run test -- --grep test/bar/*
-       { pattern: config.grep ? config.grep : 'test/**/*.test.js', type: 'module' }
-     ],
+  config.set(
+    merge(createDefaultConfig(config), {
+      files: [
+        // runs all files ending with .test in the test folder,
+        // can be overwritten by passing a --grep flag. examples:
+        //
+        // npm run test -- --grep test/foo/bar.test.js
+        // npm run test -- --grep test/bar/*
+        {
+          pattern: config.grep ? config.grep : 'test/**/*.test.js',
+          type: 'module'
+        }
+      ],
 
-     coverageIstanbulReporter: {
+      coverageIstanbulReporter: {
         thresholds: {
           global: {
             statements: 80,
             branches: 80,
-            functions: 90,
+            functions: 89,
             lines: 80
           }
         }
+      },
+
+      coverageReporter: {
+        exclude: [
+          'test/**/*.test.js'
+        ]
       }
-   })
- );
- return config;
+    })
+  );
+  return config;
 };
