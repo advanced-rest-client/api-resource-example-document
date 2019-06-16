@@ -21,6 +21,11 @@ describe('<api-example-render>', () => {
       <api-example-render media-type="application/json" isjson noactions></api-example-render>`));
   }
 
+  async function noTitleFixture() {
+    return (await fixture(`
+      <api-example-render notitle></api-example-render>`));
+  }
+
   describe('Basics', () => {
     let element;
     beforeEach(async () => {
@@ -40,6 +45,74 @@ describe('<api-example-render>', () => {
         assert.isTrue(spy.called);
         done();
       });
+    });
+  });
+
+  describe('View rendering', () => {
+    let element;
+
+    it('Renders title for an example', async () => {
+      element = await basicFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: false,
+        title: 'test'
+      };
+      await nextFrame();
+      const h6 = element.shadowRoot.querySelector('h6');
+      assert.ok(h6);
+      assert.equal(h6.innerText.trim(), 'test');
+    });
+
+    it('Do not renders title forwhen notitle is set', async () => {
+      element = await noTitleFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: false,
+        title: 'test'
+      };
+      await nextFrame();
+      const h6 = element.shadowRoot.querySelector('h6');
+      assert.notOk(h6);
+    });
+
+    it('Renders actions', async () => {
+      element = await basicFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: false
+      };
+      await nextFrame();
+      const node = element.shadowRoot.querySelector('.example-actions');
+      assert.ok(node);
+    });
+
+    it('Renders JSON toggle button', async () => {
+      element = await jsonFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: false
+      };
+      await nextFrame();
+      const node = element.shadowRoot.querySelector('[data-action="table"]');
+      assert.ok(node);
+    });
+
+    it('Renders code toggle view', async () => {
+      element = await jsonFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: true,
+        raw: 'test'
+      };
+      await nextFrame();
+      const node = element.shadowRoot.querySelector('[data-action="code"]');
+      assert.ok(node);
     });
   });
 
@@ -188,6 +261,14 @@ describe('<api-example-render>', () => {
       const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
       tap(nodes[1]);
       assert.equal(element.selectedUnion, 1);
+    });
+
+    it('Ignores not numeric indexes', async () => {
+      await nextFrame();
+      const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
+      nodes[1].dataset.index = 'test';
+      tap(nodes[1]);
+      assert.equal(element.selectedUnion, 0);
     });
   });
 
@@ -350,6 +431,97 @@ describe('<api-example-render>', () => {
       await nextFrame();
       const node = element.shadowRoot.querySelector('.example-actions');
       assert.notOk(node);
+    });
+  });
+
+  describe('_renderUnion()', () => {
+    let element;
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Returns undefined when no value', () => {
+      const result = element._renderUnion({});
+      assert.isUndefined(result);
+    });
+
+    it('Returns value for unions', () => {
+      const result = element._renderUnion({
+        values: [{
+          hasTitle: true,
+          title: 'test-title',
+          value: 'a'
+        }, {
+          hasTitle: true,
+          title: 'other-title',
+          value: 'b'
+        }]
+      });
+      assert.typeOf(result, 'object');
+    });
+
+    it('Has no api-example-render when no union selected', () => {
+      const result = element._renderUnion({
+        values: [{
+          hasTitle: true,
+          title: 'test-title',
+          value: 'a'
+        }]
+      });
+      assert.isUndefined(result.values[1]);
+    });
+
+    it('Has api-example-render when union selected', () => {
+      element.selectedUnion = 0;
+      const result = element._renderUnion({
+        values: [{
+          hasTitle: true,
+          title: 'test-title',
+          value: 'a'
+        }]
+      });
+      const html = result.values[1].getHTML();
+      assert.notEqual(html.indexOf('api-example-render'), -1);
+    });
+  });
+
+  describe('_computeUnionExamples()', () => {
+    let element;
+    let example;
+    beforeEach(async () => {
+      element = await basicFixture();
+      example = {
+        values: [{
+          hasTitle: true,
+          title: 'test-title',
+          value: 'a'
+        }, {
+          hasTitle: true,
+          title: 'other-title',
+          value: 'b'
+        }]
+      };
+    });
+
+    it('Returns undefined when no selectedUnion argument', () => {
+      const result = element._computeUnionExamples(undefined, example);
+      assert.isUndefined(result);
+    });
+
+    it('Returns undefined when no example argument', () => {
+      const result = element._computeUnionExamples(0, undefined);
+      assert.isUndefined(result);
+    });
+
+    it('Returns undefined when no values in example', () => {
+      delete example.values;
+      const result = element._computeUnionExamples(0, example);
+      assert.isUndefined(result);
+    });
+
+    it('Returns selected value', () => {
+      const result = element._computeUnionExamples(0, example);
+      assert.deepEqual(result, example.values[0]);
     });
   });
 });
