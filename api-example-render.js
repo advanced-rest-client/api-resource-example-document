@@ -380,10 +380,6 @@ class ApiExampleRender extends LitElement {
     }
   }
 
-  _computeRenderTitle(hasTitle, noTitle) {
-    return !!(hasTitle && !noTitle);
-  }
-
   _renderUnion(example) {
     const values = example.values;
     if (!values) {

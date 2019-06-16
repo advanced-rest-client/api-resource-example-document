@@ -152,28 +152,6 @@ describe('<api-example-render>', () => {
     });
   });
 
-  describe('_computeRenderTitle()', () => {
-    let element;
-    beforeEach(async () => {
-      element = await basicFixture();
-    });
-
-    it('Returns false when no hasTitle', () => {
-      const result = element._computeRenderTitle(false, false);
-      assert.isFalse(result);
-    });
-
-    it('Returns false when noTitle is set', () => {
-      const result = element._computeRenderTitle(true, true);
-      assert.isFalse(result);
-    });
-
-    it('Returns true when no noTitle and hasTitle', () => {
-      const result = element._computeRenderTitle(true, false);
-      assert.isTrue(result);
-    });
-  });
-
   describe('_selectUnion()', () => {
     let element;
     beforeEach(async () => {
