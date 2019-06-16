@@ -1,30 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-  <title>api-resource-example-document test</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
-  <script src="amf-loader.js"></script>
-  <link rel="import" href="../api-resource-example-document.html">
-</head>
-<body>
-  <test-fixture id="Basic">
-    <template>
-      <api-resource-example-document></api-resource-example-document>
-    </template>
-  </test-fixture>
+import { fixture, assert, nextFrame } from '@open-wc/testing';
+import sinon from 'sinon/pkg/sinon-esm.js';
+import { AmfLoader } from './amf-loader.js';
+import '../api-resource-example-document.js';
 
-  <test-fixture id="Json">
-    <template>
-      <api-resource-example-document media-type="application/json"></api-resource-example-document>
-    </template>
-  </test-fixture>
+describe('<api-example-render>', () => {
+  async function basicFixture() {
+    return (await fixture(`<api-resource-example-document></api-resource-example-document>`));
+  }
 
-  <script>
-  /* global AmfLoader */
+  async function jsonFixture() {
+    return (await fixture(`
+      <api-resource-example-document mediatype="application/json"></api-resource-example-document>`));
+  }
+
+
   function clearTableStorage() {
     localStorage.removeItem('jsonTableEnabled');
   }
@@ -33,20 +22,21 @@
     return localStorage.jsonTableEnabled;
   }
 
-  suite('_tableChanged()', () => {
+
+  describe('_tableChanged()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
       clearTableStorage();
     });
 
-    test('Does noting when state is undefined', () => {
+    it('Does noting when state is undefined', () => {
       const spy = sinon.spy(element, '_dispatchTableState');
       element._tableChanged();
       assert.isFalse(spy.called);
     });
 
-    test('Updates state of the local storage', () => {
+    it('Updates state of the local storage', () => {
       element._tableChanged(true);
       let result = getStorageValue();
       assert.equal(result, 'true');
@@ -55,76 +45,76 @@
       assert.equal(result, 'false');
     });
 
-    test('Calles _dispatchTableState()', () => {
+    it('Calles _dispatchTableState()', () => {
       const spy = sinon.spy(element, '_dispatchTableState');
       element._tableChanged(false);
       assert.isTrue(spy.called);
     });
   });
 
-  suite('_dispatchTableState()', () => {
+  describe('_dispatchTableState()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
     });
 
-    test('Dispatches the event', () => {
+    it('Dispatches the event', () => {
       const spy = sinon.spy();
       element.addEventListener('json-table-state-changed', spy);
       element._dispatchTableState(true);
       assert.isTrue(spy.called);
     });
 
-    test('Returns the event', () => {
+    it('Returns the event', () => {
       const result = element._dispatchTableState(true);
       assert.typeOf(result, 'customevent');
     });
 
-    test('Event is not cancelable', () => {
+    it('Event is not cancelable', () => {
       const result = element._dispatchTableState(true);
       assert.isFalse(result.cancelable);
     });
 
-    test('Event bubbles', () => {
+    it('Event bubbles', () => {
       const result = element._dispatchTableState(true);
       assert.isTrue(result.bubbles);
     });
 
-    test('Event is composed', () => {
+    it('Event is composed', () => {
       const result = element._dispatchTableState(true);
       if (result.composed !== undefined) {
         assert.isTrue(result.composed);
       }
     });
 
-    test('Has the sate on detail object', () => {
+    it('Has the sate on detail object', () => {
       const result = element._dispatchTableState(true);
       assert.isTrue(result.detail.enabled);
     });
   });
 
-  suite('_onStorageChanged()', () => {
+  describe('_onStorageChanged()', () => {
     let element;
-    setup(() => {
+    beforeEach(async () => {
       clearTableStorage();
-      element = fixture('Basic');
+      element = await basicFixture();
     });
 
-    test('Does nothing when key is not jsonTableEnabled', () => {
+    it('Does nothing when key is not jsonTableEnabled', () => {
       element._onStorageChanged({
         key: 'test'
       });
       assert.isFalse(element.table);
     });
 
-    test('Does nothing when newValue is not set', () => {
+    it('Does nothing when newValue is not set', () => {
       element._onStorageChanged({
         key: 'jsonTableEnabled'
       });
       assert.isFalse(element.table);
     });
 
-    test('Updates table state', () => {
+    it('Updates table state', () => {
       element._onStorageChanged({
         key: 'jsonTableEnabled',
         newValue: 'true'
@@ -133,36 +123,36 @@
     });
   });
 
-  suite('_localStorageValueToBoolean()', () => {
+  describe('_localStorageValueToBoolean()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
     });
 
-    test('Returns false when no argument', () => {
+    it('Returns false when no argument', () => {
       const result = element._localStorageValueToBoolean();
       assert.isFalse(result);
     });
 
-    test('Returns false', () => {
+    it('Returns false', () => {
       const result = element._localStorageValueToBoolean('false');
       assert.isFalse(result);
     });
 
-    test('Returns `true`', () => {
+    it('Returns `true`', () => {
       const result = element._localStorageValueToBoolean('true');
       assert.isTrue(result);
     });
   });
 
-  suite('_onJsonTableStateChanged()', () => {
+  describe('_onJsonTableStateChanged()', () => {
     let element;
-    setup(() => {
+    beforeEach(async () => {
       clearTableStorage();
-      element = fixture('Basic');
+      element = await basicFixture();
     });
 
-    test('Does nothing when dispatched by self', () => {
+    it('Does nothing when dispatched by self', () => {
       element._onJsonTableStateChanged({
         composedPath: () => [element],
         detail: {
@@ -172,7 +162,7 @@
       assert.isFalse(element.table);
     });
 
-    test('Does nothing when represents the same value', () => {
+    it('Does nothing when represents the same value', () => {
       element._onJsonTableStateChanged({
         composedPath: () => [],
         detail: {
@@ -182,7 +172,7 @@
       assert.isFalse(element.table);
     });
 
-    test('Updates "table" value', () => {
+    it('Updates "table" value', () => {
       element._onJsonTableStateChanged({
         composedPath: () => [],
         detail: {
@@ -193,96 +183,84 @@
     });
   });
 
-  suite('_computeExamples()', () => {
+  describe('_computeExamples()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
     });
 
-    test('Sets _examplesDebouncer property', () => {
+    it('Sets _examplesDebouncer property', () => {
       element._computeExamples();
       assert.isTrue(element._examplesDebouncer);
     });
 
-    test('Does not schedule a task when debouncer is on', () => {
-      element._computeExamples();
-      const spy = sinon.spy(Polymer.RenderStatus, 'afterNextRender');
-      element._computeExamples();
-      Polymer.RenderStatus.afterNextRender.restore();
-      assert.isFalse(spy.called);
-    });
-
-    test('Eventually calls __computeExamples()', (done) => {
+    it('Eventually calls __computeExamples()', (done) => {
       element._computeExamples();
       const spy = sinon.spy(element, '__computeExamples');
-      Polymer.RenderStatus.afterNextRender(element, () => {
-        setTimeout(() => {
-          assert.isTrue(spy.called);
-          done();
-        });
+      setTimeout(() => {
+        assert.isTrue(spy.called);
+        done();
       });
     });
 
-    test('Clears _examplesDebouncer property', (done) => {
+    it('Clears _examplesDebouncer property', (done) => {
       element._computeExamples();
-      Polymer.RenderStatus.afterNextRender(element, () => {
-        setTimeout(() => {
-          assert.isFalse(element._examplesDebouncer);
-          done();
-        });
+      setTimeout(() => {
+        assert.isFalse(element._examplesDebouncer);
+        done();
       });
     });
   });
 
-  suite('_computeEffectiveTable()', () => {
+  describe('_computeEffectiveTable()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
     });
 
-    test('Returns true when table and JSON', () => {
+    it('Returns true when table and JSON', () => {
       const result = element._computeEffectiveTable(true, true);
       assert.isTrue(result);
     });
 
-    test('Returns false when not a JSON', () => {
+    it('Returns false when not a JSON', () => {
       const result = element._computeEffectiveTable(true, false);
       assert.isFalse(result);
     });
 
-    test('Returns false when not table', () => {
+    it('Returns false when not table', () => {
       const result = element._computeEffectiveTable(false, true);
       assert.isFalse(result);
     });
 
-    test('Returns false when not table and not JSON', () => {
+    it('Returns false when not table and not JSON', () => {
       const result = element._computeEffectiveTable(false, false);
       assert.isFalse(result);
     });
   });
 
-  suite('_computeIsJson()', () => {
+  describe('_computeIsJson()', () => {
     let element;
-    setup(() => {
-      element = fixture('Basic');
+    beforeEach(async () => {
+      element = await basicFixture();
     });
 
-    test('Returns false when no type', () => {
+    it('Returns false when no type', () => {
       const result = element._computeIsJson();
       assert.isFalse(result);
     });
 
-    test('Returns false for non-json media type', () => {
+    it('Returns false for non-json media type', () => {
       const result = element._computeIsJson('application/xml');
       assert.isFalse(result);
     });
 
-    test('Returns true for json media type', () => {
+    it('Returns true for json media type', () => {
       const result = element._computeIsJson('application/json');
       assert.isTrue(result);
     });
 
-    test('Returns true for other json media type', () => {
+    it('Returns true for other json media type', () => {
       const result = element._computeIsJson('application/x-json');
       assert.isTrue(result);
     });
@@ -321,67 +299,66 @@
     return element._ensureArray(schema[key]);
   }
 
-  suite('__computeExamples()', () => {
+  describe('__computeExamples()', () => {
     [
       ['Regular model', false],
       ['Compact model', true]
     ].forEach((item) => {
-      suite(item[0], () => {
+      describe(item[0], () => {
         let amf;
-        suiteSetup(() => {
-          return AmfLoader.load(item[1])
-          .then((data) => amf = data);
+        before(async () => {
+          amf = await AmfLoader.load(item[1]);
         });
 
         let element;
-        setup((done) => {
-          element = fixture('Basic');
-          element.amfModel = amf;
-          flush(() => done());
+        beforeEach(async () => {
+          element = await basicFixture();
+          element.amf = amf;
+          await nextFrame();
         });
 
-        test('Clears renderedExamples when no examples', () => {
-          element._setRenderedExamples([{
+        it('Clears _renderedExamples when no examples', () => {
+          element._renderedExamples = [{
             value: '{}',
             hasTitle: false
-          }]);
+          }];
           element.__computeExamples();
-          assert.isUndefined(element.renderedExamples);
+          assert.isUndefined(element._renderedExamples);
         });
 
-        test('Clears renderedExamples when examples empty', () => {
-          element._setRenderedExamples([{
+        it('Clears _renderedExamples when examples empty', () => {
+          element._renderedExamples = [{
             value: '{}',
             hasTitle: false
-          }]);
+          }];
           element.__computeExamples([]);
-          assert.isUndefined(element.renderedExamples);
+          assert.isUndefined(element._renderedExamples);
         });
 
-        test('Clears renderedExamples when no media type', () => {
-          element._setRenderedExamples([{
+        it('Clears _renderedExamples when no media type', () => {
+          element._renderedExamples = [{
             value: '{}',
             hasTitle: false
-          }]);
+          }];
           element.__computeExamples([{}]);
-          assert.isUndefined(element.renderedExamples);
+          assert.isUndefined(element._renderedExamples);
         });
 
-        test('Computes examples from array of Payloads', () => {
+        it('Computes examples from array of Payloads', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.__computeExamples(payloads, 'application/json');
-          assert.typeOf(element.renderedExamples, 'array');
-          assert.lengthOf(element.renderedExamples, 1);
+          assert.typeOf(element._renderedExamples, 'array');
+          assert.lengthOf(element._renderedExamples, 1);
         });
 
-        test('Computes examples from a single payload', () => {
+        it('Computes examples from a single payload', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.__computeExamples(payloads[0], 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Computes examples from a payload\'s schema', () => {
+        it('Computes examples from a payload\'s schema', () => {
           const payload = getPayload(element, amf, '/IncludedInType', 'post')[0];
           const id = payload['@id'];
           const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
@@ -394,21 +371,21 @@
           assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Computes payload from an Example', () => {
+        it('Computes payload from an Example', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           element.__computeExamples(examples[0], 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
         });
 
-        test('Computes payload from multiple Examples', () => {
+        it('Computes payload from multiple Examples', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           element.__computeExamples(examples, 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 2);
         });
 
-        test('Ignores unknown array items', () => {
+        it('Ignores unknown array items', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           examples.push({});
           element.__computeExamples(examples, 'application/json');
@@ -416,7 +393,7 @@
           assert.lengthOf(element.renderedExamples, 2);
         });
 
-        test('Ignores unknown shapes', () => {
+        it('Ignores unknown shapes', () => {
           element.__computeExamples({}, 'application/json');
           assert.isUndefined(element.renderedExamples);
         });
@@ -424,26 +401,25 @@
     });
   });
 
-  suite('General tests', () => {
+  describe('General tests', () => {
     [
       ['Regular model', false],
       ['Compact model', true]
     ].forEach((item) => {
-      suite(item[0], () => {
+      describe(item[0], () => {
         let amf;
-        suiteSetup(() => {
-          return AmfLoader.load(item[1])
-          .then((data) => amf = data);
+        before(async () => {
+          amf = await AmfLoader.load(item[1]);
         });
 
         let element;
-        setup((done) => {
-          element = fixture('Json');
-          element.amfModel = amf;
-          flush(() => done());
+        beforeEach(async () => {
+          element = await jsonFixture();
+          element.amf = amf;
+          await nextFrame();
         });
 
-        test('Sets has-examples attribute when examples are generated', (done) => {
+        it('Sets hasexamples attribute when examples are generated', (done) => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.examples = payloads;
           element.addEventListener('has-examples-changed', function f(e) {
@@ -451,12 +427,14 @@
               return;
             }
             element.removeEventListener('has-examples-changed', f);
-            assert.isTrue(element.hasAttribute('has-examples'));
-            done();
+            setTimeout(() => {
+              assert.isTrue(element.hasAttribute('hasexamples'));
+              done();
+            });
           });
         });
 
-        test('Renders api-example-render for each example', (done) => {
+        it('Renders api-example-render for each example', (done) => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
           element.addEventListener('has-examples-changed', function f(e) {
@@ -464,7 +442,7 @@
               return;
             }
             element.removeEventListener('has-examples-changed', f);
-            flush(() => {
+            setTimeout(() => {
               const nodes = element.shadowRoot.querySelectorAll('api-example-render');
               assert.lengthOf(nodes, 2);
               done();
@@ -474,6 +452,4 @@
       });
     });
   });
-  </script>
-</body>
-</html>
+});

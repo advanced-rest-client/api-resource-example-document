@@ -5,21 +5,14 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-example-render.html
+ *   api-example-render.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../clipboard-copy/clipboard-copy.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../json-table/json-table.d.ts" />
-/// <reference path="../prism-element/prism-theme-default.d.ts" />
-/// <reference path="../paper-button/paper-button.d.ts" />
+import {LitElement, html, css, unsafeCSS} from 'lit-element';
 
 declare namespace ApiElements {
 
@@ -60,43 +53,7 @@ declare namespace ApiElements {
    * `--api-example-render` | Mixin applied to this elment | `{}`
    * `--code-block` | Mixin applied to the output block | `{}`
    */
-  class ApiExampleRender extends Polymer.Element {
-
-    /**
-     * Data to render.
-     */
-    example: object|null|undefined;
-
-    /**
-     * Examples media type
-     */
-    mediaType: string|null|undefined;
-
-    /**
-     * When true the example is a JSON type example.
-     */
-    isJson: boolean|null|undefined;
-    readonly _isJson: boolean|null|undefined;
-
-    /**
-     * Computed value whether the examples are generated for a union type.
-     */
-    readonly isUnion: boolean|null|undefined;
-
-    /**
-     * List of union type names.
-     */
-    readonly unions: Array<String|null>|null;
-
-    /**
-     * Index of selected union.
-     */
-    selectedUnion: number|null|undefined;
-
-    /**
-     * Computed value of an example selected from union types.
-     */
-    readonly unionExample: object|null|undefined;
+  class ApiExampleRender extends LitElement {
 
     /**
      * Current state of "table" button. When tru the button is highlighted.
@@ -106,9 +63,14 @@ declare namespace ApiElements {
     table: boolean|null|undefined;
 
     /**
-     * When set it renders JSON table instead of code view.
+     * Examples media type
      */
-    renderTable: boolean|null|undefined;
+    mediaType: string|null|undefined;
+
+    /**
+     * Data to render.
+     */
+    example: object|null|undefined;
 
     /**
      * Opens example source view (source from API spec file).
@@ -116,15 +78,40 @@ declare namespace ApiElements {
     sourceOpened: boolean|null|undefined;
 
     /**
+     * When true the example is a JSON type example.
+     */
+    isJson: boolean|null|undefined;
+
+    /**
+     * Index of selected union.
+     */
+    selectedUnion: number|null|undefined;
+
+    /**
+     * When set it renders JSON table instead of code view.
+     */
+    renderTable: boolean|null|undefined;
+
+    /**
      * When set the title won't be rendered event if the example has one.
      */
     noTitle: boolean|null|undefined;
-    readonly _hasRaw: boolean|null|undefined;
 
     /**
      * When set the actions row (copy, switch view type) is not rendered.
      */
     noActions: boolean|null|undefined;
+    constructor();
+
+    /**
+     * This is rather dirty hack to import Polymer's `prism-theme-default`.
+     * The theme inserts `dom-module` with styles to the head section upon import.
+     * This method reads the content of the theme and creates CSSResult instance
+     * of it.
+     */
+    static getPrismTheme(): CSSResult|null;
+    render(): any;
+    _setObservableProperty(prop: any, value: any): any;
 
     /**
      * Computes whether passed value is a valig JSON object, when component is
@@ -148,7 +135,7 @@ declare namespace ApiElements {
     highlight(code: String|null, type: String|null): String|null;
 
     /**
-     * Coppies current response text value to clipboard.
+     * Coppies current response text value to clipboard."tabble"
      */
     _copyToClipboard(e: Event|null): void;
 
@@ -158,33 +145,24 @@ declare namespace ApiElements {
      * @param button Button to reset.
      */
     _resetCopyButtonState(button: Element|null): void;
-    _computeIsUnion(example: any): any;
-    _computeUnions(isUnion: any, example: any): any;
     _computeUnionExamples(selectedUnion: any, example: any): any;
     _toggleTable(e: any): void;
     _toggleSourceOpened(e: any): void;
-
-    /**
-     * Resets union selection when union types list changes.
-     *
-     * @param types List of current union types.
-     */
-    _unionTypesChanged(types: any[]|null): void;
 
     /**
      * Handler for union type button click.
      * Sets `selectedUnion` property.
      */
     _selectUnion(e: ClickEvent|null): void;
-
-    /**
-     * Computes if selectedUnion equals current item index.
-     */
-    _unionTypeActive(selectedUnion: Number|null, index: Number|null): Boolean|null;
     _computeRenderTitle(hasTitle: any, noTitle: any): any;
+    _renderUnion(example: any): any;
+    _renderExample(example: any): any;
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-example-render": ApiElements.ApiExampleRender;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-example-render": ApiElements.ApiExampleRender;
+  }
 }
