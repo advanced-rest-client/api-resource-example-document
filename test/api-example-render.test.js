@@ -31,13 +31,15 @@ describe('<api-example-render>', () => {
       await nextFrame();
     });
 
-    it('Calls highlight() when code change', async () => {
+    it('Calls highlight() when code change', (done) => {
       element.example = {
         value: 'test'
       };
       const spy = sinon.spy(element, 'highlight');
-      await nextFrame();
-      assert.isTrue(spy.called);
+      setTimeout(() => {
+        assert.isTrue(spy.called);
+        done();
+      });
     });
   });
 
