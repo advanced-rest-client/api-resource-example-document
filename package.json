@@ -8,7 +8,7 @@
     "url": "git://github.com/advanced-rest-client/api-resource-example-document.git"
   },
   "name": "@api-components/api-resource-example-document",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "Apache-2.0",
   "main": "api-resource-example-document.js",
   "authors": [
