@@ -279,7 +279,7 @@ class ApiExampleRender extends LitElement {
       output.innerHTML = this.highlight(String(example.raw), 'yaml');
     } else {
       const value = String(example.value);
-      if (value !== undefined) {
+      if (value || value === false || value === 0) {
         output.innerHTML = this.highlight(value, this.mediaType);
       } else {
         output.innerText = '(no value in example)';
