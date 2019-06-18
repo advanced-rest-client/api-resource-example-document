@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>api-resource-example-document demo</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
+    <script type="module" src="../node_modules/@advanced-rest-client/arc-demo-helper/arc-demo-helper.js"></script>
+
+    <style>
+      html,
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100%;
+
+        --api-navigation-operation-endpoint-opened-background-color: #f4f5f6;
+        --api-navigation-list-item-selected-background-color: #e8e9ea;
+        --api-navigation-list-item-selected-color: #000;
+        --api-navigation-color: #58595a;
+        --api-navigation-list-item-selected-border-left: 4px #00A2DF solid;
+        --api-navigation-list-item-hovered-border-left: 4px #ABE2F5 solid;
+        --api-navigation-endpoint-font-size: 15px;
+        --api-navigation-list-item-padding: 5px 15px;
+        --api-navigation-list-item-border-left: 4px transparent solid;
+        --api-navigation-list-section-font-size: 15px;
+        --api-navigation-list-item-summary-padding: 8px 12px;
+        --api-navigation-list-item-selected-weight: 500;
+
+        --method-display-selected-color: #fff;
+        /* HTTP methods colors in method documentation panel */
+        --http-method-label-border-radius: 1px;
+        --http-method-label-get-background-color: #00b49d;
+        --http-method-label-get-color: #fff;
+        --http-method-label-post-background-color: #9a63f9;
+        --http-method-label-post-color: #fff;
+        --http-method-label-put-background-color: #F2BE24;
+        --http-method-label-put-color: #fff;
+        --http-method-label-patch-background-color: #5E66F9;
+        --http-method-label-patch-color: #fff;
+        --http-method-label-delete-background-color: #D1344E;
+        --http-method-label-delete-color: #fff;
+        --http-method-label-options-background-color: #00B5D1;
+        --http-method-label-options-color: #fff;
+        --http-method-label-head-background-color: #17BC65;
+        --http-method-label-head-color: #fff;
+        --http-method-label-padding: 4px 5px;
+        --method-display-font-weigth: 100;
+        --dark-divider-opacity: 0;
+
+
+        --code-background-color: #F4F5F6;
+        --code-type-text-value-color: #690;
+        --code-type-number-value-color: #690;
+        --code-type-boolean-value-color: #0288d1;
+        --code-type-null-value-color: #0288d1;
+        --code-punctuation-value-color: #999;
+        --code-type-link-color: #757575;
+        --code-array-index-color: rgba(1, 87, 155, 0.57);
+      }
+
+      api-resource-example-document::part(code-content-action-button) {
+        border-color: #616161;
+        border-radius: 1px;
+      }
+
+      api-navigation {
+        width: 320px;
+        min-width: 320px;
+        overflow: auto;
+      }
+
+      header {
+        padding: 12px 24px;
+        background-color: #262728;
+        display: flex;
+        align-items: center;
+        --iron-icon-fill-color: #fff;
+        --paper-input-container-color: #fff;
+        --paper-input-container-input-color: #fff;
+      }
+
+      [role="main"].centered {
+        max-width: 1100px;
+        display: flex;
+        align-items: start;
+      }
+
+      .demo-container {
+        flex: 1;
+        flex-basis: 0.000000001px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

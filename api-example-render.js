@@ -337,6 +337,10 @@ class ApiExampleRender extends LitElement {
       button.innerText = 'Error';
     }
     button.disabled = true;
+    if ('part' in button) {
+      button.part.add('content-action-button-disabled');
+      button.part.add('code-content-action-button-disabled');
+    }
     setTimeout(() => this._resetCopyButtonState(button), 1000);
   }
   /**
@@ -346,6 +350,10 @@ class ApiExampleRender extends LitElement {
   _resetCopyButtonState(button) {
     button.innerText = 'Copy';
     button.disabled = false;
+    if ('part' in button) {
+      button.part.remove('content-action-button-disabled');
+      button.part.remove('code-content-action-button-disabled');
+    }
   }
 
   _computeUnionExamples(selectedUnion, example) {
@@ -359,18 +367,36 @@ class ApiExampleRender extends LitElement {
   }
 
   _toggleTable(e) {
-    const active = e.target.active;
+    const { target } = e;
+    const active = target.active;
     this.table = active;
     if (active && this.sourceOpened) {
       this.sourceOpened = !active;
     }
+    this._toggleActionButtonCssPart(target, active);
   }
 
   _toggleSourceOpened(e) {
-    const active = e.target.active;
+    const { target } = e;
+    const active = target.active;
     this.sourceOpened = active;
     if (active && this.table) {
       this.table = !active;
+    }
+    this._toggleActionButtonCssPart(target, active);
+  }
+
+  _toggleActionButtonCssPart(target, active) {
+    if (!('part' in target)) {
+      return;
+    }
+    const parts = ['content-action-button-active', 'code-content-action-button-active'];
+    for (let i = 0, len = parts.length; i < len; i++) {
+      if (active) {
+        target.part.add(parts[i]);
+      } else {
+        target.part.remove(parts[i]);
+      }
     }
   }
   /**
@@ -429,12 +455,14 @@ class ApiExampleRender extends LitElement {
       ${renderTitle ? html`<h6>${example.title}</h6>`: undefined}
       ${!this.noActions ? html`<div class="example-actions">
         <paper-button
+          part="content-action-button, code-content-action-button"
           class="action-button"
           data-action="copy"
           @click="${this._copyToClipboard}"
           title="Copy example to clipboard">Copy</paper-button>
         ${isJson ? html`
           <paper-button
+            part="content-action-button, code-content-action-button"
             class="action-button"
             data-action="table"
             toggles
@@ -443,6 +471,7 @@ class ApiExampleRender extends LitElement {
             title="Toggle between table and JSON view">Table view</paper-button>` : undefined}
         ${hasRaw ? html`
           <paper-button
+            part="content-action-button, code-content-action-button"
             class="action-button"
             data-action="code"
             toggles
@@ -451,8 +480,8 @@ class ApiExampleRender extends LitElement {
             title="Toggle between JSON and example source view">Source vierw</paper-button>` : undefined}
       </div>` : undefined}
       ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
-      <div class="code-wrapper" ?hidden="${this.renderTable}">
-        <code id="output" class="markdown-html" language-xml=""></code>
+      <div class="code-wrapper" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
+        <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
       </div>
     </div>`;
   }

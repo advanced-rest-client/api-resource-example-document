@@ -486,8 +486,12 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   _examplesTemplate(examples) {
+    let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
+    parts += 'code-content-action-button-disabled content-action-button-active, ';
+    parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
     return examples.map((item) => html`
       <api-example-render
+      exportparts="${parts}"
       class="example"
       .example="${item}"
       ?isjson="${this.isJson}"
