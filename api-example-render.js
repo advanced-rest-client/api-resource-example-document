@@ -68,7 +68,8 @@ class ApiExampleRender extends LitElement {
   }
 
   static get styles() {
-    const styles = css`:host {
+    const styles = css`
+    :host {
       display: block;
       padding: 4px;
       background-color: var(--code-background-color, #f5f2f0);
@@ -95,19 +96,29 @@ class ApiExampleRender extends LitElement {
       margin: 0 8px 4px 8px;
     }
 
-    paper-button[active] {
-      background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
-    }
-
     .union-toggle {
       outline: none;
       background-color: var(--api-type-document-union-button-background-color, transparent);
       color: var(--api-type-document-union-button-color, #000);
+      border-width: 1px;
+      border-color: var(--api-body-document-media-button-border-color, #a3b11d);
+      border-style: solid;
     }
 
     .union-toggle[active] {
       background-color: var(--api-type-document-union-button-active-background-color, #CDDC39);
       color: var(--api-type-document-union-button-active-color, #000);
+    }
+
+    .action-button {
+      outline: none;
+      border-width: 1px;
+      border-color: var(--api-body-document-action-button-border-color, #BDBDBD);
+      border-style: solid;
+    }
+
+    .action-button[active] {
+      background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
     }
 
     .union-type-selector {
@@ -418,11 +429,13 @@ class ApiExampleRender extends LitElement {
       ${renderTitle ? html`<h6>${example.title}</h6>`: undefined}
       ${!this.noActions ? html`<div class="example-actions">
         <paper-button
+          class="action-button"
           data-action="copy"
           @click="${this._copyToClipboard}"
           title="Copy example to clipboard">Copy</paper-button>
         ${isJson ? html`
           <paper-button
+            class="action-button"
             data-action="table"
             toggles
             .active="${this.table}"
@@ -430,6 +443,7 @@ class ApiExampleRender extends LitElement {
             title="Toggle between table and JSON view">Table view</paper-button>` : undefined}
         ${hasRaw ? html`
           <paper-button
+            class="action-button"
             data-action="code"
             toggles
             .active="${this.sourceOpened}"
