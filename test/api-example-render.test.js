@@ -1,4 +1,4 @@
-import { fixture, assert, nextFrame } from '@open-wc/testing';
+import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
 import { tap } from '@polymer/iron-test-helpers/mock-interactions.js';
 import sinon from 'sinon/pkg/sinon-esm.js';
 import '@polymer/prism-element/prism-highlighter.js';
@@ -272,6 +272,8 @@ describe('<api-example-render>', () => {
     });
   });
 
+  const hasPartsApi = 'part' in document.createElement('span');
+
   describe('_copyToClipboard()', () => {
     let element;
     beforeEach(async () => {
@@ -315,6 +317,28 @@ describe('<api-example-render>', () => {
         done();
       });
     });
+
+    (hasPartsApi ? it : it.skip)('Adds content-action-button-disabled to the button', async () => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      await aTimeout();
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.click();
+      assert.isTrue(button.part.contains('content-action-button-disabled'));
+    });
+
+    (hasPartsApi ? it : it.skip)('Adds code-content-action-button-disabled to the button', async () => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      await aTimeout();
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.click();
+      assert.isTrue(button.part.contains('code-content-action-button-disabled'));
+    });
   });
 
   describe('_resetCopyButtonState()', () => {
@@ -355,6 +379,30 @@ describe('<api-example-render>', () => {
         assert.isFalse(button.disabled);
         done();
       });
+    });
+
+    (hasPartsApi ? it : it.skip)('Removes content-action-button-disabled part from the button', async () => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      await aTimeout();
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.click();
+      element._resetCopyButtonState(button);
+      assert.isFalse(button.part.contains('content-action-button-disabled'));
+    });
+
+    (hasPartsApi ? it : it.skip)('Removes code-content-action-button-disabled part from the button', async () => {
+      element.example = {
+        value: '{}',
+        hasTitle: false
+      };
+      await aTimeout();
+      const button = element.shadowRoot.querySelector('[data-action="copy"]');
+      button.click();
+      element._resetCopyButtonState(button);
+      assert.isFalse(button.part.contains('code-content-action-button-disabled'));
     });
   });
 
@@ -522,6 +570,30 @@ describe('<api-example-render>', () => {
     it('Returns selected value', () => {
       const result = element._computeUnionExamples(0, example);
       assert.deepEqual(result, example.values[0]);
+    });
+  });
+
+  (hasPartsApi ? describe : describe.skip)('_toggleActionButtonCssPart()', () => {
+    let element;
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Adds a part to the target', async () => {
+      const target = document.createElement('span');
+      element._toggleActionButtonCssPart(target, true);
+      assert.isTrue(target.part.contains('content-action-button-active'), 'Has content-action-button-active part');
+      assert.isTrue(target.part.contains('code-content-action-button-active'),
+        'Has code-content-action-button-active part');
+    });
+
+    it('Removes a part from the target', async () => {
+      const target = document.createElement('span');
+      target.part = 'content-action-button-active, code-content-action-button-active';
+      element._toggleActionButtonCssPart(target, false);
+      assert.isFalse(target.part.contains('content-action-button-active'), 'Has no content-action-button-active part');
+      assert.isFalse(target.part.contains('code-content-action-button-active'),
+        'Has no code-content-action-button-active part');
     });
   });
 });
