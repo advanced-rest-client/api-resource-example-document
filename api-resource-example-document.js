@@ -404,7 +404,7 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     if (e.composedPath()[0] === this) {
       return;
     }
-    const {enabled} = e.detail;
+    const { enabled } = e.detail;
     if (enabled !== this.table) {
       this.table = enabled;
     }
