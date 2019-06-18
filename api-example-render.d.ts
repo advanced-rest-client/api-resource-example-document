@@ -148,13 +148,13 @@ declare namespace ApiElements {
     _computeUnionExamples(selectedUnion: any, example: any): any;
     _toggleTable(e: any): void;
     _toggleSourceOpened(e: any): void;
+    _toggleActionButtonCssPart(target: any, active: any): void;
 
     /**
      * Handler for union type button click.
      * Sets `selectedUnion` property.
      */
     _selectUnion(e: ClickEvent|null): void;
-    _computeRenderTitle(hasTitle: any, noTitle: any): any;
     _renderUnion(example: any): any;
     _renderExample(example: any): any;
   }
