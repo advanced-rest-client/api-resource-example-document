@@ -420,3 +420,12 @@
 
 
 
+## 3.0.3 (2019-07-29)
+
+
+### Bug Fixes
+
+* fixing linter errors ([4be70ab](https://github.com/advanced-rest-client/api-resource-example-document/commit/4be70ab))
+
+
+
