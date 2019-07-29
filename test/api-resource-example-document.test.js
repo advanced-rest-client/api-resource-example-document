@@ -3,7 +3,7 @@ import sinon from 'sinon/pkg/sinon-esm.js';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
 
-describe('<api-example-render>', () => {
+describe('<api-resource-example-document>', () => {
   async function basicFixture() {
     return (await fixture(`<api-resource-example-document></api-resource-example-document>`));
   }
@@ -449,6 +449,41 @@ describe('<api-example-render>', () => {
             });
           });
         });
+      });
+    });
+  });
+
+  describe('a11y', () => {
+    let element;
+    let amf;
+    before(async () => {
+      amf = await AmfLoader.load();
+    });
+
+    beforeEach(async () => {
+      element = await jsonFixture();
+      element.amf = amf;
+    });
+
+    async function resolveWhenReady(element, amf, path, method) {
+      /* global Promise */
+      return new Promise((resolve) => {
+        const payloads = getPayload(element, amf, path, method);
+        element.examples = payloads;
+        element.addEventListener('has-examples-changed', function f(e) {
+          if (!e.detail.value) {
+            return;
+          }
+          element.removeEventListener('has-examples-changed', f);
+          setTimeout(() => resolve());
+        });
+      });
+    }
+
+    it('passes accessibility test', async () => {
+      await resolveWhenReady(element, amf, '/IncludedInType', 'post');
+      await assert.isAccessible(element, {
+        // ignoredRules: ['color-contrast']
       });
     });
   });

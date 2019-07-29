@@ -596,4 +596,24 @@ describe('<api-example-render>', () => {
         'Has no code-content-action-button-active part');
     });
   });
+
+  describe('a11y', () => {
+    let element;
+    beforeEach(async () => {
+      element = await basicFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: false,
+        title: 'test'
+      };
+      await nextFrame();
+    });
+
+    it('passes accessibility test', async () => {
+      await assert.isAccessible(element, {
+        // ignoredRules: ['color-contrast']
+      });
+    });
+  });
 });
