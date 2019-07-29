@@ -285,13 +285,17 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   connectedCallback() {
-    super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
     window.addEventListener('storage', this._onStorageChanged);
     window.addEventListener('json-table-state-changed', this._onJsonTableStateChanged);
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
     window.removeEventListener('storage', this._onStorageChanged);
     window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
   }
