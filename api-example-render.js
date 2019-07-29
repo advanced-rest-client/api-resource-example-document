@@ -1,7 +1,7 @@
-import { LitElement, html, css, unsafeCSS } from 'lit-element';
+import { LitElement, html, css } from 'lit-element';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/json-table/json-table.js';
-import '@polymer/prism-element/prism-theme-default.js';
+import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
 import '@polymer/paper-button/paper-button.js';
 /**
  * `api-example-render`
@@ -46,95 +46,71 @@ import '@polymer/paper-button/paper-button.js';
  * @memberof ApiElements
  */
 class ApiExampleRender extends LitElement {
-  /**
-   * This is rather dirty hack to import Polymer's `prism-theme-default`.
-   * The theme inserts `dom-module` with styles to the head section upon import.
-   * This method reads the content of the theme and creates CSSResult instance
-   * of it.
-   * @return {CSSResult}
-   */
-  static getPrismTheme() {
-    const theme = document.head.querySelector('dom-module#prism-theme-default');
-    if (!theme) {
-      return;
-    }
-    const tpl = theme.querySelector('template');
-    if (!tpl) {
-      return;
-    }
-    const clone = tpl.content.cloneNode(true);
-    const style = clone.querySelector('style');
-    return unsafeCSS(style.innerText);
-  }
-
   static get styles() {
-    const styles = css`
-    :host {
-      display: block;
-      padding: 4px;
-      background-color: var(--code-background-color, #f5f2f0);
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: block;
+        padding: 4px;
+        background-color: var(--code-background-color, #f5f2f0);
+      }
 
-    .code-wrapper {
-      padding: 8px;
-    }
+      .code-wrapper {
+        padding: 8px;
+      }
 
-    #output {
-      white-space: pre-wrap;
-      word-wrap: var(--code-block-word-wrap, break-word);
-      font-family: var(--arc-font-code-family);
-    }
+      #output {
+        white-space: pre-wrap;
+        word-wrap: var(--code-block-word-wrap, break-word);
+        font-family: var(--arc-font-code-family);
+      }
 
-    [hidden] {
-      display: none !important;
-    }
+      [hidden] {
+        display: none !important;
+      }
 
-    h6 {
-      font-weight: var(--arc-font-body1-font-weight);
-      line-height: var(--arc-font-body1-line-height);
-      font-size: 15px;
-      margin: 0 8px 4px 8px;
-    }
+      h6 {
+        font-weight: var(--arc-font-body1-font-weight);
+        line-height: var(--arc-font-body1-line-height);
+        font-size: 15px;
+        margin: 0 8px 4px 8px;
+      }
 
-    .union-toggle {
-      outline: none;
-      background-color: var(--api-type-document-union-button-background-color, transparent);
-      color: var(--api-type-document-union-button-color, #000);
-      border-width: 1px;
-      border-color: var(--api-body-document-media-button-border-color, #a3b11d);
-      border-style: solid;
-    }
+      .union-toggle {
+        outline: none;
+        background-color: var(--api-type-document-union-button-background-color, transparent);
+        color: var(--api-type-document-union-button-color, #000);
+        border-width: 1px;
+        border-color: var(--api-body-document-media-button-border-color, #a3b11d);
+        border-style: solid;
+      }
 
-    .union-toggle[active] {
-      background-color: var(--api-type-document-union-button-active-background-color, #CDDC39);
-      color: var(--api-type-document-union-button-active-color, #000);
-    }
+      .union-toggle[active] {
+        background-color: var(--api-type-document-union-button-active-background-color, #CDDC39);
+        color: var(--api-type-document-union-button-active-color, #000);
+      }
 
-    .action-button {
-      outline: none;
-      border-width: 1px;
-      border-color: var(--api-body-document-action-button-border-color, #BDBDBD);
-      border-style: solid;
-    }
+      .action-button {
+        outline: none;
+        border-width: 1px;
+        border-color: var(--api-body-document-action-button-border-color, #BDBDBD);
+        border-style: solid;
+      }
 
-    .action-button[active] {
-      background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
-    }
+      .action-button[active] {
+        background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
+        color: var(--api-resource-example-document-button-active-color, currentColor);
+      }
 
-    .union-type-selector {
-      margin: 12px 8px;
-    }
+      .union-type-selector {
+        margin: 12px 8px;
+      }
 
-    json-table {
-      margin: 0 8px;
-    }
-    `;
-    const prism = ApiExampleRender.getPrismTheme();
-    const result = [styles];
-    if (prism) {
-      result[result.length] = prism;
-    }
-    return result;
+      json-table {
+        margin: 0 8px;
+      }`
+    ];
   }
 
   static get properties() {

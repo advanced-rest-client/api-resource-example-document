@@ -5,47 +5,35 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>api-resource-example-document demo</title>
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
-    <script type="module" src="../node_modules/@advanced-rest-client/arc-demo-helper/arc-demo-helper.js"></script>
 
     <style>
-      html,
-      body {
-        margin: 0 !important;
-        padding: 0 !important;
-        height: 100%;
-      }
+    body.styled.dark {
+      --http-method-label-get-background-color: rgb(0, 128, 0);
+      --http-method-label-get-color: #fff;
+      --http-method-label-post-background-color: rgb(33, 150, 243);
+      --http-method-label-post-color: #fff;
+      --http-method-label-put-background-color: rgb(255, 165, 0);
+      --http-method-label-put-color: fff;
+      --http-method-label-delete-background-color: rgb(244, 67, 54);
+      --http-method-label-delete-color: fff;
 
-      api-navigation {
-        width: 320px;
-        min-width: 320px;
-        overflow: auto;
-      }
+      --code-background-color: #263238;
+      --iron-icon-fill-color: #fff;
+      --code-type-boolean-value-color: #F07178;
+      --code-type-number-value-color: #F78C6A;
+      --code-type-text-value-color: #C3E88D;
+      --code-property-value-color: #F07178;
 
-      header {
-        padding: 12px 24px;
-        background-color: #C5E1A5;
-        display: flex;
-        align-items: center;
-        --iron-icon-fill-color: #3E2723;
-        --paper-input-container-focus-color: #33691E;
-        --paper-input-container-label: {
-          color: #3E2723;
-        };
-      }
-
-      [role="main"].centered {
-        max-width: 1100px;
-        display: flex;
-        align-items: start;
-      }
-
-      .demo-container {
-        flex: 1;
-        flex-basis: 0.000000001px;
-      }
+      --api-type-document-union-button-color: #fff;
+      --api-resource-example-document-button-active-background-color: #cddc39;
+      --api-resource-example-document-button-active-color: #000;
+      --json-table-list-property-name-color: #fff;
+      --json-table-complex-name-label-color: #9E9E9E;
+      --code-operator-value-background-color: transparent;
+    }
     </style>
+
   </head>
   <body>
     <div id="demo"></div>

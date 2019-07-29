@@ -1,5 +1,4 @@
 import { LitElement, html } from 'lit-element';
-import { render } from 'lit-html';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
 import '@api-components/api-navigation/api-navigation.js';
@@ -164,37 +163,18 @@ class ApiDemo extends ApiDemoPageBase {
       html`<p>Examples not found in selected method</p>`;
   }
 
-  render() {
-    if (this._rendering) {
-      return;
-    }
-    this._rendering = true;
-    setTimeout(() => {
-      this._rendering = false;
-      this._render();
-    });
-  }
-
-  _render() {
+  contentTemplate() {
     const mediaTypes = this.mediaTypes;
     const hasData = this.hasData;
-
-    render(html `
-    ${this.headerTemplate()}
-    <section class="horizontal-section-container centered" role="main">
-      ${this._apiNavigationTemplate()}
-      <div class="demo-container">
-        <paper-dropdown-menu label="Select media type" ?hidden="${this.singlePayload}">
-          <paper-listbox slot="dropdown-content" id="mediaList" @selected-changed="${this._mediaChanged}">
-          ${mediaTypes ? mediaTypes.map((item) => html`<paper-item>${item.label}</paper-item>`) : undefined}
-          </paper-listbox>
-        </paper-dropdown-menu>
-        ${hasData ? this._examplesTemplate() : html`<p>Select an object that contains examples.</p>`}
-      </div>
-    </section>
-
+    return html`
     <demo-element id="helper" .amf="${this.amf}"></demo-element>
-    `, document.querySelector('#demo'));
+    <paper-dropdown-menu label="Select media type" ?hidden="${this.singlePayload}">
+      <paper-listbox slot="dropdown-content" id="mediaList" @selected-changed="${this._mediaChanged}">
+      ${mediaTypes ? mediaTypes.map((item) => html`<paper-item>${item.label}</paper-item>`) : undefined}
+      </paper-listbox>
+    </paper-dropdown-menu>
+    ${hasData ? this._examplesTemplate() : html`<p>Select an object that contains examples.</p>`}
+    `;
   }
 }
 const instance = new ApiDemo();
