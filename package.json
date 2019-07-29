@@ -1,61 +1,82 @@
 {
+  "name": "@api-components/api-resource-example-document",
   "description": "A viewer for examples in a resource based on AMF model",
+  "version": "3.0.2",
+  "license": "Apache-2.0",
+  "main": "api-resource-example-document.js",
   "keywords": [
-    "api-components"
+    "api-components",
+    "examples",
+    "resource",
+    "operation"
+  ],
+  "authors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
+  ],
+  "contributors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/advanced-rest-client/api-resource-example-document.git"
   },
-  "name": "@api-components/api-resource-example-document",
-  "version": "3.0.2",
-  "license": "Apache-2.0",
-  "main": "api-resource-example-document.js",
-  "authors": [
-    "Pawel Psztyc",
-    "The Advanced REST client authors <arc@mulesoft.com>"
-  ],
-  "devDependencies": {
-    "@advanced-rest-client/arc-demo-helper": "^1.0.3",
-    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
-    "@api-components/api-model-generator": "^0.1.12",
-    "@api-components/api-navigation": "^3.0.1",
-    "@open-wc/testing": "^0.11.1",
-    "@open-wc/testing-karma": "^2.0.6",
-    "@polymer/gen-typescript-declarations": "^1.6.1",
-    "@polymer/iron-test-helpers": "^3.0.0",
-    "@polymer/paper-dropdown-menu": "^3.0.0",
-    "@polymer/paper-item": "^3.0.0",
-    "@polymer/paper-listbox": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.2.10",
-    "owc-dev-server": "^0.3.0",
-    "sinon": "^7.3.2",
-    "web-animations-js": "^2.3.1"
-  },
-  "scripts": {
-    "start": "owc-dev-server --open demo",
-    "test": "karma start --coverage",
-    "test:watch": "karma start --auto-watch=true --single-run=false",
-    "test:legacy": "karma start --legacy --coverage",
-    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
-    "test:sl": "karma start karma.sl.config.js --legacy --coverage",
-    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
-  },
   "bugs": {
     "url": "https://github.com/advanced-rest-client/api-resource-example-document/issues",
     "email": "arc@mulesoft.com"
   },
-  "contributors": [
-    "Pawel Psztyc",
-    "The Advanced REST client authors <arc@mulesoft.com>"
-  ],
   "dependencies": {
     "@advanced-rest-client/clipboard-copy": "^3.0.0",
     "@advanced-rest-client/json-table": "^3.0.2",
-    "@api-components/amf-helper-mixin": "^3.0.1",
+    "@api-components/amf-helper-mixin": "^3.0.2",
     "@api-components/api-example-generator": "^3.0.2",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/prism-element": "^3.0.0",
-    "lit-element": "^2.0.1"
+    "lit-element": "^2.2.1"
+  },
+  "devDependencies": {
+    "@advanced-rest-client/arc-demo-helper": "^1.0.6",
+    "@advanced-rest-client/eslint-config": "^1.0.6",
+    "@advanced-rest-client/prettier-config": "^0.1.0",
+    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
+    "@api-components/api-model-generator": "^0.1.12",
+    "@api-components/api-navigation": "^3.0.3",
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/testing": "^2.2.1",
+    "@open-wc/testing-karma": "^3.1.5",
+    "@polymer/gen-typescript-declarations": "^1.6.2",
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "deepmerge": "^4.0.0",
+    "es-dev-server": "^1.8.3",
+    "husky": "^1.0.0",
+    "karma": "^4.2.0",
+    "lint-staged": "^8.0.0",
+    "sinon": "^7.3.2",
+    "web-animations-js": "^2.3.1"
+  },
+  "scripts": {
+    "test": "karma start --coverage",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --open --watch",
+    "start:compatibility": "es-dev-server --app-index demo/index.html --compatibility all --node-resolve --open --watch",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier \"**/*.js\" --write",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:sl": "karma start karma.sl.config.js --legacy --coverage",
+    "generate-model": "node demo/model.js"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
