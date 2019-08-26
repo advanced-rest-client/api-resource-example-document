@@ -128,6 +128,10 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * depending on original source.
        */
       rawOnly: { type: Boolean, reflect: true },
+      /**
+       * Enables Anypoint legacy styling
+       */
+      legacy: { type: Boolean },
       _effectiveTable: {
         type: Boolean
       },
@@ -503,7 +507,8 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ?table="${this.table}"
       ?rendertable="${this._effectiveTable}"
       ?noactions="${this.noActions}"
-      @table-changed="${this._tableCHangedHandler}"></api-example-render>`);
+      @table-changed="${this._tableCHangedHandler}"
+      ?legacy="${this.legacy}"></api-example-render>`);
   }
 
   render() {
