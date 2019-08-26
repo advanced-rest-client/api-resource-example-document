@@ -12,6 +12,8 @@ class ApiDemo extends ApiDemoPageBase {
     super();
     this._mediaChanged = this._mediaChanged.bind(this);
 
+    this.componentName = 'api-resource-example-document';
+
     this.hasData = false;
     this.singlePayload = true;
   }
