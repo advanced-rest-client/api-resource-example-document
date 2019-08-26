@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit-element';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/json-table/json-table.js';
 import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
-import '@polymer/paper-button/paper-button.js';
+import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 /**
  * `api-example-render`
  *
@@ -86,7 +86,7 @@ class ApiExampleRender extends LitElement {
         border-style: solid;
       }
 
-      .union-toggle[active] {
+      .union-toggle[activated] {
         background-color: var(--api-type-document-union-button-active-background-color, #CDDC39);
         color: var(--api-type-document-union-button-active-color, #000);
       }
@@ -152,7 +152,11 @@ class ApiExampleRender extends LitElement {
       /**
        * When set the actions row (copy, switch view type) is not rendered.
        */
-      noActions: { type: Boolean }
+      noActions: { type: Boolean },
+      /**
+       * Enables Anypoint legacy styling
+       */
+      legacy: { type: Boolean }
     };
   }
 
@@ -200,6 +204,11 @@ class ApiExampleRender extends LitElement {
     if (this._setObservableProperty('sourceOpened', value)) {
       this._dataChanged(this._mediaType, this._example, value);
     }
+  }
+
+  constructor() {
+    super();
+    this.sourceOpened = false;
   }
 
   _setObservableProperty(prop, value) {
@@ -344,22 +353,22 @@ class ApiExampleRender extends LitElement {
 
   _toggleTable(e) {
     const { target } = e;
-    const active = target.active;
-    this.table = active;
-    if (active && this.sourceOpened) {
-      this.sourceOpened = !active;
+    const { value } = e.detail;
+    this.table = value;
+    if (value && this.sourceOpened) {
+      this.sourceOpened = !value;
     }
-    this._toggleActionButtonCssPart(target, active);
+    this._toggleActionButtonCssPart(target, value);
   }
 
   _toggleSourceOpened(e) {
     const { target } = e;
-    const active = target.active;
-    this.sourceOpened = active;
-    if (active && this.table) {
-      this.table = !active;
+    const { value } = e.detail;
+    this.sourceOpened = value;
+    if (value && this.table) {
+      this.table = !value;
     }
-    this._toggleActionButtonCssPart(target, active);
+    this._toggleActionButtonCssPart(target, value);
   }
 
   _toggleActionButtonCssPart(target, active) {
@@ -387,7 +396,7 @@ class ApiExampleRender extends LitElement {
       return;
     }
     if (this.selectedUnion === index) {
-      e.target.active = true;
+      e.target.setAttribute('activated', '');
     } else {
       this.selectedUnion = index;
     }
@@ -405,11 +414,13 @@ class ApiExampleRender extends LitElement {
       <div class="union-type-selector">
         <span>Any of:</span>
         ${unions.map((item, index) => html`
-          <paper-button class="union-toggle"
-            .active="${selectedUnion === index}"
+          <anypoint-button
+            class="union-toggle"
+            ?activated="${selectedUnion === index}"
             @click="${this._selectUnion}"
             data-index="${index}"
-            title="Select ${item} type">${item}</paper-button>`)}
+            ?legacy="${this.legacy}"
+            title="Select ${item} type">${item}</anypoint-button>`)}
       </div>
       ${unionExample ? html`
         <api-example-render
@@ -424,36 +435,40 @@ class ApiExampleRender extends LitElement {
   }
 
   _renderExample(example) {
+    const { legacy } = this;
     const renderTitle = !!(example.hasTitle && !this.noTitle);
     const hasRaw = this._computeHasRaw(example.value, example.raw);
     const isJson = this._computeIsJson(this.isJson, example.value);
     return html`<div class="example">
       ${renderTitle ? html`<h6>${example.title}</h6>`: undefined}
       ${!this.noActions ? html`<div class="example-actions">
-        <paper-button
+        <anypoint-button
           part="content-action-button, code-content-action-button"
           class="action-button"
           data-action="copy"
           @click="${this._copyToClipboard}"
-          title="Copy example to clipboard">Copy</paper-button>
+          ?legacy="${legacy}"
+          title="Copy example to clipboard">Copy</anypoint-button>
         ${isJson ? html`
-          <paper-button
+          <anypoint-button
             part="content-action-button, code-content-action-button"
             class="action-button"
             data-action="table"
             toggles
             .active="${this.table}"
-            @click="${this._toggleTable}"
-            title="Toggle between table and JSON view">Table view</paper-button>` : undefined}
+            @active-changed="${this._toggleTable}"
+            ?legacy="${legacy}"
+            title="Toggle between table and JSON view">Table view</anypoint-button>` : undefined}
         ${hasRaw ? html`
-          <paper-button
+          <anypoint-button
             part="content-action-button, code-content-action-button"
             class="action-button"
             data-action="code"
             toggles
             .active="${this.sourceOpened}"
-            @click="${this._toggleSourceOpened}"
-            title="Toggle between JSON and example source view">Source vierw</paper-button>` : undefined}
+            @active-changed="${this._toggleSourceOpened}"
+            ?legacy="${legacy}"
+            title="Toggle between JSON and example source view">Source vierw</anypoint-button>` : undefined}
       </div>` : undefined}
       ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
       <div class="code-wrapper" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">

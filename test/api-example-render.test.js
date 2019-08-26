@@ -1,6 +1,6 @@
 import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
 import { tap } from '@polymer/iron-test-helpers/mock-interactions.js';
-import sinon from 'sinon/pkg/sinon-esm.js';
+import * as sinon from 'sinon/pkg/sinon-esm.js';
 import '@polymer/prism-element/prism-highlighter.js';
 import '../api-example-render.js';
 
@@ -251,7 +251,8 @@ describe('<api-example-render>', () => {
       const nodes = element.shadowRoot.querySelectorAll('.union-type-selector .union-toggle');
       nodes[0].active = false;
       tap(nodes[0]);
-      assert.isTrue(nodes[0].active);
+      await nextFrame();
+      assert.isTrue(nodes[0].hasAttribute('activated'));
     });
 
     it('Changes the selection', async () => {
