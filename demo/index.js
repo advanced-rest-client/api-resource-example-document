@@ -147,12 +147,18 @@ class ApiDemo extends ApiDemoPageBase {
   }
 
   _apiListTemplate() {
-    return html`
-    <paper-item data-src="demo-api.json">Demo api</paper-item>
-    <paper-item data-src="demo-api-compact.json">Demo api - compact model</paper-item>
-    <paper-item data-src="raml-types.json">RAML types with raml examples</paper-item>
-    <paper-item data-src="raml-types-compact.json">RAML types with raml examples - compact model</paper-item>
-    `;
+    const result = [];
+
+    [
+      ['demo-api', 'Demo API'],
+      ['google-drive-api', 'Google Drive'],
+      ['raml-types', 'RAML types with raml examples'],
+    ].forEach(([file, label]) => {
+      result[result.length] = html`
+      <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
+      <paper-item data-src="${file}.json">${label}</paper-item>`;
+    });
+    return result;
   }
 
   _examplesTemplate() {

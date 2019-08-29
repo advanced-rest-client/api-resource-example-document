@@ -63,6 +63,7 @@ class ApiExampleRender extends LitElement {
       #output {
         white-space: pre-wrap;
         word-wrap: var(--code-block-word-wrap, break-word);
+        word-break: var(--code-block-word-break, break-all);
         font-family: var(--arc-font-code-family);
       }
 
