@@ -48,6 +48,14 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
     .example:not(:last-of-type) {
       margin-bottom: 24px;
+    }
+
+    .example-title {
+      font-weight: var(--arc-font-body1-font-weight);
+      line-height: var(--arc-font-body1-line-height);
+      font-size: 15px;
+      margin: 8px 8px 20px 12px;
+      display: block;
     }`;
   }
 
@@ -511,11 +519,12 @@ class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   render() {
-    const examples = this.renderedExamples;
+    const examples = this.renderedExamples || [];
     return html`
     <prism-highlighter></prism-highlighter>
     <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
-    ${examples && examples.length ? this._examplesTemplate(examples) : undefined}`;
+    ${examples.length > 1 ? html`<span class="example-title">Examples</span>` : undefined}
+    ${examples.length ? this._examplesTemplate(examples) : undefined}`;
   }
 }
 window.customElements.define('api-resource-example-document', ApiResourceExampleDocument);

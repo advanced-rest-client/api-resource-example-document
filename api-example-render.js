@@ -448,7 +448,7 @@ class ApiExampleRender extends LitElement {
   }
 
   _headerTemplate(example) {
-    const renderTitle = !example.isScalar;
+    const renderTitle = !example.isScalar || example.hasTitle;
     const noActions = !!(this.noActions || example.isScalar);
     if (noActions && !renderTitle) {
       return '';
