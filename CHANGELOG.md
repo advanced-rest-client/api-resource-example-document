@@ -449,3 +449,18 @@
 
 
 
+## 3.0.7 (2019-09-13)
+
+
+### Bug Fixes
+
+* adding missing `legacy` property on the document ([c9d2457](https://github.com/advanced-rest-client/api-resource-example-document/commit/c9d2457))
+* fixing linter errors ([4be70ab](https://github.com/advanced-rest-client/api-resource-example-document/commit/4be70ab))
+
+
+### Features
+
+* titles and buttons are now hidden for scalar values ([0a82622](https://github.com/advanced-rest-client/api-resource-example-document/commit/0a82622))
+
+
+
