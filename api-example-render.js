@@ -41,7 +41,6 @@ import '@anypoint-web-components/anypoint-button/anypoint-button.js';
  * `--code-block` | Mixin applied to the output block | `{}`
  *
  * @customElement
- * @polymer
  * @demo demo/index.html
  * @memberof ApiElements
  */
@@ -435,42 +434,60 @@ class ApiExampleRender extends LitElement {
     `;
   }
 
-  _renderExample(example) {
+  _titleTemplate(example) {
+    const renderTitle = !!(example.hasTitle && !this.noTitle && !example.isScalar);
+    if (!renderTitle) {
+      return '';
+    }
+    return html`<h6>${example.title}</h6>`;
+  }
+
+  _actionsTemplate(example) {
+    if (this.noActions || example.isScalar) {
+      return '';
+    }
     const { legacy } = this;
-    const renderTitle = !!(example.hasTitle && !this.noTitle);
     const hasRaw = this._computeHasRaw(example.value, example.raw);
     const isJson = this._computeIsJson(this.isJson, example.value);
-    return html`<div class="example">
-      ${renderTitle ? html`<h6>${example.title}</h6>`: undefined}
-      ${!this.noActions ? html`<div class="example-actions">
+    return html`
+    <div class="example-actions">
+      <anypoint-button
+        part="content-action-button, code-content-action-button"
+        class="action-button"
+        data-action="copy"
+        @click="${this._copyToClipboard}"
+        ?legacy="${legacy}"
+        title="Copy example to clipboard"
+      >Copy</anypoint-button>
+      ${isJson ? html`
         <anypoint-button
           part="content-action-button, code-content-action-button"
           class="action-button"
-          data-action="copy"
-          @click="${this._copyToClipboard}"
+          data-action="table"
+          toggles
+          .active="${this.table}"
+          @active-changed="${this._toggleTable}"
           ?legacy="${legacy}"
-          title="Copy example to clipboard">Copy</anypoint-button>
-        ${isJson ? html`
-          <anypoint-button
-            part="content-action-button, code-content-action-button"
-            class="action-button"
-            data-action="table"
-            toggles
-            .active="${this.table}"
-            @active-changed="${this._toggleTable}"
-            ?legacy="${legacy}"
-            title="Toggle between table and JSON view">Table view</anypoint-button>` : undefined}
-        ${hasRaw ? html`
-          <anypoint-button
-            part="content-action-button, code-content-action-button"
-            class="action-button"
-            data-action="code"
-            toggles
-            .active="${this.sourceOpened}"
-            @active-changed="${this._toggleSourceOpened}"
-            ?legacy="${legacy}"
-            title="Toggle between JSON and example source view">Source vierw</anypoint-button>` : undefined}
-      </div>` : undefined}
+          title="Toggle between table and JSON view"
+        >Table view</anypoint-button>` : undefined}
+      ${hasRaw ? html`
+        <anypoint-button
+          part="content-action-button, code-content-action-button"
+          class="action-button"
+          data-action="code"
+          toggles
+          .active="${this.sourceOpened}"
+          @active-changed="${this._toggleSourceOpened}"
+          ?legacy="${legacy}"
+          title="Toggle between JSON and example source view"
+        >Source vierw</anypoint-button>` : undefined}
+    </div>`;
+  }
+
+  _renderExample(example) {
+    return html`<div class="example">
+      ${this._titleTemplate(example)}
+      ${this._actionsTemplate(example)}
       ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
       <div class="code-wrapper" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
         <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>

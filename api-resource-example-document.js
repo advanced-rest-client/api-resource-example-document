@@ -35,7 +35,6 @@ import './api-example-render.js';
  * `--api-resource-example-document-button-active-background-color` | Background color of active button | `#e0e0e0`
  *
  * @customElement
- * @polymer
  * @demo demo/index.html
  * @memberof ApiElements
  * @appliesMixin ApiElements.AmfHelperMixin

@@ -112,6 +112,20 @@ describe('<api-example-render>', () => {
       const node = element.shadowRoot.querySelector('[data-action="code"]');
       assert.ok(node);
     });
+
+    it('does not render action buttons when is scalar type', async () => {
+      element = await basicFixture();
+      element.example = {
+        value: '{}',
+        hasTitle: true,
+        hasRaw: true,
+        raw: 'test',
+        isScalar: true
+      };
+      await nextFrame();
+      const node = element.shadowRoot.querySelector('.example-actions');
+      assert.notOk(node);
+    });
   });
 
   describe('highlight()', () => {
