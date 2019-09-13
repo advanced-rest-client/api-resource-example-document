@@ -58,7 +58,7 @@ describe('<api-example-render>', () => {
         title: 'test'
       };
       await nextFrame();
-      const h6 = element.shadowRoot.querySelector('h6');
+      const h6 = element.shadowRoot.querySelector('.example-title');
       assert.ok(h6);
       assert.equal(h6.innerText.trim(), 'test');
     });

@@ -70,7 +70,7 @@ class ApiExampleRender extends LitElement {
         display: none !important;
       }
 
-      h6 {
+      .example-title {
         font-weight: var(--arc-font-body1-font-weight);
         line-height: var(--arc-font-body1-line-height);
         font-size: 15px;
@@ -109,6 +109,19 @@ class ApiExampleRender extends LitElement {
 
       json-table {
         margin: 0 8px;
+      }
+
+      .examples-header {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+
+      .example-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        flex: 1;
       }`
     ];
   }
@@ -434,18 +447,24 @@ class ApiExampleRender extends LitElement {
     `;
   }
 
-  _titleTemplate(example) {
-    const renderTitle = !!(example.hasTitle && !this.noTitle && !example.isScalar);
-    if (!renderTitle) {
+  _headerTemplate(example) {
+    const renderTitle = !example.isScalar;
+    const noActions = !!(this.noActions || example.isScalar);
+    if (noActions && !renderTitle) {
       return '';
     }
-    return html`<h6>${example.title}</h6>`;
+    return html`<div class="examples-header">
+      ${renderTitle ? this._titleTemplate(example) : ''}
+      ${!noActions ? this._actionsTemplate(example) : ''}
+    </div>`;
+  }
+
+  _titleTemplate(example) {
+    const label = (this.noTitle || !example.title) ? 'Example' : example.title;
+    return html`<span class="example-title">${label}</span>`;
   }
 
   _actionsTemplate(example) {
-    if (this.noActions || example.isScalar) {
-      return '';
-    }
     const { legacy } = this;
     const hasRaw = this._computeHasRaw(example.value, example.raw);
     const isJson = this._computeIsJson(this.isJson, example.value);
@@ -486,8 +505,7 @@ class ApiExampleRender extends LitElement {
 
   _renderExample(example) {
     return html`<div class="example">
-      ${this._titleTemplate(example)}
-      ${this._actionsTemplate(example)}
+      ${this._headerTemplate(example)}
       ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
       <div class="code-wrapper" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
         <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
