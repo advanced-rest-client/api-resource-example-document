@@ -499,7 +499,7 @@ class ApiExampleRender extends LitElement {
           @active-changed="${this._toggleSourceOpened}"
           ?legacy="${legacy}"
           title="Toggle between JSON and example source view"
-        >Source vierw</anypoint-button>` : undefined}
+        >Source view</anypoint-button>` : undefined}
     </div>`;
   }
 
