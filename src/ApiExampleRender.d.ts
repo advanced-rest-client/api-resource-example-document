@@ -105,9 +105,9 @@ declare namespace ApiElements {
     noActions: boolean|null|undefined;
 
     /**
-     * Enables Anypoint legacy styling
+     * Enables Anypoint compatibility styling
      */
-    legacy: boolean|null|undefined;
+    compatibility: boolean|null|undefined;
     constructor();
     render(): any;
     _setObservableProperty(prop: any, value: any): any;

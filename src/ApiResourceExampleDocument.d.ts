@@ -132,9 +132,9 @@ declare namespace ApiElements {
     noActions: boolean|null|undefined;
 
     /**
-     * Enables Anypoint legacy styling
+     * Enables Anypoint compatibility styling
      */
-    legacy: boolean|null|undefined;
+    compatibility: boolean|null|undefined;
     _effectiveTable: boolean|null|undefined;
 
     /**
