@@ -12,9 +12,10 @@ A viewer for examples in a resource based on AMF model
 <api-resource-example-document examples='[{"http://schema.org/name":[{"@value":"Example1"}],"http://raml.org/vocabularies/document#value":[{"@value":"{{\n    \"value\":true}"}]}]'></api-resource-example-document>
 ```
 
-### API components
+## Version compatibility
 
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
+This version only works with AMF model version 2 (AMF parser >= 4.0.0).
+For compatibility with previous model version use `3.x.x` version of the component.
 
 ## Usage
 
@@ -47,14 +48,17 @@ import '@api-components/api-resource-example-document/api-resource-example-docum
 class SampleElement extends LitElement {
   render() {
     return html`
-    <api-resource-example-document amf-model="${this.model}"></api-resource-example-document>
+    <api-resource-example-document
+      .amf="${this.model}"
+      .examples="${this.examples}"
+      .mediaType="${this.examplesMediaType}"></api-resource-example-document>
     `;
   }
 }
 customElements.define('sample-element', SampleElement);
 ```
 
-### Installation
+## Development
 
 ```sh
 git clone https://github.com/advanced-rest-client/api-resource-example-document
@@ -72,3 +76,7 @@ npm start
 ```sh
 npm test
 ```
+
+### API components
+
+This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)

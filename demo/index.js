@@ -125,7 +125,7 @@ class ApiDemo extends ApiDemoPageBase {
     const helper = this.helper;
     const result = [];
     payloads.forEach((item) => {
-      const label = helper._getValue(item, helper.ns.raml.vocabularies.http + 'mediaType');
+      const label = helper._getValue(item, helper.ns.aml.vocabularies.core.mediaType);
       if (label) {
         result.push({label});
       }

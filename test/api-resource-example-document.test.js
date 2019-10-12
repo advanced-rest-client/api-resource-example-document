@@ -1,5 +1,5 @@
 import { fixture, assert, nextFrame } from '@open-wc/testing';
-import sinon from 'sinon/pkg/sinon-esm.js';
+import * as sinon from 'sinon/pkg/sinon-esm.js';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
 
@@ -269,13 +269,13 @@ describe('<api-resource-example-document>', () => {
   function getPayloads(element, amf, endpoint) {
     const webApi = element._computeWebApi(amf);
     const endPoint = element._computeEndpointByPath(webApi, endpoint);
-    const opKey = element._getAmfKey(element.ns.w3.hydra.supportedOperation);
+    const opKey = element._getAmfKey(element.ns.aml.vocabularies.apiContract.supportedOperation);
     return element._ensureArray(endPoint[opKey]);
   }
 
   function getPayload(element, amf, endpoint, method) {
     const ops = getPayloads(element, amf, endpoint);
-    const op = ops.find((item) => element._getValue(item, element.ns.w3.hydra.core + 'method') === method);
+    const op = ops.find((item) => element._getValue(item, element.ns.aml.vocabularies.apiContract.method) === method);
     const expects = element._computeExpects(op);
     return element._ensureArray(element._computePayload(expects));
   }
@@ -285,7 +285,7 @@ describe('<api-resource-example-document>', () => {
       payloadIndex = 0;
     }
     const payload = getPayload(element, amf, endpoint, method)[payloadIndex];
-    const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
+    const sKey = element._getAmfKey(element.ns.aml.vocabularies.shapes.schema);
     let schema = payload[sKey];
     if (schema instanceof Array) {
       schema = schema[0];
@@ -295,7 +295,7 @@ describe('<api-resource-example-document>', () => {
 
   function computeExamples(element, amf, endpoint, method, payloadIndex) {
     const schema = getPayloadSchema(element, amf, endpoint, method, payloadIndex);
-    const key = element._getAmfKey(element.ns.raml.vocabularies.document + 'examples');
+    const key = element._getAmfKey(element.ns.aml.vocabularies.apiContract.examples);
     return element._ensureArray(schema[key]);
   }
 
@@ -306,7 +306,7 @@ describe('<api-resource-example-document>', () => {
     ].forEach((item) => {
       describe(item[0], () => {
         let amf;
-        before(async () => {
+        before(async () => {computeExamples
           amf = await AmfLoader.load(item[1]);
         });
 
@@ -361,7 +361,7 @@ describe('<api-resource-example-document>', () => {
         it('Computes examples from a payload\'s schema', () => {
           const payload = getPayload(element, amf, '/IncludedInType', 'post')[0];
           const id = payload['@id'];
-          const sKey = element._getAmfKey(element.ns.raml.vocabularies.http + 'schema');
+          const sKey = element._getAmfKey(element.ns.aml.vocabularies.shapes.schema);
           let schema = payload[sKey];
           if (schema instanceof Array) {
             schema = schema[0];
@@ -466,7 +466,6 @@ describe('<api-resource-example-document>', () => {
     });
 
     async function resolveWhenReady(element, amf, path, method) {
-      /* global Promise */
       return new Promise((resolve) => {
         const payloads = getPayload(element, amf, path, method);
         element.examples = payloads;
