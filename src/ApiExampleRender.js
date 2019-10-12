@@ -51,12 +51,11 @@ export class ApiExampleRender extends LitElement {
       css`
       :host {
         display: block;
-        padding: 4px;
-        background-color: var(--code-background-color, #f5f2f0);
+        background-color: inherit;
       }
 
       .code-wrapper {
-        padding: 8px;
+        padding: 0px;
       }
 
       #output {
@@ -74,7 +73,7 @@ export class ApiExampleRender extends LitElement {
         font-weight: var(--arc-font-body1-font-weight);
         line-height: var(--arc-font-body1-line-height);
         font-size: 15px;
-        margin: 0 8px 4px 8px;
+        margin: 0 8px 4px 0px;
       }
 
       .union-toggle {
@@ -104,11 +103,7 @@ export class ApiExampleRender extends LitElement {
       }
 
       .union-type-selector {
-        margin: 12px 8px;
-      }
-
-      json-table {
-        margin: 0 8px;
+        margin: 0px 8px 12px 0px;
       }
 
       .examples-header {
@@ -117,12 +112,25 @@ export class ApiExampleRender extends LitElement {
         flex-direction: row;
       }
 
+      .code-wrapper.scalar {
+        padding-top: 1px;
+      }
+
       .example-actions {
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
         flex: 1;
-      }`
+      }
+
+      api-example-render {
+        background-color: inherit;
+      }
+
+      anypoint-button {
+        height: 28px;
+      }
+      `
     ];
   }
 
@@ -504,12 +512,11 @@ export class ApiExampleRender extends LitElement {
   }
 
   _renderExample(example) {
-    return html`<div class="example">
-      ${this._headerTemplate(example)}
-      ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
-      <div class="code-wrapper" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
-        <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
-      </div>
+    return html`
+    ${this._headerTemplate(example)}
+    ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
+    <div class="code-wrapper ${example.isScalar ? 'scalar': ''}" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
+      <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
     </div>`;
   }
 

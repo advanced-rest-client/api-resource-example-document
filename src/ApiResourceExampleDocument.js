@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@polymer/prism-element/prism-highlighter.js';
 import '@api-components/api-example-generator/api-example-generator.js';
+import { code } from '@advanced-rest-client/arc-icons/ArcIcons.js';
 import '../api-example-render.js';
 /**
  * `api-resource-example-document`
@@ -56,6 +57,27 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       font-size: 15px;
       margin: 8px 8px 20px 12px;
       display: block;
+    }
+
+    .item-container {
+      border-left: 3px var(--api-example-accent-color, #FF9800) solid;
+      border-radius: 2px;
+      background-color: var(--api-example-background-color, var(--code-background-color, #f5f7f9));
+      padding: 16px 0;
+      margin: 20px 0;
+      display: flex;
+    }
+
+    .info-icon {
+      margin: 0 12px;
+      fill: var(--api-example-accent-color, #FF9800);
+      width: 24px;
+      height: 24px;
+    }
+
+    api-example-render {
+      flex: 1;
+      background-color: inherit;
     }`;
   }
 
@@ -505,17 +527,21 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
     return examples.map((item) => html`
+    <div class="item-container">
+      <div class="info-icon">${code}</div>
       <api-example-render
-      exportparts="${parts}"
-      class="example"
-      .example="${item}"
-      ?isjson="${this.isJson}"
-      ?mediatype="${this.mediaType}"
-      ?table="${this.table}"
-      ?rendertable="${this._effectiveTable}"
-      ?noactions="${this.noActions}"
-      @table-changed="${this._tableCHangedHandler}"
-      ?legacy="${this.legacy}"></api-example-render>`);
+        exportparts="${parts}"
+        class="example"
+        .example="${item}"
+        ?isjson="${this.isJson}"
+        ?mediatype="${this.mediaType}"
+        ?table="${this.table}"
+        ?rendertable="${this._effectiveTable}"
+        ?noactions="${this.noActions}"
+        @table-changed="${this._tableCHangedHandler}"
+        ?legacy="${this.legacy}"></api-example-render>
+    </div>
+      `);
   }
 
   render() {
@@ -523,7 +549,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return html`
     <prism-highlighter></prism-highlighter>
     <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
-    ${examples.length > 1 ? html`<span class="example-title">Examples</span>` : undefined}
     ${examples.length ? this._examplesTemplate(examples) : undefined}`;
   }
 }
