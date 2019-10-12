@@ -158,9 +158,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        */
       rawOnly: { type: Boolean, reflect: true },
       /**
-       * Enables Anypoint legacy styling
+       * Enables Anypoint compatibility styling
        */
-      legacy: { type: Boolean },
+      compatibility: { type: Boolean },
       _effectiveTable: {
         type: Boolean
       },
@@ -539,7 +539,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
         ?rendertable="${this._effectiveTable}"
         ?noactions="${this.noActions}"
         @table-changed="${this._tableCHangedHandler}"
-        ?legacy="${this.legacy}"></api-example-render>
+        ?compatibility="${this.compatibility}"></api-example-render>
     </div>
       `);
   }

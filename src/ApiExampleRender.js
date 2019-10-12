@@ -175,9 +175,9 @@ export class ApiExampleRender extends LitElement {
        */
       noActions: { type: Boolean },
       /**
-       * Enables Anypoint legacy styling
+       * Enables Anypoint compatibility styling
        */
-      legacy: { type: Boolean }
+      compatibility: { type: Boolean }
     };
   }
 
@@ -440,7 +440,7 @@ export class ApiExampleRender extends LitElement {
             ?activated="${selectedUnion === index}"
             @click="${this._selectUnion}"
             data-index="${index}"
-            ?legacy="${this.legacy}"
+            ?compatibility="${this.compatibility}"
             title="Select ${item} type">${item}</anypoint-button>`)}
       </div>
       ${unionExample ? html`
@@ -473,7 +473,7 @@ export class ApiExampleRender extends LitElement {
   }
 
   _actionsTemplate(example) {
-    const { legacy } = this;
+    const { compatibility } = this;
     const hasRaw = this._computeHasRaw(example.value, example.raw);
     const isJson = this._computeIsJson(this.isJson, example.value);
     return html`
@@ -483,7 +483,7 @@ export class ApiExampleRender extends LitElement {
         class="action-button"
         data-action="copy"
         @click="${this._copyToClipboard}"
-        ?legacy="${legacy}"
+        ?compatibility="${compatibility}"
         title="Copy example to clipboard"
       >Copy</anypoint-button>
       ${isJson ? html`
@@ -494,7 +494,7 @@ export class ApiExampleRender extends LitElement {
           toggles
           .active="${this.table}"
           @active-changed="${this._toggleTable}"
-          ?legacy="${legacy}"
+          ?compatibility="${compatibility}"
           title="Toggle between table and JSON view"
         >Table view</anypoint-button>` : undefined}
       ${hasRaw ? html`
@@ -505,7 +505,7 @@ export class ApiExampleRender extends LitElement {
           toggles
           .active="${this.sourceOpened}"
           @active-changed="${this._toggleSourceOpened}"
-          ?legacy="${legacy}"
+          ?compatibility="${compatibility}"
           title="Toggle between JSON and example source view"
         >Source view</anypoint-button>` : undefined}
     </div>`;
