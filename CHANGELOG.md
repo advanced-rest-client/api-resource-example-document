@@ -551,3 +551,21 @@
 
 
 
+## 4.0.2 (2019-11-08)
+
+
+### Bug Fixes
+
+* adding missing `legacy` property on the document ([c9d2457](https://github.com/advanced-rest-client/api-resource-example-document/commit/c9d245731db14819459ff4943a3ba72516ecda4e))
+* fixing a typo ([102c4ec](https://github.com/advanced-rest-client/api-resource-example-document/commit/102c4ecc678347c75e074968d98f09893f5f96bb))
+* fixing linter errors ([4be70ab](https://github.com/advanced-rest-client/api-resource-example-document/commit/4be70ab39cd322ab612d0b061639531bfdebf5f9))
+
+
+### Features
+
+* adding "example" title if there's more than one example ([9b80fed](https://github.com/advanced-rest-client/api-resource-example-document/commit/9b80fed917139f4a6861daf34755e3983d442803))
+* redesigning title with actions placed on the right hand side ([c085ee4](https://github.com/advanced-rest-client/api-resource-example-document/commit/c085ee44438e34a4a326f094d149e633f8b7a222))
+* titles and buttons are now hidden for scalar values ([0a82622](https://github.com/advanced-rest-client/api-resource-example-document/commit/0a82622381a95e33dee971100a97632e91e2855d))
+
+
+
