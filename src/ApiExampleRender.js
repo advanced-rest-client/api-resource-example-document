@@ -45,7 +45,7 @@ import '@anypoint-web-components/anypoint-button/anypoint-button.js';
  * @memberof ApiElements
  */
 export class ApiExampleRender extends LitElement {
-  static get styles() {
+  get styles() {
     return [
       styles,
       css`
@@ -526,7 +526,7 @@ export class ApiExampleRender extends LitElement {
       return html``;
     }
     const isUnion = !!(example && example.hasUnion);
-    return html`
+    return html`<style>${this.styles}</style>
     ${isUnion ? this._renderUnion(example) : this._renderExample(example)}
     <clipboard-copy .content="${example.value}"></clipboard-copy>
     `;

@@ -41,7 +41,7 @@ import '../api-example-render.js';
  * @appliesMixin ApiElements.AmfHelperMixin
  */
 export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
-  static get styles() {
+  get styles() {
     return css`
     :host {
       display: block;
@@ -546,7 +546,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
   render() {
     const examples = this.renderedExamples || [];
-    return html`
+    return html`<style>${this.styles}</style>
     <prism-highlighter></prism-highlighter>
     <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
     ${examples.length ? this._examplesTemplate(examples) : undefined}`;
