@@ -4,6 +4,37 @@ import '@advanced-rest-client/json-table/json-table.js';
 import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 /**
+ * Transforms input into a content to be rendered in the code view.
+ */
+export const SafeHtmlUtils = {
+  AMP_RE: new RegExp(/&/g),
+  GT_RE: new RegExp(/>/g),
+  LT_RE: new RegExp(/</g),
+  SQUOT_RE: new RegExp(/'/g),
+  QUOT_RE: new RegExp(/"/g),
+  htmlEscape: function(s) {
+    if (typeof s !== 'string') {
+      return s;
+    }
+    if (s.indexOf('&') !== -1) {
+      s = s.replace(SafeHtmlUtils.AMP_RE, '&amp;');
+    }
+    if (s.indexOf('<') !== -1) {
+      s = s.replace(SafeHtmlUtils.LT_RE, '&lt;');
+    }
+    if (s.indexOf('>') !== -1) {
+      s = s.replace(SafeHtmlUtils.GT_RE, '&gt;');
+    }
+    if (s.indexOf('"') !== -1) {
+      s = s.replace(SafeHtmlUtils.QUOT_RE, '&quot;');
+    }
+    if (s.indexOf("'") !== -1) {
+      s = s.replace(SafeHtmlUtils.SQUOT_RE, '&#39;');
+    }
+    return s;
+  }
+};
+/**
  * `api-example-render`
  *
  * Renders a JSON values using Prism highlighter or JSON table.
@@ -69,13 +100,6 @@ export class ApiExampleRender extends LitElement {
         display: none !important;
       }
 
-      .example-title {
-        font-weight: var(--arc-font-body1-font-weight);
-        line-height: var(--arc-font-body1-line-height);
-        font-size: 15px;
-        margin: 0 8px 4px 0px;
-      }
-
       .union-toggle {
         outline: none;
         background-color: var(--api-type-document-union-button-background-color, transparent);
@@ -90,26 +114,18 @@ export class ApiExampleRender extends LitElement {
         color: var(--api-type-document-union-button-active-color, #000);
       }
 
-      .action-button {
-        outline: none;
-        border-width: 1px;
-        border-color: var(--api-body-document-action-button-border-color, #BDBDBD);
-        border-style: solid;
+      .action-button[active] {
+        background-color: var(--api-resource-example-document-button-active-background-color, #CDDC39);
+        color: var(--api-resource-example-document-button-active-color, currentColor);
       }
 
-      .action-button[active] {
-        background-color: var(--api-resource-example-document-button-active-background-color, #e0e0e0);
-        color: var(--api-resource-example-document-button-active-color, currentColor);
+      .union-toggle[focused],
+      .action-button[active][focused] {
+        outline: auto;
       }
 
       .union-type-selector {
         margin: 0px 8px 12px 0px;
-      }
-
-      .examples-header {
-        display: flex;
-        align-items: center;
-        flex-direction: row;
       }
 
       .code-wrapper.scalar {
@@ -118,17 +134,20 @@ export class ApiExampleRender extends LitElement {
 
       .example-actions {
         display: flex;
+        align-items: center;
+        flex-direction: row;
         justify-content: flex-end;
         flex-wrap: wrap;
         flex: 1;
       }
 
-      api-example-render {
-        background-color: inherit;
+      anypoint-button {
+        margin-bottom: 8px;
+        height: 28px;
       }
 
-      anypoint-button {
-        height: 28px;
+      api-example-render {
+        background-color: inherit;
       }
       `
     ];
@@ -166,10 +185,6 @@ export class ApiExampleRender extends LitElement {
        * Opens example source view (source from API spec file).
        */
       sourceOpened: { type: Boolean },
-      /**
-       * When set the title won't be rendered event if the example has one.
-       */
-      noTitle: { type: Boolean },
       /**
        * When set the actions row (copy, switch view type) is not rendered.
        */
@@ -310,6 +325,11 @@ export class ApiExampleRender extends LitElement {
    * @return {String} Highlighted code.
    */
   highlight(code, type) {
+    if (code.length > 10000) {
+      // examples that are huge causes browser to choke or hang.
+      // This just sanitizes the schema and renders unprocessed data.
+      return SafeHtmlUtils.htmlEscape(code);
+    }
     let lang;
     if (type) {
       if (type.indexOf('json') !== -1) {
@@ -360,6 +380,7 @@ export class ApiExampleRender extends LitElement {
       button.part.remove('content-action-button-disabled');
       button.part.remove('code-content-action-button-disabled');
     }
+    button.focus();
   }
 
   _computeUnionExamples(selectedUnion, example) {
@@ -450,29 +471,15 @@ export class ApiExampleRender extends LitElement {
           .mediaType="${this.mediaType}"
           .table="${this.table}"
           .renderTable="${this.renderTable}"
-          notitle
           .noActions="${this.noActions}"></api-example-render>` : undefined}
     `;
   }
 
   _headerTemplate(example) {
-    const renderTitle = !example.isScalar || example.hasTitle;
     const noActions = !!(this.noActions || example.isScalar);
-    if (noActions && !renderTitle) {
+    if (noActions) {
       return '';
     }
-    return html`<div class="examples-header">
-      ${renderTitle ? this._titleTemplate(example) : ''}
-      ${!noActions ? this._actionsTemplate(example) : ''}
-    </div>`;
-  }
-
-  _titleTemplate(example) {
-    const label = (this.noTitle || !example.title) ? 'Example' : example.title;
-    return html`<span class="example-title">${label}</span>`;
-  }
-
-  _actionsTemplate(example) {
     const { compatibility } = this;
     const hasRaw = this._computeHasRaw(example.value, example.raw);
     const isJson = this._computeIsJson(this.isJson, example.value);

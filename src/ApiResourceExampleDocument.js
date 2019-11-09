@@ -51,20 +51,27 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       margin-bottom: 24px;
     }
 
-    .example-title {
-      font-weight: var(--arc-font-body1-font-weight);
-      line-height: var(--arc-font-body1-line-height);
-      font-size: 15px;
-      margin: 8px 8px 20px 12px;
-      display: block;
-    }
-
     .item-container {
       border-left: 3px var(--api-example-accent-color, #FF9800) solid;
       border-radius: 2px;
       background-color: var(--api-example-background-color, var(--code-background-color, #f5f7f9));
-      padding: 16px 0;
       margin: 20px 0;
+    }
+
+    .example-title {
+      font-weight: var(--arc-font-body1-font-weight);
+      line-height: var(--arc-font-body1-line-height);
+      font-size: 1rem;
+      display: block;
+      padding: 8px 12px;
+      background-color: var(--api-example-title-background-color, #ff9800);
+      color: var(--api-example-title-color, #000);
+      border-top-right-radius: 2px;
+      border-top-left-radius: 2px;
+    }
+
+    .renderer {
+      padding: 8px 0;
       display: flex;
     }
 
@@ -522,24 +529,36 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.table = e.detail.value;
   }
 
+  _titleTemplate(example) {
+    if (example.isScalar) {
+      return;
+    }
+    const label = !example.title ? 'Example' : example.title;
+    return html`<div class="example-title">${label}</div>`;
+  }
+
   _examplesTemplate(examples) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
     return examples.map((item) => html`
     <div class="item-container">
-      <div class="info-icon">${code}</div>
-      <api-example-render
-        exportparts="${parts}"
-        class="example"
-        .example="${item}"
-        ?isjson="${this.isJson}"
-        ?mediatype="${this.mediaType}"
-        ?table="${this.table}"
-        ?rendertable="${this._effectiveTable}"
-        ?noactions="${this.noActions}"
-        @table-changed="${this._tableCHangedHandler}"
-        ?compatibility="${this.compatibility}"></api-example-render>
+      ${this._titleTemplate(item)}
+      <div class="renderer">
+        <div class="info-icon">${code}</div>
+        <api-example-render
+          exportparts="${parts}"
+          class="example"
+          .example="${item}"
+          ?isjson="${this.isJson}"
+          ?mediatype="${this.mediaType}"
+          ?table="${this.table}"
+          ?rendertable="${this._effectiveTable}"
+          ?noactions="${this.noActions}"
+          @table-changed="${this._tableCHangedHandler}"
+          ?compatibility="${this.compatibility}"
+        ></api-example-render>
+      </div>
     </div>
       `);
   }

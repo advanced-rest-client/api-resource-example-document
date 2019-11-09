@@ -2,6 +2,7 @@ import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
 import { tap } from '@polymer/iron-test-helpers/mock-interactions.js';
 import * as sinon from 'sinon/pkg/sinon-esm.js';
 import '@polymer/prism-element/prism-highlighter.js';
+import { SafeHtmlUtils } from '../src/ApiExampleRender.js';
 import '../api-example-render.js';
 
 const highlighter = document.createElement('prism-highlighter');
@@ -19,11 +20,6 @@ describe('<api-example-render>', () => {
   async function noActionsFixture() {
     return (await fixture(`
       <api-example-render media-type="application/json" isjson noactions></api-example-render>`));
-  }
-
-  async function noTitleFixture() {
-    return (await fixture(`
-      <api-example-render notitle></api-example-render>`));
   }
 
   describe('Basics', () => {
@@ -48,33 +44,6 @@ describe('<api-example-render>', () => {
 
   describe('View rendering', () => {
     let element;
-
-    it('Renders title for an example', async () => {
-      element = await basicFixture();
-      element.example = {
-        value: '{}',
-        hasTitle: true,
-        hasRaw: false,
-        title: 'test'
-      };
-      await nextFrame();
-      const h6 = element.shadowRoot.querySelector('.example-title');
-      assert.ok(h6);
-      assert.equal(h6.innerText.trim(), 'test');
-    });
-
-    it('Do not renders title forwhen notitle is set', async () => {
-      element = await noTitleFixture();
-      element.example = {
-        value: '{}',
-        hasTitle: true,
-        hasRaw: false,
-        title: 'test'
-      };
-      await nextFrame();
-      const h6 = element.shadowRoot.querySelector('h6');
-      assert.notOk(h6);
-    });
 
     it('Renders actions', async () => {
       element = await basicFixture();
@@ -607,6 +576,74 @@ describe('<api-example-render>', () => {
       assert.isFalse(target.part.contains('content-action-button-active'), 'Has no content-action-button-active part');
       assert.isFalse(target.part.contains('code-content-action-button-active'),
         'Has no code-content-action-button-active part');
+    });
+  });
+
+  describe('SafeHtmlUtils', () => {
+    describe('htmlEscape()', () => {
+      it('returns the same input when no string', () => {
+        const result = SafeHtmlUtils.htmlEscape(22);
+        assert.equal(result, 22);
+      });
+
+      it('replaces "&" characters', () => {
+        const result = SafeHtmlUtils.htmlEscape('&a&');
+        assert.equal(result, '&amp;a&amp;');
+      });
+
+      it('replaces "<" characters', () => {
+        const result = SafeHtmlUtils.htmlEscape('<a<');
+        assert.equal(result, '&lt;a&lt;');
+      });
+
+      it('replaces ">" characters', () => {
+        const result = SafeHtmlUtils.htmlEscape('>a>');
+        assert.equal(result, '&gt;a&gt;');
+      });
+
+      it('replaces quote characters', () => {
+        const result = SafeHtmlUtils.htmlEscape('"a"');
+        assert.equal(result, '&quot;a&quot;');
+      });
+
+      it('replaces single quote characters', () => {
+        const result = SafeHtmlUtils.htmlEscape("'a'");
+        assert.equal(result, '&#39;a&#39;');
+      });
+    });
+  });
+
+  describe('Huge example rendering', () => {
+    let element;
+    let out;
+    beforeEach(async () => {
+      element = await basicFixture();
+      await nextFrame();
+    });
+
+    function getString(size) {
+      size = size || 10001;
+      let result = '<element>&"\'';
+      for (let i = 0; i < size; i++) {
+        result += 'a';
+      }
+      result += '</result>';
+      return result;
+    }
+
+    it('renders sanitized code', async () => {
+      element.example = {
+        value: getString(),
+        hasTitle: true,
+        hasRaw: false,
+        title: 'test'
+      };
+      await aTimeout();
+      out = element.shadowRoot.querySelector('#output');
+      const result = out.innerHTML;
+      // even though the " and ' characters are replaced when reading them back
+      // from the output element they are converted to " and '
+      assert.equal(result.substr(0, 20), '&lt;element&gt;&amp;');
     });
   });
 

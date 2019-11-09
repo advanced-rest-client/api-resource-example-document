@@ -1,4 +1,4 @@
-import { fixture, assert, nextFrame } from '@open-wc/testing';
+import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
 import * as sinon from 'sinon/pkg/sinon-esm.js';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
@@ -448,6 +448,27 @@ describe('<api-resource-example-document>', () => {
               done();
             });
           });
+        });
+
+        it('renders default title for an example', async () => {
+          const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          element.examples = payloads;
+          await aTimeout(100);
+          const h6 = element.shadowRoot.querySelector('.example-title');
+          assert.ok(h6);
+          assert.equal(h6.innerText.trim(), 'Example');
+        });
+
+        it('renders title for an example', async () => {
+          const payloads = getPayload(element, amf, '/user-raml-example', 'post');
+          element.examples = payloads;
+          await aTimeout(100);
+          const titles = element.shadowRoot.querySelectorAll('.example-title');
+          assert.lengthOf(titles, 4, 'has 4 examples');
+          assert.equal(titles[0].innerText.trim(), 'User 1');
+          assert.equal(titles[1].innerText.trim(), 'User 2');
+          assert.equal(titles[2].innerText.trim(), 'User 3');
+          assert.equal(titles[3].innerText.trim(), 'User 4');
         });
       });
     });
