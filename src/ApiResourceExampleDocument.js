@@ -85,6 +85,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     api-example-render {
       flex: 1;
       background-color: inherit;
+      overflow: auto;
+      max-width: 100%;
     }`;
   }
 

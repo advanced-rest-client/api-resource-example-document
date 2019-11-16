@@ -149,6 +149,12 @@ export class ApiExampleRender extends LitElement {
       api-example-render {
         background-color: inherit;
       }
+
+      json-table,
+      api-example-render {
+        overflow: auto;
+        max-width: 100%;
+      }
       `
     ];
   }
