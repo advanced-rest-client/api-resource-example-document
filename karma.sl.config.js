@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const merge = require('deepmerge');
-const slSettings = require('@advanced-rest-client/testing-karma-sl/sl-settings.js');
+const { slSettings } = require('@advanced-rest-client/testing-karma-sl');
 const createBaseConfig = require('./karma.conf.js');
 
 module.exports = (config) => {
@@ -16,7 +16,6 @@ module.exports = (config) => {
     'SL_Firefox-1',
     // 'SL_Safari',
     // 'SL_Safari-1',
-    // 'SL_IE_11',
     // 'SL_EDGE'
   ];
   config.set(merge(createBaseConfig(config), slConfig));
