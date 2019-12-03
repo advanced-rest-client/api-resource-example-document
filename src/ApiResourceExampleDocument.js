@@ -570,6 +570,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return html`<style>${this.styles}</style>
     <prism-highlighter></prism-highlighter>
     <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
-    ${examples.length ? this._examplesTemplate(examples) : undefined}`;
+    ${examples.length ? this._examplesTemplate(examples) : ''}`;
   }
 }

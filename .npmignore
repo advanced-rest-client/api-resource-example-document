@@ -1,6 +1,7 @@
 coverage/
 test/
 demo/
+dist/
 gen-tsd.json
 CONTRIBUTING.md
 .travis.yml

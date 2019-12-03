@@ -477,7 +477,7 @@ export class ApiExampleRender extends LitElement {
           .mediaType="${this.mediaType}"
           .table="${this.table}"
           .renderTable="${this.renderTable}"
-          .noActions="${this.noActions}"></api-example-render>` : undefined}
+          .noActions="${this.noActions}"></api-example-render>` : ''}
     `;
   }
 
@@ -509,7 +509,7 @@ export class ApiExampleRender extends LitElement {
           @active-changed="${this._toggleTable}"
           ?compatibility="${compatibility}"
           title="Toggle between table and JSON view"
-        >Table view</anypoint-button>` : undefined}
+        >Table view</anypoint-button>` : ''}
       ${hasRaw ? html`
         <anypoint-button
           part="content-action-button, code-content-action-button"
@@ -520,14 +520,14 @@ export class ApiExampleRender extends LitElement {
           @active-changed="${this._toggleSourceOpened}"
           ?compatibility="${compatibility}"
           title="Toggle between JSON and example source view"
-        >Source view</anypoint-button>` : undefined}
+        >Source view</anypoint-button>` : ''}
     </div>`;
   }
 
   _renderExample(example) {
     return html`
     ${this._headerTemplate(example)}
-    ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: undefined}
+    ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: ''}
     <div class="code-wrapper ${example.isScalar ? 'scalar': ''}" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
       <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
     </div>`;
@@ -536,7 +536,7 @@ export class ApiExampleRender extends LitElement {
   render() {
     const example = this.example;
     if (!example) {
-      return html``;
+      return '';
     }
     const isUnion = !!(example && example.hasUnion);
     return html`<style>${this.styles}</style>
