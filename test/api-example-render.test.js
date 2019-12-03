@@ -498,7 +498,7 @@ describe('<api-example-render>', () => {
           value: 'a'
         }]
       });
-      assert.isUndefined(result.values[1]);
+      assert.notOk(result.values[1]);
     });
 
     it('Has api-example-render when union selected', () => {
