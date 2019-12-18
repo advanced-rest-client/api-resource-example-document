@@ -256,6 +256,7 @@ types:
       application/json:
         type: !include user-raml-example.raml
         examples:
+          description: This is multiple examples for the body.
           User 3:
             id: uid3
             username: ppsztyc
@@ -303,3 +304,17 @@ types:
         example: !include named-example-with-link.raml
       application/xml:
         example: !include named-example-with-link.raml
+/example-with-description:
+  post:
+    body:
+      application/json:
+        type: !include user-raml-example.raml
+        example:
+          description: This is multiple examples for the body.
+          value:
+            id: uid3
+            username: ppsztyc
+            firstName: Pawel
+            lastName: Psztyc
+            profilePhoto: https://img/domain.com/ppsztyc
+            email: ppsztyc@domain.com
