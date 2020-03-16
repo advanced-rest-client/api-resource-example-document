@@ -662,7 +662,7 @@ describe('<api-example-render>', () => {
 
     it('passes accessibility test', async () => {
       await assert.isAccessible(element, {
-        // ignoredRules: ['color-contrast']
+        ignoredRules: ['color-contrast']
       });
     });
   });
