@@ -3574,7 +3574,7 @@
 ],
 "doc:reference-id": [
 {
-"@id": "#2"
+"@id": "#27"
 }
 ],
 "doc:location": [
@@ -3673,7 +3673,7 @@
 ],
 "sourcemaps:lexical": [
 {
-"@id": "#109/source-map/lexical/element_0",
+"@id": "#109/source-map/lexical/element_1",
 "sourcemaps:element": [
 {
 "@value": "amf://id#109"
@@ -3682,6 +3682,19 @@
 "sourcemaps:value": [
 {
 "@value": "[(69,6)-(104,1)]"
+}
+]
+},
+{
+"@id": "#109/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "apiContract:examples"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(71,8)-(72,0)]"
 }
 ]
 }
@@ -3789,7 +3802,7 @@
 ],
 "doc:reference-id": [
 {
-"@id": "#4"
+"@id": "#2"
 }
 ],
 "doc:location": [
@@ -3867,6 +3880,21 @@
 "@id": "#155/source-map",
 "@type": [
 "sourcemaps:SourceMap"
+],
+"sourcemaps:lexical": [
+{
+"@id": "#155/source-map/lexical/element_0",
+"sourcemaps:element": [
+{
+"@value": "apiContract:examples"
+}
+],
+"sourcemaps:value": [
+{
+"@value": "[(74,8)-(75,0)]"
+}
+]
+}
 ],
 "sourcemaps:auto-generated-name": [
 {
@@ -4288,7 +4316,7 @@
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [
@@ -4313,19 +4341,14 @@
 ],
 "doc:raw": [
 {
-"@value": "{\n  \"id\": \"R34fg663H9KW9MMSKISI\",\n  \"name\": \"Pawel Psztyc\",\n  \"birthday\": \"1983-10-20\",\n  \"gender\": \"male\",\n  \"url\": \"https://domain.com/profile/pawel.psztyc\",\n  \"image\": {\n    \"url\": \"https://domain.com/profile/pawel.psztyc/image\",\n    \"thumb\": \"https://domain.com/profile/pawel.psztyc/image/thumb\"\n  },\n  \"tagline\": \"Some text about me.\",\n  \"language\": \"en_GB\",\n  \"etag\": \"W\\\\244m4n5kj3gbn2nj4k4n4\"\n}\n"
-}
-],
-"core:mediaType": [
-{
-"@value": "application/json"
+"@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource error=\"false\" type=\"AppPerson\">\n  <id>Qawer63J73HJ6khjswuqyq62382jG21s</id>\n  <name>John Smith</name>\n  <birthday>1990-10-12</birthday>\n  <gender>male</gender>\n  <url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s</url>\n  <image>\n    <url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image</url>\n    <thumb>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image/thumb</thumb>\n  </image>\n  <tagline>Hi, I'm John!</tagline>\n  <language>en_US</language>\n</resource>\n"
 }
 ]
 }
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [
@@ -4350,14 +4373,14 @@
 ],
 "doc:raw": [
 {
-"@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resource error=\"false\" type=\"AppPerson\">\n  <id>Qawer63J73HJ6khjswuqyq62382jG21s</id>\n  <name>John Smith</name>\n  <birthday>1990-10-12</birthday>\n  <gender>male</gender>\n  <url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s</url>\n  <image>\n    <url>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image</url>\n    <thumb>https://www.domain.com/people/Qawer63J73HJ6khjswuqyq62382jG21s/image/thumb</thumb>\n  </image>\n  <tagline>Hi, I'm John!</tagline>\n  <language>en_US</language>\n</resource>\n"
+"@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n  <xs:element name=\"resource\">\n    <xs:complexType>\n      <xs:sequence>\n        <xs:element name=\"id\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"name\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"birthday\" type=\"xs:date\"></xs:element>\n        <xs:element name=\"gender\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"url\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"image\">\n          <xs:complexType>\n            <xs:sequence>\n              <xs:element name=\"url\" type=\"xs:string\"></xs:element>\n              <xs:element name=\"thumb\" type=\"xs:string\"></xs:element>\n            </xs:sequence>\n          </xs:complexType>\n        </xs:element>\n        <xs:element name=\"tagline\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"language\" type=\"xs:string\"></xs:element>\n      </xs:sequence>\n      <xs:attribute name=\"error\" type=\"xs:boolean\" use=\"required\"></xs:attribute>\n      <xs:attribute name=\"type\" type=\"xs:string\" use=\"required\"></xs:attribute>\n    </xs:complexType>\n  </xs:element>\n</xs:schema>\n"
 }
 ]
 }
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [
@@ -5601,7 +5624,7 @@
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [
@@ -5649,14 +5672,19 @@
 ],
 "doc:raw": [
 {
-"@value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n  <xs:element name=\"resource\">\n    <xs:complexType>\n      <xs:sequence>\n        <xs:element name=\"id\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"name\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"birthday\" type=\"xs:date\"></xs:element>\n        <xs:element name=\"gender\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"url\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"image\">\n          <xs:complexType>\n            <xs:sequence>\n              <xs:element name=\"url\" type=\"xs:string\"></xs:element>\n              <xs:element name=\"thumb\" type=\"xs:string\"></xs:element>\n            </xs:sequence>\n          </xs:complexType>\n        </xs:element>\n        <xs:element name=\"tagline\" type=\"xs:string\"></xs:element>\n        <xs:element name=\"language\" type=\"xs:string\"></xs:element>\n      </xs:sequence>\n      <xs:attribute name=\"error\" type=\"xs:boolean\" use=\"required\"></xs:attribute>\n      <xs:attribute name=\"type\" type=\"xs:string\" use=\"required\"></xs:attribute>\n    </xs:complexType>\n  </xs:element>\n</xs:schema>\n"
+"@value": "{\n  \"$id\": \"http://example.com/example.json\",\n  \"type\": \"object\",\n  \"definitions\": {},\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"properties\": {\n    \"id\": {\n      \"$id\": \"/properties/id\",\n      \"type\": \"string\",\n      \"title\": \"The Id Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"R34fg663H9KW9MMSKISI\"\n      ]\n    },\n    \"name\": {\n      \"$id\": \"/properties/name\",\n      \"type\": \"string\",\n      \"title\": \"The Name Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"Pawel Psztyc\"\n      ]\n    },\n    \"birthday\": {\n      \"$id\": \"/properties/birthday\",\n      \"type\": \"string\",\n      \"title\": \"The Birthday Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"1983-10-20\"\n      ]\n    },\n    \"gender\": {\n      \"$id\": \"/properties/gender\",\n      \"type\": \"string\",\n      \"title\": \"The Gender Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"male\"\n      ]\n    },\n    \"url\": {\n      \"$id\": \"/properties/url\",\n      \"type\": \"string\",\n      \"title\": \"The Url Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"https://domain.com/profile/pawel.psztyc\"\n      ]\n    },\n    \"image\": {\n      \"$id\": \"/properties/image\",\n      \"type\": \"object\",\n      \"properties\": {\n        \"url\": {\n          \"$id\": \"/properties/image/properties/url\",\n          \"type\": \"string\",\n          \"title\": \"The Url Schema \",\n          \"default\": \"\",\n          \"examples\": [\n            \"https://domain.com/profile/pawel.psztyc/image\"\n          ]\n        },\n        \"thumb\": {\n          \"$id\": \"/properties/image/properties/thumb\",\n          \"type\": \"string\",\n          \"title\": \"The Thumb Schema \",\n          \"default\": \"\",\n          \"examples\": [\n            \"https://domain.com/profile/pawel.psztyc/image/thumb\"\n          ]\n        }\n      }\n    },\n    \"tagline\": {\n      \"$id\": \"/properties/tagline\",\n      \"type\": \"string\",\n      \"title\": \"The Tagline Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"Some text about me.\"\n      ]\n    },\n    \"language\": {\n      \"$id\": \"/properties/language\",\n      \"type\": \"string\",\n      \"title\": \"The Language Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"en_GB\"\n      ]\n    },\n    \"etag\": {\n      \"$id\": \"/properties/etag\",\n      \"type\": \"string\",\n      \"title\": \"The Etag Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"W\\\\244m4n5kj3gbn2nj4k4n4\"\n      ]\n    }\n  }\n}\n"
+}
+],
+"core:mediaType": [
+{
+"@value": "application/json"
 }
 ]
 }
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [
@@ -5681,7 +5709,7 @@
 ],
 "doc:raw": [
 {
-"@value": "{\n  \"$id\": \"http://example.com/example.json\",\n  \"type\": \"object\",\n  \"definitions\": {},\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"properties\": {\n    \"id\": {\n      \"$id\": \"/properties/id\",\n      \"type\": \"string\",\n      \"title\": \"The Id Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"R34fg663H9KW9MMSKISI\"\n      ]\n    },\n    \"name\": {\n      \"$id\": \"/properties/name\",\n      \"type\": \"string\",\n      \"title\": \"The Name Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"Pawel Psztyc\"\n      ]\n    },\n    \"birthday\": {\n      \"$id\": \"/properties/birthday\",\n      \"type\": \"string\",\n      \"title\": \"The Birthday Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"1983-10-20\"\n      ]\n    },\n    \"gender\": {\n      \"$id\": \"/properties/gender\",\n      \"type\": \"string\",\n      \"title\": \"The Gender Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"male\"\n      ]\n    },\n    \"url\": {\n      \"$id\": \"/properties/url\",\n      \"type\": \"string\",\n      \"title\": \"The Url Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"https://domain.com/profile/pawel.psztyc\"\n      ]\n    },\n    \"image\": {\n      \"$id\": \"/properties/image\",\n      \"type\": \"object\",\n      \"properties\": {\n        \"url\": {\n          \"$id\": \"/properties/image/properties/url\",\n          \"type\": \"string\",\n          \"title\": \"The Url Schema \",\n          \"default\": \"\",\n          \"examples\": [\n            \"https://domain.com/profile/pawel.psztyc/image\"\n          ]\n        },\n        \"thumb\": {\n          \"$id\": \"/properties/image/properties/thumb\",\n          \"type\": \"string\",\n          \"title\": \"The Thumb Schema \",\n          \"default\": \"\",\n          \"examples\": [\n            \"https://domain.com/profile/pawel.psztyc/image/thumb\"\n          ]\n        }\n      }\n    },\n    \"tagline\": {\n      \"$id\": \"/properties/tagline\",\n      \"type\": \"string\",\n      \"title\": \"The Tagline Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"Some text about me.\"\n      ]\n    },\n    \"language\": {\n      \"$id\": \"/properties/language\",\n      \"type\": \"string\",\n      \"title\": \"The Language Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"en_GB\"\n      ]\n    },\n    \"etag\": {\n      \"$id\": \"/properties/etag\",\n      \"type\": \"string\",\n      \"title\": \"The Etag Schema \",\n      \"default\": \"\",\n      \"examples\": [\n        \"W\\\\244m4n5kj3gbn2nj4k4n4\"\n      ]\n    }\n  }\n}\n"
+"@value": "{\n  \"id\": \"R34fg663H9KW9MMSKISI\",\n  \"name\": \"Pawel Psztyc\",\n  \"birthday\": \"1983-10-20\",\n  \"gender\": \"male\",\n  \"url\": \"https://domain.com/profile/pawel.psztyc\",\n  \"image\": {\n    \"url\": \"https://domain.com/profile/pawel.psztyc/image\",\n    \"thumb\": \"https://domain.com/profile/pawel.psztyc/image/thumb\"\n  },\n  \"tagline\": \"Some text about me.\",\n  \"language\": \"en_GB\",\n  \"etag\": \"W\\\\244m4n5kj3gbn2nj4k4n4\"\n}\n"
 }
 ],
 "core:mediaType": [
@@ -5693,7 +5721,7 @@
 ],
 "doc:version": [
 {
-"@value": "2.0.0"
+"@value": "2.1.0"
 }
 ],
 "doc:root": [

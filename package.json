@@ -32,7 +32,7 @@
     "@advanced-rest-client/json-table": "^3.1.5",
     "@advanced-rest-client/prism-highlight": "^4.0.2",
     "@anypoint-web-components/anypoint-button": "^1.0.15",
-    "@api-components/amf-helper-mixin": "^4.0.17",
+    "@api-components/amf-helper-mixin": "^4.0.20",
     "@api-components/api-example-generator": "^4.0.4",
     "@polymer/prism-element": "^3.0.0",
     "lit-element": "^2.2.1"
@@ -42,7 +42,7 @@
     "@advanced-rest-client/eslint-config": "^1.1.4",
     "@advanced-rest-client/prettier-config": "^0.1.0",
     "@advanced-rest-client/testing-karma-sl": "^1.1.0",
-    "@api-components/api-model-generator": "^0.2.3",
+    "@api-components/api-model-generator": "^0.2.6",
     "@api-components/api-navigation": "^4.0.2",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
