@@ -503,7 +503,7 @@ describe('<api-resource-example-document>', () => {
     it('passes accessibility test', async () => {
       await resolveWhenReady(element, amf, '/IncludedInType', 'post');
       await assert.isAccessible(element, {
-        // ignoredRules: ['color-contrast']
+        ignoredRules: ['color-contrast']
       });
     });
   });
