@@ -76,7 +76,8 @@
     "test:legacy:watch": "karma start --compatibility auto --auto-watch=true --single-run=false",
     "test:sl": "karma start karma.sl.config.js --compatibility auto --coverage",
     "generate-model": "node demo/model.js",
-    "build": "rimraf dist && rollup -c rollup.config.js"
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "prepare": "node demo/model.js"
   },
   "lint-staged": {
     "*.js": [
