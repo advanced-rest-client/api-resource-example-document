@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@polymer/prism-element/prism-highlighter.js';
-import '@api-components/api-example-generator/api-example-generator.js';
+import { ExampleGenerator } from '@api-components/api-example-generator';
 import { code } from '@advanced-rest-client/arc-icons/ArcIcons.js';
 import '../api-example-render.js';
 /**
@@ -481,7 +481,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       noAuto,
       rawOnly
     };
-    const generator = this.shadowRoot.querySelector('#exampleGenerator');
+    const generator = new ExampleGenerator(this.amf);
     let result;
     if (examples instanceof Array) {
       if (this._hasType(examples[0], this.ns.aml.vocabularies.apiContract.Payload)) {
@@ -569,7 +569,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     const examples = this.renderedExamples || [];
     return html`<style>${this.styles}</style>
     <prism-highlighter></prism-highlighter>
-    <api-example-generator .amf="${this.amf}" id="exampleGenerator"></api-example-generator>
     ${examples.length ? this._examplesTemplate(examples) : ''}`;
   }
 }
