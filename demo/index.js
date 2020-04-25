@@ -1,65 +1,21 @@
-import { LitElement, html } from 'lit-element';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
+import { html } from 'lit-element';
+import { ApiDemoPage } from '@advanced-rest-client/arc-demo-helper';
 import '@api-components/api-navigation/api-navigation.js';
 import '../api-resource-example-document.js';
 
-class DemoElement extends AmfHelperMixin(LitElement) {}
-window.customElements.define('demo-element', DemoElement);
-
-class ApiDemo extends ApiDemoPageBase {
+class ApiDemo extends ApiDemoPage {
   constructor() {
     super();
+    this.initObservableProperties([
+      'examples', 'mediaTypes', 'payloads', 'singlePayload',
+    ]);
+
     this._mediaChanged = this._mediaChanged.bind(this);
 
     this.componentName = 'api-resource-example-document';
 
     this.hasData = false;
     this.singlePayload = true;
-  }
-
-  get helper() {
-    return document.getElementById('helper');
-  }
-
-  get hasData() {
-    return this._hasData;
-  }
-
-  set hasData(value) {
-    this._setObservableProperty('hasData', value);
-  }
-
-  get examples() {
-    return this._examples;
-  }
-
-  set examples(value) {
-    this._setObservableProperty('examples', value);
-  }
-
-  get mediaTypes() {
-    return this._mediaTypes;
-  }
-
-  set mediaTypes(value) {
-    this._setObservableProperty('mediaTypes', value);
-  }
-
-  get payloads() {
-    return this._payloads;
-  }
-
-  set payloads(value) {
-    this._setObservableProperty('payloads', value);
-  }
-
-  get singlePayload() {
-    return this._singlePayload;
-  }
-
-  set singlePayload(value) {
-    this._setObservableProperty('singlePayload', value);
   }
 
   _navChanged(e) {
@@ -77,9 +33,8 @@ class ApiDemo extends ApiDemoPageBase {
     if (list) {
       list.selected = -1;
     }
-    const helper = this.helper;
-    const webApi = helper._computeWebApi(this.amf);
-    const method = helper._computeMethodModel(webApi, selection);
+    const webApi = this._computeWebApi(this.amf);
+    const method = this._computeMethodModel(webApi, selection);
     if (!method) {
       this.hasData = false;
       return;
@@ -103,12 +58,11 @@ class ApiDemo extends ApiDemoPageBase {
     if (!model) {
       return;
     }
-    const helper = this.helper;
-    const expects = helper._computeExpects(model);
+    const expects = this._computeExpects(model);
     if (!expects) {
       return;
     }
-    let payloads = helper._computePayload(expects);
+    let payloads = this._computePayload(expects);
     if (!payloads) {
       return;
     }
@@ -122,10 +76,9 @@ class ApiDemo extends ApiDemoPageBase {
     if (!payloads) {
       return;
     }
-    const helper = this.helper;
     const result = [];
     payloads.forEach((item) => {
-      const label = helper._getValue(item, helper.ns.aml.vocabularies.core.mediaType);
+      const label = this._getValue(item, this.ns.aml.vocabularies.core.mediaType);
       if (label) {
         result.push({label});
       }
@@ -155,8 +108,8 @@ class ApiDemo extends ApiDemoPageBase {
       ['raml-types', 'RAML types with raml examples'],
     ].forEach(([file, label]) => {
       result[result.length] = html`
-      <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
-      <paper-item data-src="${file}.json">${label}</paper-item>`;
+      <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
+      <anypoint-item data-src="${file}.json">${label}</anypoint-item>`;
     });
     return result;
   }
@@ -175,12 +128,12 @@ class ApiDemo extends ApiDemoPageBase {
     const mediaTypes = this.mediaTypes;
     const hasData = this.hasData;
     return html`
-    <demo-element id="helper" .amf="${this.amf}"></demo-element>
-    <paper-dropdown-menu label="Select media type" ?hidden="${this.singlePayload}">
-      <paper-listbox slot="dropdown-content" id="mediaList" @selected-changed="${this._mediaChanged}">
-      ${mediaTypes ? mediaTypes.map((item) => html`<paper-item>${item.label}</paper-item>`) : undefined}
-      </paper-listbox>
-    </paper-dropdown-menu>
+    <anypoint-dropdown-menu ?hidden="${this.singlePayload}">
+      <label slot="label">Select media type</label>
+      <anypoint-listbox slot="dropdown-content" id="mediaList" @selected-changed="${this._mediaChanged}">
+      ${mediaTypes ? mediaTypes.map((item) => html`<anypoint-item>${item.label}</anypoint-item>`) : undefined}
+      </anypoint-listbox>
+    </anypoint-dropdown-menu>
     ${hasData ? this._examplesTemplate() : html`<p>Select an object that contains examples.</p>`}
     `;
   }

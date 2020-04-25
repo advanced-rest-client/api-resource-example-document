@@ -38,7 +38,7 @@
     "lit-element": "^2.3.1"
   },
   "devDependencies": {
-    "@advanced-rest-client/arc-demo-helper": "^1.0.17",
+    "@advanced-rest-client/arc-demo-helper": "^2.1.4",
     "@advanced-rest-client/eslint-config": "^1.1.5",
     "@advanced-rest-client/prettier-config": "^0.1.0",
     "@advanced-rest-client/testing-karma-sl": "^1.2.0",
