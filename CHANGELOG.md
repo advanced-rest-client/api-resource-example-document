@@ -1294,3 +1294,37 @@ Bumping version so the changes will be deliver do maaster.
  [f45db4a](https://github.com/advanced-rest-client/api-resource-example-document/commit/f45db4aa1fe547b859225eb2b073881599410eed) by Pawel Psztyc
 
 
+<a name="4.0.8"></a>
+## [4.0.8](https://github.com/advanced-rest-client/api-resource-example-document/compare/4.0.6...4.0.8) (2020-04-25)
+
+### Build
+
+* bumping version [1b54d5a](https://github.com/advanced-rest-client/api-resource-example-document/commit/1b54d5ac77004ce00927cc96c7f3a92771504063) by Pawel
+* bumping version [b77581c](https://github.com/advanced-rest-client/api-resource-example-document/commit/b77581c174512339624408c4c21a156cf952d0e2) by Pawel Psztyc
+
+
+### Update
+
+* adding types support [46e1250](https://github.com/advanced-rest-client/api-resource-example-document/commit/46e1250e0a308b685f97d0c41015e326bbdc2ffd) by Pawel
+* upgrading demo page [509971a](https://github.com/advanced-rest-client/api-resource-example-document/commit/509971abe08601140d4fbbab79c3427acf9e84fa) by Pawel
+* upgrading example generator [ad0a335](https://github.com/advanced-rest-client/api-resource-example-document/commit/ad0a335b3a56c06c6483016efebd8faf15062f48) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [ba44b9d](https://github.com/advanced-rest-client/api-resource-example-document/commit/ba44b9da33966d1b84773591236d1b3d4d76c7cf) by Ci agent
+* removing demo api model files from the repository [e800852](https://github.com/advanced-rest-client/api-resource-example-document/commit/e800852706fabf75e63c87f088bb8cc849e727a2) by Pawel Psztyc
+* removing git add from lint staged [a98bcfd](https://github.com/advanced-rest-client/api-resource-example-document/commit/a98bcfd478fde7e0485c96ad9b1d0a4347531bec) by Pawel Psztyc
+* upgrading dependencies [a986c48](https://github.com/advanced-rest-client/api-resource-example-document/commit/a986c483ae60c1fbfb24e29e7e38c4a094f69978) by Pawel Psztyc
+* bump amf-helper-mixin and amf version to 4.0.6 [8b207c0](https://github.com/advanced-rest-client/api-resource-example-document/commit/8b207c03832f7297003c62e727878891d04765a6) by Leandro Bauret
+* updating dependnecies [4f0e8e7](https://github.com/advanced-rest-client/api-resource-example-document/commit/4f0e8e753f5ff416437f064277895952006cef35) by Pawel Psztyc
+
+
+### Documentation
+
+* updating travis badge [fa5342b](https://github.com/advanced-rest-client/api-resource-example-document/commit/fa5342b3a46bd70a3a283a99f1b4690dc1e3c588) by Pawel
+* adding descriptions to examples [d6af2e7](https://github.com/advanced-rest-client/api-resource-example-document/commit/d6af2e7b095ced5df2718ae322ee9f2bee2b6546) by Pawel Psztyc
+
+
+### Testing
+
+* adding ignored rule again [7fb05ae](https://github.com/advanced-rest-client/api-resource-example-document/commit/7fb05aea9e4bc5d6df76ee21536720e3e09eb0f2) by Pawel Psztyc
+* adding color contrast to ignored a11y rules [ef9acbd](https://github.com/advanced-rest-client/api-resource-example-document/commit/ef9acbd5baecb447b2ae386ccf77a8a6e492318c) by Pawel Psztyc
+
+
