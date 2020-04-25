@@ -37,8 +37,8 @@ import '../api-example-render.js';
  *
  * @customElement
  * @demo demo/index.html
- * @memberof ApiElements
- * @appliesMixin ApiElements.AmfHelperMixin
+ * @mixin AmfHelperMixin
+ * @extends LitElement
  */
 export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   get styles() {
@@ -110,7 +110,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       /**
        * Rendered payload ID (if any) to associate examples with the paylaod.
        */
-      payloadId: String,
+      payloadId: { type: String },
       /**
        * Computed in a debouncer examples to render.
        */
