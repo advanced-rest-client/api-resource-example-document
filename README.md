@@ -1,6 +1,6 @@
 [![Published on NPM](https://img.shields.io/npm/v/@api-components/api-resource-example-document.svg)](https://www.npmjs.com/package/@api-components/api-resource-example-document)
 
-[![Build Status](https://travis-ci.org/advanced-rest-client/api-resource-example-document.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/api-resource-example-document)
+[![Build Status](https://travis-ci.com/advanced-rest-client/api-resource-example-document.svg)](https://travis-ci.org/advanced-rest-client/api-resource-example-document)
 
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/api-resource-example-document)
 
