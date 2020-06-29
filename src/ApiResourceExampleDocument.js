@@ -179,7 +179,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        */
       _hasLocalStorage: {
         type: Boolean
-      }
+      },
+      renderReadOnly: { type: Boolean },
     };
   }
 
@@ -465,11 +466,11 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this._examplesDebouncer = true;
     setTimeout(() => {
       this._examplesDebouncer = false;
-      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.payloadId, this.noAuto);
+      this.__computeExamples(this.examples, this.mediaType, this.rawOnly, this.typeName, this.payloadId, this.noAuto, this.renderReadOnly);
     });
   }
 
-  __computeExamples(examples, mediaType, rawOnly, typeName, payloadId, noAuto) {
+  __computeExamples(examples, mediaType, rawOnly, typeName, payloadId, noAuto, renderReadOnly) {
     this._renderedExamples = undefined;
     this.hasExamples = false;
     if (!examples || (!mediaType && !rawOnly)) {
@@ -479,7 +480,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       typeName,
       typeId: payloadId,
       noAuto,
-      rawOnly
+      rawOnly,
+      renderReadOnly,
     };
     const generator = new ExampleGenerator(this.amf);
     let result;
