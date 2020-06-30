@@ -1,7 +1,7 @@
 {
   "name": "@api-components/api-resource-example-document",
   "description": "A viewer for examples in a resource based on AMF model",
-  "version": "4.0.8",
+  "version": "4.1.0",
   "license": "Apache-2.0",
   "main": "api-resource-example-document.js",
   "keywords": [
@@ -33,7 +33,7 @@
     "@advanced-rest-client/prism-highlight": "^4.0.2",
     "@anypoint-web-components/anypoint-button": "^1.0.15",
     "@api-components/amf-helper-mixin": "^4.1.1",
-    "@api-components/api-example-generator": "^4.2.0",
+    "@api-components/api-example-generator": "^4.4.0",
     "@polymer/prism-element": "^3.0.0",
     "lit-element": "^2.3.1"
   },

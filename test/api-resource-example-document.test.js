@@ -397,6 +397,24 @@ describe('<api-resource-example-document>', () => {
           element.__computeExamples({}, 'application/json');
           assert.isUndefined(element.renderedExamples);
         });
+
+        it('Computes examples without readOnly property', async () => {
+          amf = await AmfLoader.load(item[1], 'oas-3-api');
+          element.amf = amf;
+          await nextFrame();
+          const payloads = getPayload(element, amf, '/default', 'post');
+          element.__computeExamples(payloads, 'application/json');
+          assert.equal(element.renderedExamples[0].value.indexOf('"id":'), -1);
+        });
+
+        it('Computes examples with readOnly property', async () => {
+          amf = await AmfLoader.load(item[1], 'oas-3-api');
+          element.amf = amf;
+          await nextFrame();
+          const payloads = getPayload(element, amf, '/default', 'post');
+          element.__computeExamples(payloads, 'application/json', undefined, undefined, undefined, undefined, true);
+          assert.notEqual(element.renderedExamples[0].value.indexOf('"id":'), -1);
+        });
       });
     });
   });
