@@ -1328,3 +1328,25 @@ Bumping version so the changes will be deliver do maaster.
 * adding color contrast to ignored a11y rules [ef9acbd](https://github.com/advanced-rest-client/api-resource-example-document/commit/ef9acbd5baecb447b2ae386ccf77a8a6e492318c) by Pawel Psztyc
 
 
+<a name="4.1.0"></a>
+## [4.1.0](https://github.com/advanced-rest-client/api-resource-example-document/compare/4.0.7...4.1.0) (2020-06-30)
+
+### Build
+
+* bumping version [1b54d5a](https://github.com/advanced-rest-client/api-resource-example-document/commit/1b54d5ac77004ce00927cc96c7f3a92771504063) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [ea0b2b2](https://github.com/advanced-rest-client/api-resource-example-document/commit/ea0b2b2e293c65d0c2ac4f8689c5057e886e7a4a) by Ci agent
+* adding types support [46e1250](https://github.com/advanced-rest-client/api-resource-example-document/commit/46e1250e0a308b685f97d0c41015e326bbdc2ffd) by Pawel
+* upgrading demo page [509971a](https://github.com/advanced-rest-client/api-resource-example-document/commit/509971abe08601140d4fbbab79c3427acf9e84fa) by Pawel
+* upgrading example generator [ad0a335](https://github.com/advanced-rest-client/api-resource-example-document/commit/ad0a335b3a56c06c6483016efebd8faf15062f48) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [ba44b9d](https://github.com/advanced-rest-client/api-resource-example-document/commit/ba44b9da33966d1b84773591236d1b3d4d76c7cf) by Ci agent
+
+
+### Documentation
+
+* updating travis badge [fa5342b](https://github.com/advanced-rest-client/api-resource-example-document/commit/fa5342b3a46bd70a3a283a99f1b4690dc1e3c588) by Pawel
+
+
