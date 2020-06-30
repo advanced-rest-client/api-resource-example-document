@@ -180,6 +180,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       _hasLocalStorage: {
         type: Boolean
       },
+      /**
+       * If enabled then the example generator will be called with this option to add
+       * read-only properties to the example
+       */
       renderReadOnly: { type: Boolean },
     };
   }
