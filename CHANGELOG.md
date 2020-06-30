@@ -1350,3 +1350,12 @@ Bumping version so the changes will be deliver do maaster.
 * updating travis badge [fa5342b](https://github.com/advanced-rest-client/api-resource-example-document/commit/fa5342b3a46bd70a3a283a99f1b4690dc1e3c588) by Pawel
 
 
+<a name="4.1.0"></a>
+## [4.1.0](https://github.com/advanced-rest-client/api-resource-example-document/compare/4.0.8...4.1.0) (2020-06-30)
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [16fd51d](https://github.com/advanced-rest-client/api-resource-example-document/commit/16fd51d09252242a5fa4f4e98d1634785a2df4c6) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [ea0b2b2](https://github.com/advanced-rest-client/api-resource-example-document/commit/ea0b2b2e293c65d0c2ac4f8689c5057e886e7a4a) by Ci agent
+
+
