@@ -264,7 +264,7 @@ export class ApiExampleRender extends LitElement {
     return true;
   }
   /**
-   * Computes whether passed value is a valig JSON object, when component is
+   * Computes whether passed value is a valid JSON object, when component is
    * marked to parse JSON data.
    * @param {Boolean} isJson [description]
    * @param {String} value Current example value
@@ -525,10 +525,14 @@ export class ApiExampleRender extends LitElement {
   }
 
   _renderExample(example) {
+    const exampleValue = example.value;
+    const isJsonExampleValue = this._computeIsJson(this.isJson, exampleValue);
+    const renderJsonTable = this.renderTable && isJsonExampleValue;
+
     return html`
     ${this._headerTemplate(example)}
-    ${this.renderTable ? html`<json-table .json="${example.value}"></json-table>`: ''}
-    <div class="code-wrapper ${example.isScalar ? 'scalar': ''}" part="code-wrapper, example-code-wrapper" ?hidden="${this.renderTable}">
+    ${renderJsonTable ? html`<json-table .json="${exampleValue}"></json-table>`: ''}
+    <div class="code-wrapper ${example.isScalar ? 'scalar': ''}" part="code-wrapper, example-code-wrapper" ?hidden="${renderJsonTable}">
       <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
     </div>`;
   }
