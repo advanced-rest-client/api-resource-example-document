@@ -666,4 +666,35 @@ describe('<api-example-render>', () => {
       });
     });
   });
+
+  describe('_renderExample()', () => {
+    let element;
+    let nodes;
+
+    beforeEach(async () => {
+      element = await basicFixture();
+    });
+
+    it('Sets json table example', async () => {
+      element.isJson = true;
+      element.renderTable = true;
+      element.example = {
+        value: '{"a":"b"}'
+      };
+      await nextFrame();
+      nodes = element.shadowRoot.querySelector('json-table');
+      assert.isNotNull(nodes);
+    });
+
+    it('Sets code example', async () => {
+      element.isJson = true;
+      element.renderTable = true;
+      element.example = {
+        value: 'a'
+      };
+      await nextFrame();
+      nodes = element.shadowRoot.querySelector('.code-wrapper');
+      assert.isNotNull(nodes);
+    });
+  });
 });
