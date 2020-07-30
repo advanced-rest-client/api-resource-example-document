@@ -1359,3 +1359,28 @@ Bumping version so the changes will be deliver do maaster.
 * [ci skip] automated merge master->stage. syncing main branches [ea0b2b2](https://github.com/advanced-rest-client/api-resource-example-document/commit/ea0b2b2e293c65d0c2ac4f8689c5057e886e7a4a) by Ci agent
 
 
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/advanced-rest-client/api-resource-example-document/compare/4.0.8...4.1.1) (2020-07-30)
+
+### Build
+
+* bump version [8be779f](https://github.com/advanced-rest-client/api-resource-example-document/commit/8be779fca0f06f578c71e5cd1b0fe443706b041c) by Carolina Wright
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [17d323e](https://github.com/advanced-rest-client/api-resource-example-document/commit/17d323e6335ac095c11d95ab9009ab0ebe1c8f89) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [16fd51d](https://github.com/advanced-rest-client/api-resource-example-document/commit/16fd51d09252242a5fa4f4e98d1634785a2df4c6) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [ea0b2b2](https://github.com/advanced-rest-client/api-resource-example-document/commit/ea0b2b2e293c65d0c2ac4f8689c5057e886e7a4a) by Ci agent
+
+
+### Bug Fixes
+
+* apic-348 render json table for example when value is json [91b081f](https://github.com/advanced-rest-client/api-resource-example-document/commit/91b081f43c178c2f5f3ff373eb1df3e8d09832ad) by Carolina Wright
+
+
+### Testing
+
+* render code wrapper or json table depending on example value [a854ccc](https://github.com/advanced-rest-client/api-resource-example-document/commit/a854ccc68f54638bd0c9a1ecf711f705090f7aac) by Carolina Wright
+
+
