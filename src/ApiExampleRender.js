@@ -1,8 +1,15 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-param-reassign */
 import { LitElement, html, css } from 'lit-element';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/json-table/json-table.js';
-import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
+import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
+
+/** @typedef {import('lit-element').TemplateResult} TemplateResult */
+/** @typedef {import('@advanced-rest-client/arc-types').FormTypes.Example} Example */
+
 /**
  * Transforms input into a content to be rendered in the code view.
  */
@@ -12,7 +19,7 @@ export const SafeHtmlUtils = {
   LT_RE: new RegExp(/</g),
   SQUOT_RE: new RegExp(/'/g),
   QUOT_RE: new RegExp(/"/g),
-  htmlEscape: function(s) {
+  htmlEscape(s) {
     if (typeof s !== 'string') {
       return s;
     }
@@ -34,6 +41,7 @@ export const SafeHtmlUtils = {
     return s;
   }
 };
+
 /**
  * `api-example-render`
  *
@@ -61,19 +69,6 @@ export const SafeHtmlUtils = {
  * ```javascript
  * <api-example-render example="{...}" is-json mime-type="application/json"></api-example-render>
  * ```
- *
- * ## Styling
- *
- * `<api-resource-example-document>` provides the following custom properties and mixins for styling:
- *
- * Custom property | Description | Default
- * ----------------|-------------|----------
- * `--api-example-render` | Mixin applied to this elment | `{}`
- * `--code-block` | Mixin applied to the output block | `{}`
- *
- * @customElement
- * @demo demo/index.html
- * @memberof ApiElements
  */
 export class ApiExampleRender extends LitElement {
   get styles() {
@@ -206,69 +201,98 @@ export class ApiExampleRender extends LitElement {
     return this._table;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set table(value) {
-    if (this._setObservableProperty('table', value)) {
-      this.dispatchEvent(new CustomEvent('table-changed', {
-        composed: true,
-        detail: {
-          value
-        }
-      }));
+    const old = this._table;
+    if (old === value) {
+      return;
     }
+    this._table = value;
+    this.requestUpdate('table', old);
+    this.dispatchEvent(new CustomEvent('table-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
   }
 
   get mediaType() {
     return this._mediaType;
   }
 
+  /**
+   * @param {string} value
+   */
   set mediaType(value) {
-    if (this._setObservableProperty('mediaType', value)) {
-      this._dataChanged(value, this._example, this._sourceOpened);
+    const old = this._mediaType;
+    if (old === value) {
+      return;
     }
+    this._mediaType = value;
+    this.requestUpdate('mediaType', old);
+    this._dataChanged(this._example);
   }
 
   get example() {
     return this._example;
   }
 
+  /**
+   * @param {Example} value
+   */
   set example(value) {
-    if (this._setObservableProperty('example', value)) {
-      this._dataChanged(this._mediaType, value, this._sourceOpened);
-      this.selectedUnion = 0;
+    const old = this._example;
+    if (old === value) {
+      return;
     }
+    this._example = value;
+    this.requestUpdate('example', old);
+    this._dataChanged(value);
+    this.selectedUnion = 0;
   }
 
   get sourceOpened() {
     return this._sourceOpened;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set sourceOpened(value) {
-    if (this._setObservableProperty('sourceOpened', value)) {
-      this._dataChanged(this._mediaType, this._example, value);
+    const old = this._sourceOpened;
+    if (old === value) {
+      return;
     }
+    this._sourceOpened = value;
+    this.requestUpdate('sourceOpened', old);
+    this._dataChanged(this._example);
   }
 
   constructor() {
     super();
     this.sourceOpened = false;
+    this.compatibility = false;
+    this.table = false;
+    this.renderTable = false;
+    this.isJson = false;
+    this.noActions = false;
+    this.sourceOpened = false;
+    /** 
+     * @type {number}
+     */
+    this.selectedUnion = undefined;
+    this.mediaType = undefined;
   }
 
-  _setObservableProperty(prop, value) {
-    const key = '_' + prop;
-    const old = this[key];
-    if (old === value) {
-      return false;
-    }
-    this[key] = value;
-    this.requestUpdate(prop, old);
-    return true;
-  }
   /**
    * Computes whether passed value is a valid JSON object, when component is
    * marked to parse JSON data.
-   * @param {Boolean} isJson [description]
-   * @param {String} value Current example value
-   * @return {Boolean}
+   * @param {boolean} isJson [description]
+   * @param {any} value Current example value
+   * @return {boolean}
    */
   _computeIsJson(isJson, value) {
     if (!isJson) {
@@ -292,7 +316,10 @@ export class ApiExampleRender extends LitElement {
     return String(raw) !== String(value);
   }
 
-  _dataChanged(mediaType, example) {
+  /**
+   * @param {Example} example
+   */
+  _dataChanged(example) {
     if (this.__changeDebouncer || !example) {
       return;
     }
@@ -304,11 +331,11 @@ export class ApiExampleRender extends LitElement {
   }
 
   _renderCode() {
-    const example = this.example;
+    const { example } = this;
     if (!example || (!example.value && example.values)) {
       return;
     }
-    const output = this.shadowRoot.querySelector('#output');
+    const output = /** @type HTMLOutputElement */ (this.shadowRoot.querySelector('#output'));
     if (!output) {
       setTimeout(() => this._renderCode());
       return;
@@ -317,6 +344,7 @@ export class ApiExampleRender extends LitElement {
       output.innerHTML = this.highlight(String(example.raw), 'yaml');
     } else {
       const value = String(example.value);
+      // @ts-ignore
       if (value || value === false || value === 0) {
         output.innerHTML = this.highlight(value, this.mediaType);
       } else {
@@ -324,11 +352,12 @@ export class ApiExampleRender extends LitElement {
       }
     }
   }
+
   /**
    * Dispatches `syntax-highlight` custom event
-   * @param {String} code Code to highlight
-   * @param {String} type Mime type of the code
-   * @return {String} Highlighted code.
+   * @param {string} code Code to highlight
+   * @param {string} type Mime type of the code
+   * @return {string} Highlighted code.
    */
   highlight(code, type) {
     if (code.length > 10000) {
@@ -355,13 +384,14 @@ export class ApiExampleRender extends LitElement {
     this.dispatchEvent(ev);
     return ev.detail.code;
   }
+
   /**
-   * Coppies current response text value to clipboard."tabble"
+   * Copies the current response text value to clipboard.
    *
    * @param {Event} e
    */
   _copyToClipboard(e) {
-    const button = e.target;
+    const button = /** @type HTMLButtonElement */ (e.target);
     const copy = this.shadowRoot.querySelector('clipboard-copy');
     if (copy.copy()) {
       button.innerText = 'Done';
@@ -370,31 +400,41 @@ export class ApiExampleRender extends LitElement {
     }
     button.disabled = true;
     if ('part' in button) {
+      // @ts-ignore
       button.part.add('content-action-button-disabled');
+      // @ts-ignore
       button.part.add('code-content-action-button-disabled');
     }
     setTimeout(() => this._resetCopyButtonState(button), 1000);
   }
+
   /**
    * Resets button icon.
-   * @param {Element} button Button to reset.
+   * @param {HTMLButtonElement} button Button to reset.
    */
   _resetCopyButtonState(button) {
     button.innerText = 'Copy';
     button.disabled = false;
     if ('part' in button) {
+      // @ts-ignore
       button.part.remove('content-action-button-disabled');
+      // @ts-ignore
       button.part.remove('code-content-action-button-disabled');
     }
     button.focus();
   }
 
+  /**
+   * @param {number} selectedUnion
+   * @param {Example} example
+   * @return {Example|undefined} 
+   */
   _computeUnionExamples(selectedUnion, example) {
     if (selectedUnion === undefined || selectedUnion < 0) {
-      return;
+      return undefined;
     }
     if (!example || !example.values) {
-      return;
+      return undefined;
     }
     return example.values[selectedUnion];
   }
@@ -432,31 +472,37 @@ export class ApiExampleRender extends LitElement {
       }
     }
   }
+
   /**
    * Handler for union type button click.
    * Sets `selectedUnion` property.
    *
-   * @param {ClickEvent} e
+   * @param {PointerEvent} e
    */
   _selectUnion(e) {
-    const index = Number(e.target.dataset.index);
-    if (index !== index) {
+    const node = /** @type HTMLElement */ (e.target);
+    const index = Number(node.dataset.index);
+    if (Number.isNaN(index)) {
       return;
     }
     if (this.selectedUnion === index) {
-      e.target.setAttribute('activated', '');
+      node.setAttribute('activated', '');
     } else {
       this.selectedUnion = index;
     }
   }
 
+  /**
+   * @param {Example} example
+   * @returns {TemplateResult|string} 
+   */
   _renderUnion(example) {
-    const values = example.values;
+    const { values } = example;
     if (!values) {
-      return;
+      return '';
     }
     const unions = example.values.map((item) => item.title);
-    const selectedUnion = this.selectedUnion;
+    const {selectedUnion} = this;
     const unionExample = this._computeUnionExamples(selectedUnion, example);
     return html`
       <div class="union-type-selector">
@@ -481,6 +527,10 @@ export class ApiExampleRender extends LitElement {
     `;
   }
 
+  /**
+   * @param {Example} example
+   * @returns {TemplateResult|string} 
+   */
   _headerTemplate(example) {
     const noActions = !!(this.noActions || example.isScalar);
     if (noActions) {
@@ -524,8 +574,12 @@ export class ApiExampleRender extends LitElement {
     </div>`;
   }
 
+  /**
+   * @param {Example} example
+   * @returns {TemplateResult|string} 
+   */
   _renderExample(example) {
-    const exampleValue = example.value;
+    const exampleValue = /** @type any */ (example.value);
     const isJsonExampleValue = this._computeIsJson(this.isJson, exampleValue);
     const renderJsonTable = this.renderTable && isJsonExampleValue;
 
@@ -538,7 +592,7 @@ export class ApiExampleRender extends LitElement {
   }
 
   render() {
-    const example = this.example;
+    const {example} = this;
     if (!example) {
       return '';
     }

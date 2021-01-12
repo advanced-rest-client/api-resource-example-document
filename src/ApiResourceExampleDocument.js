@@ -1,9 +1,15 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable class-methods-use-this */
 import { LitElement, html, css } from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '@polymer/prism-element/prism-highlighter.js';
 import { ExampleGenerator } from '@api-components/api-example-generator';
-import { code } from '@advanced-rest-client/arc-icons/ArcIcons.js';
+import '@polymer/prism-element/prism-highlighter.js';
+import '@advanced-rest-client/arc-icons/arc-icon.js';
 import '../api-example-render.js';
+
+/** @typedef {import('lit-element').TemplateResult} TemplateResult */
+/** @typedef {import('@advanced-rest-client/arc-types').FormTypes.Example} Example */
+
 /**
  * `api-resource-example-document`
  *
@@ -25,20 +31,6 @@ import '../api-example-render.js';
  *  media-type="application/json"></api-resource-example-document>
  * ```
  *
- * ## Styling
- *
- * `<api-resource-example-document>` provides the following custom properties and mixins for styling:
- *
- * Custom property | Description | Default
- * ----------------|-------------|----------
- * `--api-resource-example-document` | Mixin applied to this elment | `{}`
- * `--api-resource-example-document-title` | Mixin applied to example title | `{}`
- * `--api-resource-example-document-button-active-background-color` | Background color of active button | `#e0e0e0`
- *
- * @customElement
- * @demo demo/index.html
- * @mixin AmfHelperMixin
- * @extends LitElement
  */
 export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   get styles() {
@@ -104,19 +96,17 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       /**
        * Type (model) name for which examples are generated for.
        * This is used by RAML to XML examples processor to wrap the example
-       * in type name. If missing this wrapping is omnited.
+       * in type name. If missing this wrapping is omitted.
        */
       typeName: { type: String },
       /**
-       * Rendered payload ID (if any) to associate examples with the paylaod.
+       * Rendered payload ID (if any) to associate examples with the payload.
        */
       payloadId: { type: String },
       /**
        * Computed in a debouncer examples to render.
        */
-      _renderedExamples: {
-        type: Array
-      },
+      _renderedExamples: { type: Array },
       /**
        * Computed value, true if there are examples to render.
        * This value is reflected to attribute so the element can be hidden
@@ -127,26 +117,17 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * api-resource-example-document[has-examples] { display: block; }
        * ```
        */
-      hasExamples: {
-        type: Boolean,
-        reflect: true
-      },
+      hasExamples: { type: Boolean, reflect: true },
       /**
        * If true it will display a table view instead of JSON code.
        * `isJson` must be set to use this option.
        */
-      table: {
-        type: Boolean,
-        reflect: true
-      },
+      table: { type: Boolean, reflect: true },
       /**
        * Computed value, true if selected media type is application/json
        * or equivalent.
        */
-      isJson: {
-        type: Boolean,
-        reflect: true
-      },
+      isJson: { type: Boolean, reflect: true },
       /**
        * Configuration passed to example generator.
        * When set the generator only returns examples that are defined in API
@@ -170,16 +151,12 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * Enables Anypoint compatibility styling
        */
       compatibility: { type: Boolean },
-      _effectiveTable: {
-        type: Boolean
-      },
+      _effectiveTable: { type: Boolean },
       /**
-       * True if current environment has localStorage suppport.
+       * True if current environment has localStorage support.
        * Chrome apps do not have localStorage property.
        */
-      _hasLocalStorage: {
-        type: Boolean
-      },
+      _hasLocalStorage: { type: Boolean },
       /**
        * If enabled then the example generator will be called with this option to add
        * read-only properties to the example
@@ -192,6 +169,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return this._hasLocalStorage;
   }
 
+  /**
+   * @returns {Example[]}
+   */
   get renderedExamples() {
     return this.__renderedExamples;
   }
@@ -200,123 +180,182 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return this.__renderedExamples;
   }
 
+  /**
+   * @param {Example[]} value
+   */
   set _renderedExamples(value) {
-    if (this._setObservableProperty('_renderedExamples', value)) {
-      this.dispatchEvent(new CustomEvent('rendered-examples-changed', {
-        composed: true,
-        detail: {
-          value
-        }
-      }));
+    const old = this.__renderedExamples;
+    if (old === value) {
+      return;
     }
+    this.__renderedExamples = value;
+    this.requestUpdate('_renderedExamples', old);
+    this.dispatchEvent(new CustomEvent('rendered-examples-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
   }
 
   get table() {
     return this._table;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set table(value) {
-    if (this._setObservableProperty('table', value)) {
-      this._tableChanged(value);
-      this._effectiveTable = this._computeEffectiveTable(value, this._isJson);
+    const old = this._table;
+    if (old === value) {
+      return;
     }
+    this._table = value;
+    this.requestUpdate('table', old);
+    this._tableChanged(value);
+    this._effectiveTable = this._computeEffectiveTable(value, this._isJson);
   }
 
   get mediaType() {
     return this._mediaType;
   }
 
+  /**
+   * @param {string} value
+   */
   set mediaType(value) {
-    if (this._setObservableProperty('mediaType', value)) {
-      this.isJson = this._computeIsJson(value);
-      this._computeExamples(this.examples, value, this.rawOnly, this.typeName, this.noAuto, this.payloadId);
+    const old = this._mediaType;
+    if (old === value) {
+      return;
     }
+    this._mediaType = value;
+    this.requestUpdate('mediaType', old);
+    this.isJson = this._computeIsJson(value);
+    this._computeExamples();
   }
 
   get isJson() {
     return this._isJson;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set isJson(value) {
-    if (this._setObservableProperty('isJson', value)) {
-      this._effectiveTable = this._computeEffectiveTable(this._table, value);
+    const old = this._isJson;
+    if (old === value) {
+      return;
     }
+    this._isJson = value;
+    this.requestUpdate('isJson', old);
+    this._effectiveTable = this._computeEffectiveTable(this._table, value);
   }
 
   get examples() {
     return this._examples;
   }
 
+  /**
+   * @param {object[]} value
+   */
   set examples(value) {
-    if (this._setObservableProperty('examples', value)) {
-      this._computeExamples(value, this._mediaType, this._rawOnly, this._typeName, this._noAuto, this._payloadId);
+    const old = this._examples;
+    if (old === value) {
+      return;
     }
+    this._examples = value;
+    this.requestUpdate('examples', old);
+    this._computeExamples();
   }
 
   get rawOnly() {
     return this._rawOnly;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set rawOnly(value) {
-    if (this._setObservableProperty('rawOnly', value)) {
-      this._computeExamples(this._examples, this._mediaType, value, this._typeName, this._noAuto, this._payloadId);
+    const old = this._rawOnly;
+    if (old === value) {
+      return;
     }
+    this._rawOnly = value;
+    this.requestUpdate('rawOnly', old);
+    this._computeExamples();
   }
 
   get typeName() {
     return this._typeName;
   }
 
+  /**
+   * @param {string} value
+   */
   set typeName(value) {
-    if (this._setObservableProperty('typeName', value)) {
-      this._computeExamples(this._examples, this._mediaType, this._rawOnly, value, this._noAuto, this._payloadId);
+    const old = this._typeName;
+    if (old === value) {
+      return;
     }
+    this._typeName = value;
+    this.requestUpdate('typeName', old);
+    this._computeExamples();
   }
 
   get noAuto() {
     return this._noAuto;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set noAuto(value) {
-    if (this._setObservableProperty('noAuto', value)) {
-      this._computeExamples(this._examples, this._mediaType, this._rawOnly, this._typeName, value, this._payloadId);
+    const old = this._noAuto;
+    if (old === value) {
+      return;
     }
+    this._noAuto = value;
+    this.requestUpdate('noAuto', old);
+    this._computeExamples();
   }
 
   get payloadId() {
     return this._payloadId;
   }
 
+  /**
+   * @param {string} value
+   */
   set payloadId(value) {
-    if (this._setObservableProperty('payloadId', value)) {
-      this._computeExamples(this._examples, this._mediaType, this._rawOnly, this._typeName, this._noAuto, value);
+    const old = this._payloadId;
+    if (old === value) {
+      return;
     }
+    this._payloadId = value;
+    this.requestUpdate('payloadId', old);
+    this._computeExamples();
   }
 
   get hasExamples() {
     return this._hasExamples;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set hasExamples(value) {
-    if (this._setObservableProperty('hasExamples', value)) {
-      this.dispatchEvent(new CustomEvent('has-examples-changed', {
-        composed: true,
-        detail: {
-          value
-        }
-      }));
-    }
-  }
-
-  _setObservableProperty(prop, value) {
-    const key = '_' + prop;
-    const old = this[key];
+    const old = this._hasExamples;
     if (old === value) {
-      return false;
+      return;
     }
-    this[key] = value;
-    this.requestUpdate(prop, old);
-    return true;
+    this._hasExamples = value;
+    this.requestUpdate('hasExamples', old);
+    this.dispatchEvent(new CustomEvent('has-examples-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
   }
 
   constructor() {
@@ -328,27 +367,26 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.noActions = false;
     this.isJson = false;
     this.hasExamples = false;
+    this.compatibility = false;
+    this.renderReadOnly = false;
     this._ensureJsonTable();
   }
 
   connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
-    }
+    super.connectedCallback();
     window.addEventListener('storage', this._onStorageChanged);
     window.addEventListener('json-table-state-changed', this._onJsonTableStateChanged);
   }
 
   disconnectedCallback() {
-    if (super.disconnectedCallback) {
-      super.disconnectedCallback();
-    }
+    super.disconnectedCallback();
     window.removeEventListener('storage', this._onStorageChanged);
     window.removeEventListener('json-table-state-changed', this._onJsonTableStateChanged);
   }
 
   _hasStorageSupport() {
     /* global chrome */
+    // @ts-ignore
     if (typeof chrome !== 'undefined' && chrome.i18n) {
       // Chrome apps have `chrome.i18n` property, regular website doesn't.
       // This is to avoid annoying warning message in Chrome apps.
@@ -361,6 +399,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       return false;
     }
   }
+
   /**
    * When response's content type is JSON the view renders the
    * JSON table element. This function reads current state for the table
@@ -375,11 +414,12 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       this.table = isTable;
     }
   }
+
   /**
-   * Updates "table" state in localstorage and disaptches
+   * Updates "table" state in localStorage and dispatches
    * `json-table-state-changed` event.
    *
-   * @param {Boolean} state Current "table" state.
+   * @param {boolean} state Current "table" state.
    */
   _tableChanged(state) {
     if (state === undefined) {
@@ -390,13 +430,14 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       return;
     }
     if (localStorage.jsonTableEnabled !== String(state)) {
-      window.localStorage.setItem('jsonTableEnabled', state);
+      window.localStorage.setItem('jsonTableEnabled', String(state));
       this._dispatchTableState(state);
     }
   }
+
   /**
    * Dispatches `json-table-state-changed` custom event.
-   * @param {Boolean} enabled
+   * @param {boolean} enabled
    * @return {CustomEvent}
    */
   _dispatchTableState(enabled) {
@@ -410,11 +451,12 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.dispatchEvent(e);
     return e;
   }
+
   /**
    * Updates the value of the `isJsonTable` property when the corresponding localStorage
    * property change.
    *
-   * @param {Event} e Storage event
+   * @param {StorageEvent} e Storage event
    */
   _onStorageChanged(e) {
     if (e.key !== 'jsonTableEnabled' || !this.hasLocalStorage) {
@@ -428,25 +470,28 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       this.table = v;
     }
   }
+
   /**
    * Reads the local value (always a string) as a boolean value.
    *
-   * @param {String} value The value read from the local storage.
-   * @return {Boolean} Boolean value read from the value.
+   * @param {string} value The value read from the local storage.
+   * @return {boolean} Boolean value read from the value.
    */
   _localStorageValueToBoolean(value) {
     if (!value) {
       return false;
     }
+    let result;
     if (value === 'true') {
-      value = true;
+      result = true;
     } else {
-      value = false;
+      result = false;
     }
-    return value;
+    return result;
   }
+
   /**
-   * Handler to the incomming `json-table-state-changed` event.
+   * Handler to the incoming `json-table-state-changed` event.
    * Sets the `table` property if it is different.
    *
    * @param {CustomEvent} e
@@ -460,6 +505,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       this.table = enabled;
     }
   }
+
   /**
    * Runs the debouncer to update examples list.
    */
@@ -474,6 +520,15 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     });
   }
 
+  /**
+   * @param {object[]} examples
+   * @param {string} mediaType
+   * @param {boolean} rawOnly
+   * @param {string} typeName
+   * @param {string} payloadId
+   * @param {boolean} noAuto
+   * @param {boolean} renderReadOnly
+   */
   __computeExamples(examples, mediaType, rawOnly, typeName, payloadId, noAuto, renderReadOnly) {
     this._renderedExamples = undefined;
     this.hasExamples = false;
@@ -489,7 +544,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     };
     const generator = new ExampleGenerator(this.amf);
     let result;
-    if (examples instanceof Array) {
+    if (Array.isArray(examples)) {
       if (this._hasType(examples[0], this.ns.aml.vocabularies.apiContract.Payload)) {
         result = generator.generatePayloadsExamples(examples, mediaType, opts);
       } else {
@@ -511,23 +566,25 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       result = generator.computeExamples(examples, mediaType, opts);
     }
     if (result && result.length) {
-      this._renderedExamples = result;
+      this._renderedExamples = /** @type Example[] */ (result);
       this.hasExamples = true;
     }
   }
+
   /**
    * Computes value for `isJson` property
-   * @param {String} type Current media type.
-   * @return {Boolean}
+   * @param {string} type Current media type.
+   * @return {boolean}
    */
   _computeIsJson(type) {
     return !!(type && type.indexOf('json') !== -1);
   }
+
   /**
    * Computes value for `_effectiveTable`.
-   * @param {Boolean} table Current state of table view for JSON.
-   * @param {Boolean} isJson [description]
-   * @return {Boolean} True when current media type is JSON and table is enabled.
+   * @param {boolean} table Current state of table view for JSON.
+   * @param {boolean} isJson [description]
+   * @return {boolean} True when current media type is JSON and table is enabled.
    */
   _computeEffectiveTable(table, isJson) {
     return !!(isJson && table);
@@ -537,14 +594,22 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.table = e.detail.value;
   }
 
+  /**
+   * @param {Example} example
+   * @returns {TemplateResult|string} 
+   */
   _titleTemplate(example) {
     if (example.isScalar) {
-      return;
+      return '';
     }
     const label = !example.title ? 'Example' : example.title;
     return html`<div class="example-title">${label}</div>`;
   }
 
+  /**
+   * @param {Example[]} examples
+   * @returns {TemplateResult[]} 
+   */
   _examplesTemplate(examples) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
@@ -553,18 +618,18 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     <div class="item-container">
       ${this._titleTemplate(item)}
       <div class="renderer">
-        <div class="info-icon">${code}</div>
+        <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
-          exportparts="${parts}"
+          exportParts="${parts}"
           class="example"
           .example="${item}"
-          ?isjson="${this.isJson}"
-          ?mediatype="${this.mediaType}"
+          .mediaType="${this.mediaType}"
+          ?isJson="${this.isJson}"
           ?table="${this.table}"
-          ?rendertable="${this._effectiveTable}"
-          ?noactions="${this.noActions}"
-          @table-changed="${this._tableCHangedHandler}"
+          ?renderTable="${this._effectiveTable}"
+          ?noActions="${this.noActions}"
           ?compatibility="${this.compatibility}"
+          @table-changed="${this._tableCHangedHandler}"
         ></api-example-render>
       </div>
     </div>
@@ -572,7 +637,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   render() {
-    const examples = this.renderedExamples || [];
+    const examples = (this.renderedExamples || []);
     return html`<style>${this.styles}</style>
     <prism-highlighter></prism-highlighter>
     ${examples.length ? this._examplesTemplate(examples) : ''}`;

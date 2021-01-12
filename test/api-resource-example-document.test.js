@@ -1,16 +1,26 @@
-import { fixture, assert, nextFrame, aTimeout } from '@open-wc/testing';
-import * as sinon from 'sinon/pkg/sinon-esm.js';
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-param-reassign */
+import { fixture, assert, nextFrame, aTimeout, html } from '@open-wc/testing';
+import sinon from 'sinon';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
 
-describe('<api-resource-example-document>', () => {
+/** @typedef {import('..').ApiResourceExampleDocument} ApiResourceExampleDocument */
+
+describe('ApiResourceExampleDocument', () => {
+  /**
+   * @returns {Promise<ApiResourceExampleDocument>}
+   */
   async function basicFixture() {
-    return (await fixture(`<api-resource-example-document></api-resource-example-document>`));
+    return (fixture(html`<api-resource-example-document></api-resource-example-document>`));
   }
 
+  /**
+   * @returns {Promise<ApiResourceExampleDocument>}
+   */
   async function jsonFixture() {
-    return (await fixture(`
-      <api-resource-example-document mediatype="application/json"></api-resource-example-document>`));
+    return (fixture(html`
+      <api-resource-example-document mediaType="application/json"></api-resource-example-document>`));
   }
 
 
@@ -24,7 +34,7 @@ describe('<api-resource-example-document>', () => {
 
 
   describe('_tableChanged()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
       clearTableStorage();
@@ -32,7 +42,7 @@ describe('<api-resource-example-document>', () => {
 
     it('Does noting when state is undefined', () => {
       const spy = sinon.spy(element, '_dispatchTableState');
-      element._tableChanged();
+      element._tableChanged(undefined);
       assert.isFalse(spy.called);
     });
 
@@ -45,7 +55,7 @@ describe('<api-resource-example-document>', () => {
       assert.equal(result, 'false');
     });
 
-    it('Calles _dispatchTableState()', () => {
+    it('Calls _dispatchTableState()', () => {
       const spy = sinon.spy(element, '_dispatchTableState');
       element._tableChanged(false);
       assert.isTrue(spy.called);
@@ -53,7 +63,7 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_dispatchTableState()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });
@@ -94,7 +104,7 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_onStorageChanged()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       clearTableStorage();
       element = await basicFixture();
@@ -124,13 +134,13 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_localStorageValueToBoolean()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });
 
     it('Returns false when no argument', () => {
-      const result = element._localStorageValueToBoolean();
+      const result = element._localStorageValueToBoolean(undefined);
       assert.isFalse(result);
     });
 
@@ -146,13 +156,14 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_onJsonTableStateChanged()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       clearTableStorage();
       element = await basicFixture();
     });
 
     it('Does nothing when dispatched by self', () => {
+      // @ts-ignore
       element._onJsonTableStateChanged({
         composedPath: () => [element],
         detail: {
@@ -163,6 +174,7 @@ describe('<api-resource-example-document>', () => {
     });
 
     it('Does nothing when represents the same value', () => {
+      // @ts-ignore
       element._onJsonTableStateChanged({
         composedPath: () => [],
         detail: {
@@ -173,6 +185,7 @@ describe('<api-resource-example-document>', () => {
     });
 
     it('Updates "table" value', () => {
+      // @ts-ignore
       element._onJsonTableStateChanged({
         composedPath: () => [],
         detail: {
@@ -184,7 +197,7 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_computeExamples()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });
@@ -213,7 +226,7 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_computeEffectiveTable()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });
@@ -240,13 +253,13 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('_computeIsJson()', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });
 
     it('Returns false when no type', () => {
-      const result = element._computeIsJson();
+      const result = element._computeIsJson(undefined);
       assert.isFalse(result);
     });
 
@@ -304,13 +317,13 @@ describe('<api-resource-example-document>', () => {
       ['Regular model', false],
       ['Compact model', true]
     ].forEach((item) => {
-      describe(item[0], () => {
+      describe(String(item[0]), () => {
         let amf;
-        before(async () => {computeExamples
+        before(async () => {
           amf = await AmfLoader.load(item[1]);
         });
 
-        let element;
+        let element = /** @type ApiResourceExampleDocument */ (null);
         beforeEach(async () => {
           element = await basicFixture();
           element.amf = amf;
@@ -320,8 +333,12 @@ describe('<api-resource-example-document>', () => {
         it('Clears _renderedExamples when no examples', () => {
           element._renderedExamples = [{
             value: '{}',
-            hasTitle: false
+            hasTitle: false,
+            hasRaw: false,
+            hasUnion: false,
+            isScalar: false,
           }];
+          // @ts-ignore
           element.__computeExamples();
           assert.isUndefined(element._renderedExamples);
         });
@@ -329,8 +346,12 @@ describe('<api-resource-example-document>', () => {
         it('Clears _renderedExamples when examples empty', () => {
           element._renderedExamples = [{
             value: '{}',
-            hasTitle: false
+            hasTitle: false,
+            hasRaw: false,
+            hasUnion: false,
+            isScalar: false,
           }];
+          // @ts-ignore
           element.__computeExamples([]);
           assert.isUndefined(element._renderedExamples);
         });
@@ -338,14 +359,19 @@ describe('<api-resource-example-document>', () => {
         it('Clears _renderedExamples when no media type', () => {
           element._renderedExamples = [{
             value: '{}',
-            hasTitle: false
+            hasTitle: false,
+            hasRaw: false,
+            hasUnion: false,
+            isScalar: false,
           }];
+          // @ts-ignore
           element.__computeExamples([{}]);
           assert.isUndefined(element._renderedExamples);
         });
 
         it('Computes examples from array of Payloads', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          // @ts-ignore
           element.__computeExamples(payloads, 'application/json');
           assert.typeOf(element._renderedExamples, 'array');
           assert.lengthOf(element._renderedExamples, 1);
@@ -353,6 +379,7 @@ describe('<api-resource-example-document>', () => {
 
         it('Computes examples from a single payload', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          // @ts-ignore
           element.__computeExamples(payloads[0], 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
@@ -366,6 +393,7 @@ describe('<api-resource-example-document>', () => {
           if (schema instanceof Array) {
             schema = schema[0];
           }
+          // @ts-ignore
           element.__computeExamples(schema, 'application/json', false, undefined, id);
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
@@ -373,6 +401,7 @@ describe('<api-resource-example-document>', () => {
 
         it('Computes payload from an Example', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
+          // @ts-ignore
           element.__computeExamples(examples[0], 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 1);
@@ -380,6 +409,7 @@ describe('<api-resource-example-document>', () => {
 
         it('Computes payload from multiple Examples', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
+          // @ts-ignore
           element.__computeExamples(examples, 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 2);
@@ -388,12 +418,14 @@ describe('<api-resource-example-document>', () => {
         it('Ignores unknown array items', () => {
           const examples = computeExamples(element, amf, '/IncludedInType', 'post', 0);
           examples.push({});
+          // @ts-ignore
           element.__computeExamples(examples, 'application/json');
           assert.typeOf(element.renderedExamples, 'array');
           assert.lengthOf(element.renderedExamples, 2);
         });
 
         it('Ignores unknown shapes', () => {
+          // @ts-ignore
           element.__computeExamples({}, 'application/json');
           assert.isUndefined(element.renderedExamples);
         });
@@ -403,7 +435,9 @@ describe('<api-resource-example-document>', () => {
           element.amf = amf;
           await nextFrame();
           const payloads = getPayload(element, amf, '/default', 'post');
+          // @ts-ignore
           element.__computeExamples(payloads, 'application/json');
+          // @ts-ignore
           assert.equal(element.renderedExamples[0].value.indexOf('"id":'), -1);
         });
 
@@ -413,6 +447,7 @@ describe('<api-resource-example-document>', () => {
           await nextFrame();
           const payloads = getPayload(element, amf, '/default', 'post');
           element.__computeExamples(payloads, 'application/json', undefined, undefined, undefined, undefined, true);
+          // @ts-ignore
           assert.notEqual(element.renderedExamples[0].value.indexOf('"id":'), -1);
         });
       });
@@ -424,13 +459,13 @@ describe('<api-resource-example-document>', () => {
       ['Regular model', false],
       ['Compact model', true]
     ].forEach((item) => {
-      describe(item[0], () => {
+      describe(String(item[0]), () => {
         let amf;
         before(async () => {
           amf = await AmfLoader.load(item[1]);
         });
 
-        let element;
+        let element = /** @type ApiResourceExampleDocument */ (null);
         beforeEach(async () => {
           element = await jsonFixture();
           element.amf = amf;
@@ -441,6 +476,7 @@ describe('<api-resource-example-document>', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.examples = payloads;
           element.addEventListener('has-examples-changed', function f(e) {
+            // @ts-ignore
             if (!e.detail.value) {
               return;
             }
@@ -456,6 +492,7 @@ describe('<api-resource-example-document>', () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
           element.addEventListener('has-examples-changed', function f(e) {
+            // @ts-ignore
             if (!e.detail.value) {
               return;
             }
@@ -472,7 +509,7 @@ describe('<api-resource-example-document>', () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.examples = payloads;
           await aTimeout(100);
-          const h6 = element.shadowRoot.querySelector('.example-title');
+          const h6 = /** @type HTMLElement */ (element.shadowRoot.querySelector('.example-title'));
           assert.ok(h6);
           assert.equal(h6.innerText.trim(), 'Example');
         });
@@ -481,7 +518,7 @@ describe('<api-resource-example-document>', () => {
           const payloads = getPayload(element, amf, '/user-raml-example', 'post');
           element.examples = payloads;
           await aTimeout(100);
-          const titles = element.shadowRoot.querySelectorAll('.example-title');
+          const titles = /** @type NodeListOf<HTMLElement> */ (element.shadowRoot.querySelectorAll('.example-title'));
           assert.lengthOf(titles, 4, 'has 4 examples');
           assert.equal(titles[0].innerText.trim(), 'User 1');
           assert.equal(titles[1].innerText.trim(), 'User 2');
@@ -493,7 +530,7 @@ describe('<api-resource-example-document>', () => {
   });
 
   describe('a11y', () => {
-    let element;
+    let element = /** @type ApiResourceExampleDocument */ (null);
     let amf;
     before(async () => {
       amf = await AmfLoader.load();
@@ -504,15 +541,15 @@ describe('<api-resource-example-document>', () => {
       element.amf = amf;
     });
 
-    async function resolveWhenReady(element, amf, path, method) {
+    async function resolveWhenReady(elm, model, path, method) {
       return new Promise((resolve) => {
-        const payloads = getPayload(element, amf, path, method);
-        element.examples = payloads;
-        element.addEventListener('has-examples-changed', function f(e) {
+        const payloads = getPayload(elm, model, path, method);
+        elm.examples = payloads;
+        elm.addEventListener('has-examples-changed', function f(e) {
           if (!e.detail.value) {
             return;
           }
-          element.removeEventListener('has-examples-changed', f);
+          elm.removeEventListener('has-examples-changed', f);
           setTimeout(() => resolve());
         });
       });
