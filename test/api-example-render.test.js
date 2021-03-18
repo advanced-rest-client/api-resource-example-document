@@ -1,9 +1,8 @@
-import { fixture, assert, nextFrame, aTimeout, html } from '@open-wc/testing';
+import { fixture, assert, nextFrame, html, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
-import '@polymer/prism-element/prism-highlighter.js';
-import { SafeHtmlUtils } from '../src/ApiExampleRender.js';
 import '../api-example-render.js';
 
+/** @typedef {import('@advanced-rest-client/clipboard-copy').ClipboardCopyElement} ClipboardCopyElement */
 /** @typedef {import('..').ApiExampleRender} ApiExampleRender */
 
 const highlighter = document.createElement('prism-highlighter');
@@ -21,7 +20,7 @@ describe('ApiExampleRender', () => {
    * @returns {Promise<ApiExampleRender>}
    */
   async function jsonFixture() {
-    return (fixture(html`<api-example-render media-type="application/json" isJson></api-example-render>`));
+    return (fixture(html`<api-example-render mediaType="application/json" isJson></api-example-render>`));
   }
 
   /**
@@ -29,36 +28,8 @@ describe('ApiExampleRender', () => {
    */
   async function noActionsFixture() {
     return (fixture(html`
-      <api-example-render media-type="application/json" isJson noActions></api-example-render>`));
+      <api-example-render mediaType="application/json" isJson noActions></api-example-render>`));
   }
-
-  describe('Basics', () => {
-    let element = /** @type ApiExampleRender */ (null);
-    beforeEach(async () => {
-      element = await jsonFixture();
-      element.example = {
-        value: '',
-        hasRaw: false,
-        hasTitle: false,
-        hasUnion: false,
-        isScalar: false,
-      };
-      await nextFrame();
-    });
-
-    it('Calls highlight() when code change', async () => {
-      const spy = sinon.spy(element, 'highlight');
-      element.example = {
-        value: 'test',
-        hasRaw: false,
-        hasTitle: false,
-        hasUnion: false,
-        isScalar: false,
-      };
-      await aTimeout(10);
-      assert.isTrue(spy.called);
-    });
-  });
 
   describe('View rendering', () => {
     let element = /** @type ApiExampleRender */ (null);
@@ -122,54 +93,56 @@ describe('ApiExampleRender', () => {
     });
   });
 
-  describe('highlight()', () => {
+  describe('_renderCode()', () => {
     let element = /** @type ApiExampleRender */ (null);
+    const baseExample = {
+      hasUnion: false,
+      hasRaw: false,
+      hasTitle: false,
+      isScalar: false,
+      value: '{"test": true}',
+    };
     beforeEach(async () => {
       element = await basicFixture();
     });
 
-    it('Dispatches syntax-highlight event', () => {
-      const spy = sinon.spy();
-      element.addEventListener('syntax-highlight', spy);
-      element.highlight('{}', 'application/json');
-      assert.isTrue(spy.called);
+    function getString(size=10001) {
+      let result = '<element>&"\'';
+      for (let i = 0; i < size; i++) {
+        result += 'a';
+      }
+      result += '</result>';
+      return result;
+    }
+
+    it('sets the _codeValue property', async () => {
+      element.example = { ...baseExample };
+      await aTimeout(0);
+      assert.equal(element._codeValue, baseExample.value);
     });
 
-    it('Event has "code" property', () => {
-      const spy = sinon.spy();
-      element.addEventListener('syntax-highlight', spy);
-      element.highlight('{}', 'application/json');
-      const e = spy.args[0][0];
-      assert.typeOf(e.detail.code, 'string');
+    it('sets the _langValue property to json', async () => {
+      element.example = { ...baseExample };
+      element.mediaType = 'application/json';
+      await aTimeout(0);
+      assert.equal(element._langValue, 'json');
     });
 
-    it('Event has "lang" property set to json', () => {
-      const spy = sinon.spy();
-      element.addEventListener('syntax-highlight', spy);
-      element.highlight('{}', 'application/json');
-      const e = spy.args[0][0];
-      assert.equal(e.detail.lang, 'json');
+    it('sets the _langValue property to xml', async () => {
+      element.example = { ...baseExample };
+      element.example.value = '<test></test>';
+      element.mediaType = 'application/xml';
+      await aTimeout(0);
+      assert.equal(element._langValue, 'xml');
     });
 
-    it('Event has "lang" property set to xml', () => {
-      const spy = sinon.spy();
-      element.addEventListener('syntax-highlight', spy);
-      element.highlight('{}', 'application/xml');
-      const e = spy.args[0][0];
-      assert.equal(e.detail.lang, 'xml');
-    });
-
-    it('Event has no "lang" property', () => {
-      const spy = sinon.spy();
-      element.addEventListener('syntax-highlight', spy);
-      element.highlight('{}', 'application/other');
-      const e = spy.args[0][0];
-      assert.isUndefined(e.detail.lang);
-    });
-
-    it('Returns parsed code', () => {
-      const result = element.highlight('{}', 'application/json');
-      assert.equal(result, '<span class="token punctuation">{</span><span class="token punctuation">}</span>');
+    it('does not set the lang property for a huge example', async () => {
+      element.example = { ...baseExample };
+      element.example.value = getString();
+      element.mediaType = 'application/xml';
+      await aTimeout(0);
+      const out = element.shadowRoot.querySelector('prism-highlight');
+      assert.isUndefined(out.lang);
     });
   });
 
@@ -313,7 +286,7 @@ describe('ApiExampleRender', () => {
         isScalar: false,
       };
       await nextFrame();
-      const copy = element.shadowRoot.querySelector('clipboard-copy');
+      const copy = /** @type ClipboardCopyElement */ (element.shadowRoot.querySelector('clipboard-copy'));
       const spy = sinon.spy(copy, 'copy');
       const button = element.shadowRoot.querySelector('[data-action="copy"]');
       /** @type HTMLElement */ (button).click();
@@ -691,76 +664,6 @@ describe('ApiExampleRender', () => {
       // @ts-ignore
       assert.isFalse(target.part.contains('code-content-action-button-active'),
         'Has no code-content-action-button-active part');
-    });
-  });
-
-  describe('SafeHtmlUtils', () => {
-    describe('htmlEscape()', () => {
-      it('returns the same input when no string', () => {
-        const result = SafeHtmlUtils.htmlEscape(22);
-        // @ts-ignore
-        assert.equal(result, 22);
-      });
-
-      it('replaces "&" characters', () => {
-        const result = SafeHtmlUtils.htmlEscape('&a&');
-        assert.equal(result, '&amp;a&amp;');
-      });
-
-      it('replaces "<" characters', () => {
-        const result = SafeHtmlUtils.htmlEscape('<a<');
-        assert.equal(result, '&lt;a&lt;');
-      });
-
-      it('replaces ">" characters', () => {
-        const result = SafeHtmlUtils.htmlEscape('>a>');
-        assert.equal(result, '&gt;a&gt;');
-      });
-
-      it('replaces quote characters', () => {
-        const result = SafeHtmlUtils.htmlEscape('"a"');
-        assert.equal(result, '&quot;a&quot;');
-      });
-
-      it('replaces single quote characters', () => {
-        const result = SafeHtmlUtils.htmlEscape("'a'");
-        assert.equal(result, '&#39;a&#39;');
-      });
-    });
-  });
-
-  describe('Huge example rendering', () => {
-    let element = /** @type ApiExampleRender */ (null);
-    let out;
-    beforeEach(async () => {
-      element = await basicFixture();
-      await nextFrame();
-    });
-
-    function getString(size=10001) {
-      let result = '<element>&"\'';
-      for (let i = 0; i < size; i++) {
-        result += 'a';
-      }
-      result += '</result>';
-      return result;
-    }
-
-    it('renders sanitized code', async () => {
-      element.example = {
-        value: getString(),
-        hasTitle: true,
-        hasRaw: false,
-        title: 'test',
-        hasUnion: false,
-        isScalar: false,
-      };
-      await nextFrame();
-      out = element.shadowRoot.querySelector('#output');
-      const result = out.innerHTML;
-      // even though the " and ' characters are replaced when reading them back
-      // from the output element they are converted to " and '
-      assert.equal(result.substr(0, 20), '&lt;element&gt;&amp;');
     });
   });
 
