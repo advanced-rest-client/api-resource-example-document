@@ -2,8 +2,6 @@ coverage/
 test/
 demo/
 CONTRIBUTING.md
-polymer.json
 karma.*
 .*
 web-test-runner.config.mjs
-es-dev-server.config.js

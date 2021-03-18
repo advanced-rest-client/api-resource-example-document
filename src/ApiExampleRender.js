@@ -1,46 +1,16 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html } from 'lit-element';
 import '@advanced-rest-client/clipboard-copy/clipboard-copy.js';
 import '@advanced-rest-client/json-table/json-table.js';
 import '@anypoint-web-components/anypoint-button/anypoint-button.js';
-import styles from '@advanced-rest-client/prism-highlight/prism-styles.js';
+import '@advanced-rest-client/prism-highlight/prism-highlight.js';
+import elementStyles from './styles/Render.js';
 
 /** @typedef {import('lit-element').TemplateResult} TemplateResult */
 /** @typedef {import('@advanced-rest-client/arc-types').FormTypes.Example} Example */
-
-/**
- * Transforms input into a content to be rendered in the code view.
- */
-export const SafeHtmlUtils = {
-  AMP_RE: new RegExp(/&/g),
-  GT_RE: new RegExp(/>/g),
-  LT_RE: new RegExp(/</g),
-  SQUOT_RE: new RegExp(/'/g),
-  QUOT_RE: new RegExp(/"/g),
-  htmlEscape(s) {
-    if (typeof s !== 'string') {
-      return s;
-    }
-    if (s.indexOf('&') !== -1) {
-      s = s.replace(SafeHtmlUtils.AMP_RE, '&amp;');
-    }
-    if (s.indexOf('<') !== -1) {
-      s = s.replace(SafeHtmlUtils.LT_RE, '&lt;');
-    }
-    if (s.indexOf('>') !== -1) {
-      s = s.replace(SafeHtmlUtils.GT_RE, '&gt;');
-    }
-    if (s.indexOf('"') !== -1) {
-      s = s.replace(SafeHtmlUtils.QUOT_RE, '&quot;');
-    }
-    if (s.indexOf("'") !== -1) {
-      s = s.replace(SafeHtmlUtils.SQUOT_RE, '&#39;');
-    }
-    return s;
-  }
-};
+/** @typedef {import('@advanced-rest-client/clipboard-copy').ClipboardCopyElement} ClipboardCopyElement */
 
 /**
  * `api-example-render`
@@ -72,86 +42,7 @@ export const SafeHtmlUtils = {
  */
 export class ApiExampleRender extends LitElement {
   get styles() {
-    return [
-      styles,
-      css`
-      :host {
-        display: block;
-        background-color: inherit;
-      }
-
-      .code-wrapper {
-        padding: 0px;
-      }
-
-      #output {
-        white-space: pre-wrap;
-        word-wrap: var(--code-block-word-wrap, break-word);
-        word-break: var(--code-block-word-break, break-all);
-        font-family: var(--arc-font-code-family);
-      }
-
-      [hidden] {
-        display: none !important;
-      }
-
-      .union-toggle {
-        outline: none;
-        background-color: var(--api-type-document-union-button-background-color, transparent);
-        color: var(--api-type-document-union-button-color, #000);
-        border-width: 1px;
-        border-color: var(--api-body-document-media-button-border-color, #a3b11d);
-        border-style: solid;
-      }
-
-      .union-toggle[activated] {
-        background-color: var(--api-type-document-union-button-active-background-color, #CDDC39);
-        color: var(--api-type-document-union-button-active-color, #000);
-      }
-
-      .action-button[active] {
-        background-color: var(--api-resource-example-document-button-active-background-color, #CDDC39);
-        color: var(--api-resource-example-document-button-active-color, currentColor);
-      }
-
-      .union-toggle[focused],
-      .action-button[active][focused] {
-        outline: auto;
-      }
-
-      .union-type-selector {
-        margin: 0px 8px 12px 0px;
-      }
-
-      .code-wrapper.scalar {
-        padding-top: 1px;
-      }
-
-      .example-actions {
-        display: flex;
-        align-items: center;
-        flex-direction: row;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        flex: 1;
-      }
-
-      anypoint-button {
-        margin-bottom: 8px;
-        height: 28px;
-      }
-
-      api-example-render {
-        background-color: inherit;
-      }
-
-      json-table,
-      api-example-render {
-        overflow: auto;
-        max-width: 100%;
-      }
-      `
-    ];
+    return elementStyles;
   }
 
   static get properties() {
@@ -233,7 +124,7 @@ export class ApiExampleRender extends LitElement {
     }
     this._mediaType = value;
     this.requestUpdate('mediaType', old);
-    this._dataChanged(this._example);
+    this._dataChanged();
   }
 
   get example() {
@@ -250,7 +141,7 @@ export class ApiExampleRender extends LitElement {
     }
     this._example = value;
     this.requestUpdate('example', old);
-    this._dataChanged(value);
+    this._dataChanged();
     this.selectedUnion = 0;
   }
 
@@ -268,7 +159,7 @@ export class ApiExampleRender extends LitElement {
     }
     this._sourceOpened = value;
     this.requestUpdate('sourceOpened', old);
-    this._dataChanged(this._example);
+    this._dataChanged();
   }
 
   constructor() {
@@ -316,11 +207,8 @@ export class ApiExampleRender extends LitElement {
     return String(raw) !== String(value);
   }
 
-  /**
-   * @param {Example} example
-   */
-  _dataChanged(example) {
-    if (this.__changeDebouncer || !example) {
+  _dataChanged() {
+    if (this.__changeDebouncer) {
       return;
     }
     this.__changeDebouncer = true;
@@ -332,57 +220,38 @@ export class ApiExampleRender extends LitElement {
 
   _renderCode() {
     const { example } = this;
+    this._langValue = undefined;
+    this._codeValue = undefined;
     if (!example || (!example.value && example.values)) {
       return;
     }
-    const output = /** @type HTMLOutputElement */ (this.shadowRoot.querySelector('#output'));
-    if (!output) {
-      setTimeout(() => this._renderCode());
-      return;
-    }
     if (this.sourceOpened) {
-      output.innerHTML = this.highlight(String(example.raw), 'yaml');
+      this._codeValue = String(example.raw);
+      this._langValue = 'yaml';
     } else {
       const value = String(example.value);
-      // @ts-ignore
-      if (value || value === false || value === 0) {
-        output.innerHTML = this.highlight(value, this.mediaType);
+      if (value.length > 10000) {
+        // examples that are huge causes browser to choke or hang.
+        // This just sanitizes the schema and renders unprocessed data.
+        this._codeValue = value;
+        // @ts-ignore
+      } else if (value || value === false || value === 0) {
+        let lang;
+        const type = this.mediaType;
+        if (type) {
+          if (type.indexOf('json') !== -1) {
+            lang = 'json';
+          } else if (type.indexOf('xml') !== -1) {
+            lang = 'xml';
+          }
+        }
+        this._codeValue = value
+        this._langValue = lang || this.mediaType;
       } else {
-        output.innerText = '(no value in example)';
+        this._codeValue = '(no value in example)';
       }
     }
-  }
-
-  /**
-   * Dispatches `syntax-highlight` custom event
-   * @param {string} code Code to highlight
-   * @param {string} type Mime type of the code
-   * @return {string} Highlighted code.
-   */
-  highlight(code, type) {
-    if (code.length > 10000) {
-      // examples that are huge causes browser to choke or hang.
-      // This just sanitizes the schema and renders unprocessed data.
-      return SafeHtmlUtils.htmlEscape(code);
-    }
-    let lang;
-    if (type) {
-      if (type.indexOf('json') !== -1) {
-        lang = 'json';
-      } else if (type.indexOf('xml') !== -1) {
-        lang = 'xml';
-      }
-    }
-    const ev = new CustomEvent('syntax-highlight', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        code,
-        lang
-      }
-    });
-    this.dispatchEvent(ev);
-    return ev.detail.code;
+    this.requestUpdate();
   }
 
   /**
@@ -392,7 +261,7 @@ export class ApiExampleRender extends LitElement {
    */
   _copyToClipboard(e) {
     const button = /** @type HTMLButtonElement */ (e.target);
-    const copy = this.shadowRoot.querySelector('clipboard-copy');
+    const copy = /** @type ClipboardCopyElement */ (this.shadowRoot.querySelector('clipboard-copy'));
     if (copy.copy()) {
       button.innerText = 'Done';
     } else {
@@ -587,7 +456,7 @@ export class ApiExampleRender extends LitElement {
     ${this._headerTemplate(example)}
     ${renderJsonTable ? html`<json-table .json="${exampleValue}"></json-table>`: ''}
     <div class="code-wrapper ${example.isScalar ? 'scalar': ''}" part="code-wrapper, example-code-wrapper" ?hidden="${renderJsonTable}">
-      <code id="output" class="markdown-html" part="markdown-html" language-xml=""></code>
+      <prism-highlight .code="${this._codeValue}" .lang="${this._langValue}"></prism-highlight>
     </div>`;
   }
 
@@ -599,7 +468,7 @@ export class ApiExampleRender extends LitElement {
     const isUnion = !!(example && example.hasUnion);
     return html`<style>${this.styles}</style>
     ${isUnion ? this._renderUnion(example) : this._renderExample(example)}
-    <clipboard-copy .content="${example.value}"></clipboard-copy>
+    <clipboard-copy .content="${/** @type string */ (example.value)}"></clipboard-copy>
     `;
   }
 }

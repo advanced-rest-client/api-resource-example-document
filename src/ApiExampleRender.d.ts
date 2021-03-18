@@ -5,20 +5,6 @@ import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import { Example } from '@advanced-rest-client/arc-types/src/forms/FormTypes';
 
 /**
- * Transforms input into a content to be rendered in the code view.
- */
-declare interface SafeHtmlUtils {
-  AMP_RE: RegExp;
-  GT_RE: RegExp;
-  LT_RE: RegExp;
-  SQUOT_RE: RegExp;
-  QUOT_RE: RegExp;
-  htmlEscape(s: any): string;
-}
-
-export declare const SafeHtmlUtils: SafeHtmlUtils;
-
-/**
  * `api-example-render`
  *
  * Renders a JSON values using Prism highlighter or JSON table.
@@ -99,6 +85,9 @@ export class ApiExampleRender extends LitElement {
    */
   compatibility: boolean;
 
+  _codeValue: string;
+  _langValue: string;
+
   constructor();
 
   /**
@@ -117,14 +106,6 @@ export class ApiExampleRender extends LitElement {
   _dataChanged(example: Example): void;
 
   _renderCode(): void;
-
-  /**
-   * Dispatches `syntax-highlight` custom event
-   * @param code Code to highlight
-   * @param type Mime type of the code
-   * @returns Highlighted code.
-   */
-  highlight(code: string, type: string): string;
 
   /**
    * Copies the current response text value to clipboard.
@@ -155,9 +136,7 @@ export class ApiExampleRender extends LitElement {
 
   _renderUnion(example: Example): TemplateResult|string;
 
-
   _headerTemplate(example: Example): TemplateResult|string;
-
 
   _renderExample(example: Example): TemplateResult;
 

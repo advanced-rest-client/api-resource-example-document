@@ -1,6 +1,5 @@
 import { LitElement, TemplateResult, CSSResult } from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
-import '@polymer/prism-element/prism-highlighter.js';
 import '@advanced-rest-client/arc-icons/arc-icon.js';
 import '../api-example-render.js';
 import { Example } from '@advanced-rest-client/arc-types/src/forms/FormTypes';

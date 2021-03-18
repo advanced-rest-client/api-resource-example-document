@@ -1,10 +1,8 @@
+# api-resource-example-document
+
 [![Published on NPM](https://img.shields.io/npm/v/@api-components/api-resource-example-document.svg)](https://www.npmjs.com/package/@api-components/api-resource-example-document)
 
-[![Build Status](https://travis-ci.com/advanced-rest-client/api-resource-example-document.svg)](https://travis-ci.org/advanced-rest-client/api-resource-example-document)
-
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/api-resource-example-document)
-
-# api-resource-example-document
+[![Tests and publishing](https://github.com/advanced-rest-client/api-resource-example-document/actions/workflows/deployment.yml/badge.svg)](https://github.com/advanced-rest-client/api-resource-example-document/actions/workflows/deployment.yml)
 
 A viewer for examples in a resource based on AMF model
 
@@ -20,7 +18,8 @@ For compatibility with previous model version use `3.x.x` version of the compone
 ## Usage
 
 ### Installation
-```
+
+```sh
 npm install --save @api-components/api-resource-example-document
 ```
 
@@ -73,10 +72,7 @@ npm start
 ```
 
 ### Running the tests
+
 ```sh
 npm test
 ```
-
-### API components
-
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
