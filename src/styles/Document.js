@@ -20,7 +20,7 @@ export default css`
   font-weight: var(--arc-font-body1-font-weight);
   line-height: var(--arc-font-body1-line-height);
   font-size: 1rem;
-  display: block;
+  display: var(--api-example-title-display, block);
   padding: 8px 12px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
