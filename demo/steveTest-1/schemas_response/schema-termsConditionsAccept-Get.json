@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "additionalProperties": true,
+    "properties": {
+        "logonID": {
+            "id": "#/properties/logonID",
+            "type": "string",
+            "description": "OneAmerica user's application logonID."
+        },
+        "accepted": {
+            "id": "#/properties/accepted",
+            "type": "boolean",
+            "description": "True/False indicator on whether legal terms were accepted."
+        },
+        "acceptedDate": {
+            "id": "#/properties/acceptedDate",
+            "type": "string",
+            "description": "Date of acceptance of legal terms."
+        }
+    }
+}
