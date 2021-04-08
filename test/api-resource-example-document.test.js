@@ -529,6 +529,39 @@ describe('ApiResourceExampleDocument', () => {
     });
   });
 
+  describe('_computeExampleTitle()', () => {
+    let element = /** @type ApiResourceExampleDocument */ (null);
+
+    beforeEach(async () => {
+      element = await basicFixture();
+      await nextFrame();
+    });
+
+    it('returns "Example" if no title is present', () => {
+      const example = {};
+      const title = element._computeExampleTitle(example);
+      assert.equal(title, 'Example');
+    });
+
+    it('returns "Example" if title is a variation of the media type', () => {
+      const example = {
+        title: 'application/json10',
+      };
+      element.mediaType = 'application/json';
+      const title = element._computeExampleTitle(example);
+      assert.equal(title, 'Example');
+    });
+
+    it('returns the example title', () => {
+      const example = {
+        title: 'Example test title',
+      };
+      element.mediaType = 'application/json';
+      const title = element._computeExampleTitle(example);
+      assert.equal(title, 'Example test title');
+    });
+  });
+
   describe('a11y', () => {
     let element = /** @type ApiResourceExampleDocument */ (null);
     let amf;

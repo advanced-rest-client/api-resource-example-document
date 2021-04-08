@@ -557,8 +557,21 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     if (example.isScalar) {
       return '';
     }
-    const label = !example.title ? 'Example' : example.title;
+    const label = this._computeExampleTitle(example);
     return html`<div class="example-title">${label}</div>`;
+  }
+
+  _computeExampleTitle(example) {
+    if (!example.title || this._exampleTitleIsMediaType(example)) {
+      return 'Example';
+    }
+    return example.title;
+  }
+
+  _exampleTitleIsMediaType(example) {
+    const { mediaType } = this;
+    const { title } = example;
+    return Boolean(title.match(`^${mediaType}(\\d)+$`));
   }
 
   /**
