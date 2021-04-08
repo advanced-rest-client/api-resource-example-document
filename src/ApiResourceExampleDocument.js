@@ -561,6 +561,11 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return html`<div class="example-title">${label}</div>`;
   }
 
+  /**
+   * Returns title to render for example
+   * @param {Example} example 
+   * @returns {String} 'Example' or the example's title
+   */
   _computeExampleTitle(example) {
     if (!example.title || this._exampleTitleIsMediaType(example)) {
       return 'Example';
@@ -568,6 +573,12 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return example.title;
   }
 
+  /**
+   * Determines whether an example's title is just a variation
+   * of the current media type + a number
+   * @param {Example} example 
+   * @returns {Boolean}
+   */
   _exampleTitleIsMediaType(example) {
     const { mediaType } = this;
     const { title } = example;
