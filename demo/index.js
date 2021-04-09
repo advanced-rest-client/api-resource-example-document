@@ -46,6 +46,7 @@ class ApiDemo extends ApiDemoPage {
     this.payloads = this.hasData ? payloads : undefined;
     if (this.hasData) {
       setTimeout(() => {
+        // eslint-disable-next-line no-shadow
         const list = document.body.querySelector('#mediaList');
         if (list) {
           list.selected = 0;
@@ -69,6 +70,7 @@ class ApiDemo extends ApiDemoPage {
     if (!(payloads instanceof Array)) {
       payloads = [payloads];
     }
+    // eslint-disable-next-line consistent-return
     return payloads;
   }
 
@@ -83,13 +85,14 @@ class ApiDemo extends ApiDemoPage {
         result.push({label});
       }
     });
+    // eslint-disable-next-line consistent-return
     return result.length ? result : undefined;
   }
 
   _mediaChanged(e) {
     this.hasExamples = false;
     const index = e.detail.value;
-    if (isNaN(index) || index === -1) {
+    if (Number.isNaN(index) || index === -1) {
       return;
     }
     const mediaType = this.mediaTypes[index].label;
@@ -103,6 +106,7 @@ class ApiDemo extends ApiDemoPage {
     const result = [];
 
     [
+      ['stevetest', 'Stevetest'],
       ['demo-api', 'Demo API'],
       ['google-drive-api', 'Google Drive'],
       ['raml-types', 'RAML types with raml examples'],
@@ -115,7 +119,7 @@ class ApiDemo extends ApiDemoPage {
   }
 
   _examplesTemplate() {
-    const hasExamples = this.hasExamples;
+    const {hasExamples} = this;
     return hasExamples ?
       html`<api-resource-example-document
         .amf="${this.amf}"
@@ -125,8 +129,8 @@ class ApiDemo extends ApiDemoPage {
   }
 
   contentTemplate() {
-    const mediaTypes = this.mediaTypes;
-    const hasData = this.hasData;
+    const {mediaTypes} = this;
+    const {hasData} = this;
     return html`
     <anypoint-dropdown-menu ?hidden="${this.singlePayload}">
       <label slot="label">Select media type</label>

@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "http://example.com/example.json",
+    "type": "object",
+    "required": [
+        "logonID",
+        "site",
+        "siteRole",
+        "acceptedDate"
+    ],
+    "properties": {
+        "logonID": {
+            "id": "#/properties/logonID",
+            "type": "string",
+            "description": "OneAmerica user's application logonID.",
+            "example": "indybrad"
+        },
+        "site": {
+            "id": "#/properties/site",
+            "type": "string",
+            "description": "OneAmerica web application identifier within which user is accepting terms.",
+            "example": "ACCTSERV"
+        },
+        "siteRole": {
+            "id": "#/properties/siteRole",
+            "type": "string",
+            "description": "OneAmerica user's role within the web application.",
+            "example": "PARTCPNT"
+        },
+        "impersonationID": {
+            "id": "#/properties/impersonationID",
+            "type": "string",
+            "description": "OneAmerica user account that is accepting on behalf of the actual OneAmerica user.",
+            "example": "xyz123"
+        },
+        "acceptedDate": {
+            "id": "#/properties/acceptedDate",
+            "type": "string",
+            "description": "Datetime of acceptance of terms by the OneAmerica user.",
+            "example": "2018-01-01T12:00:00.000"
+        }
+    }
+}
