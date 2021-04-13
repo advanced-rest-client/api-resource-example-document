@@ -1,0 +1,167 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Legal System Service v1",
+    "description": "This is the suite of Participant Legal services.",
+    "version": "1.0.0",
+    "termsOfService": "http://www.oneamerica.com",
+    "contact": {
+      "email": "jedimaster@oneamerica.com"
+    },
+    "license": {
+      "name": "OneAmerica 1.0"
+    }
+  },
+  "host": "esb.oneamerica.com:61006",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "test",
+      "description": "test"
+    }
+  ],
+  "parameters": {
+    "trait:content-type-required:content-type": {
+      "required": true,
+      "type": "string",
+      "in": "header",
+      "name": "content-type"
+    }
+  },
+  "paths": {
+    "/legal/termsConditionsAcceptReset": {
+      "delete": {
+        "description": "Delete participants existing terms and conditions",
+        "responses": {
+          "200": {
+            "description": "This status code will be returned when request passes"
+          },
+          "400": {
+            "$ref": "traits/response-errors.json#/responses/400"
+          },
+          "404": {
+            "$ref": "traits/response-errors.json#/responses/404"
+          },
+          "405": {
+            "$ref": "traits/response-errors.json#/responses/405"
+          },
+          "406": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "415": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "500": {
+            "$ref": "traits/response-errors.json#/responses/500"
+          },
+          "501": {
+            "$ref": "traits/response-errors.json#/responses/501"
+          }
+        }
+      }
+    },
+    "/legal/termsConditionsAccept": {
+      "get": {
+        "description": "Retrieves a user's status on terms and conditions acceptance.",
+        "responses": {
+          "200": {
+      			"description": "This status code will be returned when request passes.",
+            "schema": {
+              "$ref": "schemas_response/schema-termsConditionsAccept-Get.json"
+            },
+            "examples": {
+              "application/json": {
+                "logonID": "indybrad",
+                "accepted" : true,
+                "acceptedDate" : "2018-01-01T12:00:00.000"
+              }
+            }			
+          },
+          "400": {
+            "$ref": "traits/response-errors.json#/responses/400"
+          },
+          "404": {
+            "$ref": "traits/response-errors.json#/responses/404"
+          },
+          "405": {
+            "$ref": "traits/response-errors.json#/responses/405"
+          },
+          "406": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "415": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "500": {
+            "$ref": "traits/response-errors.json#/responses/500"
+          },
+          "501": {
+            "$ref": "traits/response-errors.json#/responses/501"
+          }
+        },
+        "parameters": [
+          {
+            "required": true,
+            "type": "string",
+            "in": "header",
+            "name": "webLogonID"
+          },
+          {
+            "$ref": "#/parameters/trait:content-type-required:content-type"
+          }
+        ]
+      },
+      "post": {
+        "description": "Store participant's terms and conditions acceptance.",
+        "responses": {
+          "200": {
+            "description": "This status code will be returned when request passes."
+          },
+          "400": {
+            "$ref": "traits/response-errors.json#/responses/400"
+          },
+          "404": {
+            "$ref": "traits/response-errors.json#/responses/404"
+          },
+          "405": {
+            "$ref": "traits/response-errors.json#/responses/405"
+          },
+          "406": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "415": {
+            "$ref": "traits/response-errors.json#/responses/406"
+          },
+          "500": {
+            "$ref": "traits/response-errors.json#/responses/500"
+          },
+          "501": {
+            "$ref": "traits/response-errors.json#/responses/501"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/parameters/trait:content-type-required:content-type"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "schemas/schema-termsConditionsAccept.json"
+            },
+            "required": true
+          }
+        ]
+      }
+    }
+  }
+}
