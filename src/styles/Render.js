@@ -31,11 +31,15 @@ export default css`
 .action-button[active] {
   background-color: var(--api-resource-example-document-button-active-background-color, #CDDC39);
   color: var(--api-resource-example-document-button-active-color, currentColor);
+  text-decoration: var(--api-resource-example-document-button-active-text-decoration);
+  text-underline-offset: var(--api-resource-example-document-button-active-text-underline-offset);
 }
 
 .union-toggle[focused],
 .action-button[active][focused] {
-  outline: auto;
+  outline: var(--api-resource-example-document-button-active-outline, auto);
+  text-decoration: var(--api-resource-example-document-button-active-text-decoration);
+  text-underline-offset: var(--api-resource-example-document-button-active-text-underline-offset);
 }
 
 .union-type-selector {
@@ -58,6 +62,9 @@ export default css`
 anypoint-button {
   margin-bottom: 8px;
   height: 28px;
+  color: var(--api-resource-example-document-button-color);
+  font-size: var(--api-resource-example-document-button-font-size);
+  font-weight: var(--api-resource-example-document-button-font-weight);
 }
 
 api-example-render {
