@@ -46,4 +46,8 @@ api-example-render {
   overflow: auto;
   max-width: 100%;
 }
+  
+.example-description {
+  padding: 10px 12px;
+}
 `;

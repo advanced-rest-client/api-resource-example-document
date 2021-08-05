@@ -562,6 +562,29 @@ describe('ApiResourceExampleDocument', () => {
     });
   });
 
+  describe('_computeExampleDescription()', () => {
+    let element = /** @type ApiResourceExampleDocument */ (null);
+
+    beforeEach(async () => {
+      element = await basicFixture();
+      await nextFrame();
+    });
+
+    it('returns empty if no description is present', () => {
+      const example = {};
+      const description = element._computeExampleDescription(example);
+      assert.equal(description, '');
+    });
+
+    it('returns description if present', () => {
+      const example = {
+        description: "example description",
+      };
+      const title = element._computeExampleDescription(example);
+      assert.equal(title, example.description);
+    });
+  });
+
   describe('a11y', () => {
     let element = /** @type ApiResourceExampleDocument */ (null);
     let amf;

@@ -213,5 +213,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
   _computeExampleTitle(example: Example): string;
 
+  _computeExampleDescription(example: Example): string;
+
   _exampleTitleIsMediaType(example: Example): boolean;
 }
