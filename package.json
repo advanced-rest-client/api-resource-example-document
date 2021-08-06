@@ -35,7 +35,7 @@
     "@advanced-rest-client/prism-highlight": "^4.0.4",
     "@anypoint-web-components/anypoint-button": "^1.2.0",
     "@api-components/amf-helper-mixin": "^4.3.6",
-    "@api-components/api-example-generator": "^4.4.8",
+    "@api-components/api-example-generator": "^4.4.13",
     "lit-element": "^2.4.0"
   },
   "devDependencies": {
