@@ -110,6 +110,7 @@ class ApiDemo extends ApiDemoPage {
       ['demo-api', 'Demo API'],
       ['google-drive-api', 'Google Drive'],
       ['raml-types', 'RAML types with raml examples'],
+      ['APIC-332', 'APIC-332'],
     ].forEach(([file, label]) => {
       result[result.length] = html`
       <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>

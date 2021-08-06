@@ -1,0 +1,22 @@
+#%RAML 1.0
+title: API with Examples
+
+types:
+  Org:
+    type: object
+    description: This description for the type is shown
+    properties:
+      name: string
+      address?: string
+      value?: string
+
+/organization:
+  post:
+    body:
+      application/json:
+        type: Org
+        example:
+          value:
+            name: Fake SA
+            value: Something
+          description: This description for the example is never shown

@@ -32,7 +32,6 @@ describe('ApiResourceExampleDocument', () => {
     return localStorage.jsonTableEnabled;
   }
 
-
   describe('_tableChanged()', () => {
     let element = /** @type ApiResourceExampleDocument */ (null);
     beforeEach(async () => {
@@ -312,6 +311,23 @@ describe('ApiResourceExampleDocument', () => {
     return element._ensureArray(schema[key]);
   }
 
+  async function resolveWhenReady(elm, model, path, method, payloadIndex) {
+    return new Promise((resolve) => {
+      let payload = getPayload(elm, model, path, method);
+      if (payloadIndex !== undefined) {
+        payload = payload[payloadIndex]
+      }
+      elm.examples = payload;
+      elm.addEventListener('has-examples-changed', function f(e) {
+        if (!e.detail.value) {
+          return;
+        }
+        elm.removeEventListener('has-examples-changed', f);
+        setTimeout(() => resolve());
+      });
+    });
+  }
+
   describe('__computeExamples()', () => {
     [
       ['Regular model', false],
@@ -529,6 +545,34 @@ describe('ApiResourceExampleDocument', () => {
     });
   });
 
+  describe('APIC-332', () => {
+    [
+      ['Regular model', false],
+      ['Compact model', true]
+    ].forEach((item) => {
+      describe(String(item[0]), () => {
+        let amf;
+        before(async () => {
+          amf = await AmfLoader.load(item[1], 'APIC-332');
+        });
+
+        let element = /** @type ApiResourceExampleDocument */ (null);
+        beforeEach(async () => {
+          element = await basicFixture();
+          element.amf = amf;
+          await nextFrame();
+        });
+
+        it('renders description for an example', async () => {
+          element.mediaType = 'application/json';
+          await resolveWhenReady(element, amf, '/organization', 'post', 0);
+          const description = /** @type HTMLElement */ (element.shadowRoot.querySelector('.example-description'));
+          assert.equal(description.innerText, 'This description for the example is never shown');
+        });
+      });
+    });
+  });
+
   describe('_computeExampleTitle()', () => {
     let element = /** @type ApiResourceExampleDocument */ (null);
 
@@ -596,20 +640,6 @@ describe('ApiResourceExampleDocument', () => {
       element = await jsonFixture();
       element.amf = amf;
     });
-
-    async function resolveWhenReady(elm, model, path, method) {
-      return new Promise((resolve) => {
-        const payloads = getPayload(elm, model, path, method);
-        elm.examples = payloads;
-        elm.addEventListener('has-examples-changed', function f(e) {
-          if (!e.detail.value) {
-            return;
-          }
-          elm.removeEventListener('has-examples-changed', f);
-          setTimeout(() => resolve());
-        });
-      });
-    }
 
     it('passes accessibility test', async () => {
       await resolveWhenReady(element, amf, '/IncludedInType', 'post');
