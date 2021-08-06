@@ -562,6 +562,30 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   /**
+   * @param {Example} example
+   * @returns {string}
+   */
+  _computeExampleDescription(example) {
+    const { description } = example
+    return !description ? '' : description;
+  }
+
+  /**
+   * @param {Example} example
+   * @returns {TemplateResult|string}
+   */
+  _descriptionTemplate(example) {
+    if (example.isScalar) {
+      return '';
+    }
+    const description = this._computeExampleDescription(example)
+    if (!description) {
+      return '';
+    }
+    return html`<div class="example-description">${description}</div>`;
+  }
+
+  /**
    * Returns title to render for example
    * @param {Example} example 
    * @returns {String} 'Example' or the example's title
@@ -596,6 +620,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return examples.map((item) => html`
     <div class="item-container">
       ${this._titleTemplate(item)}
+      ${this._descriptionTemplate(item)}
       <div class="renderer">
         <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render

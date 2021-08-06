@@ -2,6 +2,7 @@
   "demo-api/demo-api.raml": "RAML 1.0",
   "raml-types/raml-types.raml": "RAML 1.0",
   "google-drive-api/google-drive-api.raml": "RAML 1.0",
+  "APIC-332/APIC-332.raml": "RAML 1.0",
   "oas-3-api/oas-3-api.yaml": { "type": "OAS 3.0", "mime": "application/yaml" },
   "steveTest-1/stevetest.json": { "type": "OAS 2.0", "mime": "application/json" }
 }
