@@ -579,6 +579,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       return '';
     }
     const description = this._computeExampleDescription(example)
+    if (!description) {
+      return '';
+    }
     return html`<div class="example-description">${description}</div>`;
   }
 
