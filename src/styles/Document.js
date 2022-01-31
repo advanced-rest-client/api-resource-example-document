@@ -33,6 +33,11 @@ export default css`
   display: flex;
 }
 
+.close{
+  display: none;
+}
+
+
 .info-icon {
   margin: 0 12px;
   fill: var(--api-example-accent-color, #FF9800);

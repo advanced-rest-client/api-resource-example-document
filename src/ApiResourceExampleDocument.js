@@ -549,16 +549,48 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.table = e.detail.value;
   }
 
+
+  /**
+   * Collapse the current example panel
+   *
+   * @param {Event} e
+   */
+  _collapsePanel(e) {
+    const button = /** @type HTMLButtonElement */ (e.target);
+    console.log('button: ', button);
+    if ('part' in button) {
+      // @ts-ignore
+      button.part.add('close');
+      // @ts-ignore
+      // button.part.add('code-content-action-button-disabled');
+    }
+    // setTimeout(() => this._resetCopyButtonState(button), 1000);
+  }
+
   /**
    * @param {Example} example
    * @returns {TemplateResult|string} 
    */
   _titleTemplate(example) {
+    const { compatibility } = this;
+
     if (example.isScalar) {
       return '';
     }
     const label = this._computeExampleTitle(example);
-    return html`<div class="example-title">${label}</div>`;
+    return html`
+    <div class="example-title">
+      <span>${label}</span>
+      <anypoint-icon-button
+        part="content-action-button, code-content-action-button"
+        class="arrow-down-small"
+        data-action="collapse"
+        @click="${this._collapsePanel}"
+        ?compatibility="${compatibility}"
+        title="Collapse panel">
+          <arc-icon icon="arrowDropDown"></arc-icon> 
+      </anypoint-icon-button>
+    </div>`;
   }
 
   /**
