@@ -21,11 +21,20 @@ export default css`
   line-height: var(--arc-font-body1-line-height);
   font-size: 1rem;
   display: var(--api-example-title-display, block);
-  padding: 8px 12px;
+  min-height: 36px;
+  padding: 0 10px 0px 10px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
   border-top-right-radius: 2px;
   border-top-left-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expand-icon {
+  height: 30px;
+  width: 30px;
 }
 
 .renderer {
@@ -33,16 +42,17 @@ export default css`
   display: flex;
 }
 
-.close{
-  display: none;
-}
-
-
 .info-icon {
   margin: 0 12px;
   fill: var(--api-example-accent-color, #FF9800);
   width: 24px;
   height: 24px;
+}
+
+.close {
+  height: 0;
+  margin: 0;
+  padding: 0;
 }
 
 api-example-render {

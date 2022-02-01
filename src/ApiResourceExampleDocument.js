@@ -324,7 +324,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.hasExamples = false;
     this.compatibility = false;
     this.renderReadOnly = false;
+    this._collapseExamplePanel = false;
     this._ensureJsonTable();
+    this.expandIcon = this._getTypeExpandIcon();
   }
 
   connectedCallback() {
@@ -549,22 +551,31 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.table = e.detail.value;
   }
 
+   /**
+   * Returns icon to render for toggle button on header panel
+   * it depends by this._collapseExamplePanel is true or false 
+   * @returns {String} 'expandMore' or 'expandLess' 
+   */
+  _getTypeExpandIcon() {
+    return this._collapseExamplePanel ? 'expandLess' : 'expandMore'
+  }
 
   /**
    * Collapse the current example panel
-   *
-   * @param {Event} e
    */
-  _collapsePanel(e) {
-    const button = /** @type HTMLButtonElement */ (e.target);
-    console.log('button: ', button);
-    if ('part' in button) {
-      // @ts-ignore
-      button.part.add('close');
-      // @ts-ignore
-      // button.part.add('code-content-action-button-disabled');
+  _collapsePanel() {
+    const examplePanel = this.shadowRoot.querySelector('.renderer')
+    const infoIcon = this.shadowRoot.querySelector('.info-icon')
+    
+    if (this._collapseExamplePanel) {
+      examplePanel.classList.toggle('close')
+      infoIcon.classList.toggle('close')
+    } else {
+      examplePanel.classList.toggle('close')
+      infoIcon.classList.toggle('close')
     }
-    // setTimeout(() => this._resetCopyButtonState(button), 1000);
+    this._collapseExamplePanel = !this._collapseExamplePanel
+    this.requestUpdate('hasExamples');
   }
 
   /**
@@ -573,22 +584,22 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   _titleTemplate(example) {
     const { compatibility } = this;
-
+    
     if (example.isScalar) {
       return '';
     }
     const label = this._computeExampleTitle(example);
     return html`
-    <div class="example-title">
+    <div class="example-title" 
+      @click="${this._collapsePanel}"
+      ?compatibility="${compatibility}">
       <span>${label}</span>
       <anypoint-icon-button
         part="content-action-button, code-content-action-button"
-        class="arrow-down-small"
+        class="expand-icon"
         data-action="collapse"
-        @click="${this._collapsePanel}"
-        ?compatibility="${compatibility}"
         title="Collapse panel">
-          <arc-icon icon="arrowDropDown"></arc-icon> 
+          <arc-icon icon="${this._getTypeExpandIcon()}"></arc-icon> 
       </anypoint-icon-button>
     </div>`;
   }
