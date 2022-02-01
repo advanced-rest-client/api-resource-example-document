@@ -554,7 +554,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    /**
    * Returns icon to render for toggle button on header panel
    * it depends by this._collapseExamplePanel is true or false 
-   * @returns {String} 'expandMore' or 'expandLess' 
+   * @returns {Icons} 'expandMore' or 'expandLess' 
    */
   _getTypeExpandIcon() {
     return this._collapseExamplePanel ? 'expandLess' : 'expandMore'
@@ -565,17 +565,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   _collapsePanel() {
     const examplePanel = this.shadowRoot.querySelector('.renderer')
-    const infoIcon = this.shadowRoot.querySelector('.info-icon')
+    examplePanel.classList.toggle('close')
     
-    if (this._collapseExamplePanel) {
-      examplePanel.classList.toggle('close')
-      infoIcon.classList.toggle('close')
-    } else {
-      examplePanel.classList.toggle('close')
-      infoIcon.classList.toggle('close')
-    }
     this._collapseExamplePanel = !this._collapseExamplePanel
-    this.requestUpdate('hasExamples');
+    this.requestUpdate('hasExamples')
   }
 
   /**
@@ -595,7 +588,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ?compatibility="${compatibility}">
       <span>${label}</span>
       <anypoint-icon-button
-        part="content-action-button, code-content-action-button"
         class="expand-icon"
         data-action="collapse"
         title="Collapse panel">
@@ -665,7 +657,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
       <div class="renderer">
-        <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
           exportParts="${parts}"
           class="example"

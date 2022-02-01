@@ -40,6 +40,8 @@ export default css`
 .renderer {
   padding: 8px 0;
   display: flex;
+  min-height: 100%;
+  transition: all 2s;
 }
 
 .info-icon {
@@ -53,6 +55,8 @@ export default css`
   height: 0;
   margin: 0;
   padding: 0;
+  min-height: 0;
+  transition: all 2s;
 }
 
 api-example-render {

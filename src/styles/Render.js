@@ -8,6 +8,7 @@ export default css`
 
 .code-wrapper {
   padding: 0px;
+  margin-left: 60px;
 }
 
 [hidden] {
@@ -54,26 +55,22 @@ export default css`
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
+  margin: auto 10px;
   flex-wrap: wrap;
   flex: 1;
 }
 
 anypoint-button {
-  margin-bottom: 8px;
   height: 28px;
   color: var(--api-resource-example-document-button-color);
   font-size: var(--api-resource-example-document-button-font-size);
   font-weight: var(--api-resource-example-document-button-font-weight);
 }
 
-api-example-render {
-  background-color: inherit;
-}
-
-json-table,
-api-example-render {
+json-table {
   overflow: auto;
   max-width: 100%;
+  margin-left: 80px;
 }
 `;
