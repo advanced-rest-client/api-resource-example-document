@@ -37,7 +37,7 @@ export default css`
   width: 30px;
 }
 
-.example-panel {
+.renderer {
   padding: 8px 0;
   display: flex;
   height: 100%;

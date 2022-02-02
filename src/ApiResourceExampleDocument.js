@@ -572,7 +572,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   _collapsePanel() {
     const examplePanel = this.shadowRoot.querySelector('.renderer')
     examplePanel.classList.toggle('close')
-    
+
     this._collapseExamplePanel = !this._collapseExamplePanel
     this.requestUpdate('hasExamples')
   }
@@ -591,7 +591,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     return html`
     <div 
       class="example-title" 
-      @click="${() => this._collapsePanel()}"
+      @click="${this._collapsePanel}"
       ?compatibility="${compatibility}"
     >
       <span>${label}</span>
