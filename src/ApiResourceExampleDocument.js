@@ -120,8 +120,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       /**
        * If enabled, the example panel would be closed
        */
-      __collapseExamplePanel: { type: Boolean },
-      
+      _collapseExamplePanel: { type: Boolean, reflect: true },
     };
   }
 
@@ -311,6 +310,25 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this._hasExamples = value;
     this.requestUpdate('hasExamples', old);
     this.dispatchEvent(new CustomEvent('has-examples-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
+  }
+
+  get _collapseExamplePanel() {
+    return this.__collapseExamplePanel
+  }
+
+  set _collapseExamplePanel(value) {
+    const old = this.__collapseExamplePanel;
+    if (old === value) {
+      return;
+    }
+    this.__collapseExamplePanel = value;
+    this.requestUpdate('_collapseExamplePanel', old);
+    this.dispatchEvent(new CustomEvent('collapse-example-panel-changed', {
       composed: true,
       detail: {
         value
@@ -558,14 +576,13 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   /**
    * Collapse the current example panel
    */
-  _collapsePanel() {
+  _handleCollapsePanel() {
     const examplePanel = this.shadowRoot.querySelector('.renderer')
     const icon = this.shadowRoot.querySelector('.expand-icon')
     icon.classList.toggle('expand-icon-collapse')
     examplePanel.classList.toggle('collapse')
 
     this._collapseExamplePanel = !this._collapseExamplePanel
-    this.requestUpdate('hasExamples')
   }
 
   /**
@@ -581,8 +598,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     const label = this._computeExampleTitle(example);
     return html`<div
       class="example-title" 
-      @click="${this._collapsePanel}"
-      @keyup="${this._collapsePanel}"
+      @click="${this._handleCollapsePanel}"
+      @keyup="${this._handleCollapsePanel}"
       ?compatibility="${compatibility}"
     >
       <span>${label}</span>
