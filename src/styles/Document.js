@@ -37,11 +37,11 @@ export default css`
   width: 30px;
 }
 
-.renderer {
+.example-panel {
   padding: 8px 0;
   display: flex;
-  min-height: 100%;
-  transition: all 2s;
+  height: 100%;
+  transition: 200ms all 200ms;
 }
 
 .info-icon {
@@ -52,11 +52,10 @@ export default css`
 }
 
 .close {
-  height: 0;
+  height: 0%;
   margin: 0;
   padding: 0;
-  min-height: 0;
-  transition: all 2s;
+  transition: 200ms all 200ms;
 }
 
 api-example-render {

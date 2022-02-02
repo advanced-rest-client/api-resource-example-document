@@ -9,6 +9,7 @@ import elementStyles from './styles/Document.js';
 
 /** @typedef {import('lit-element').TemplateResult} TemplateResult */
 /** @typedef {import('@advanced-rest-client/arc-types').FormTypes.Example} Example */
+/** @typedef {import('@advanced-rest-client/arc-icons').ARCIconElement} Icon */
 
 /**
  * `api-resource-example-document`
@@ -117,6 +118,11 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * read-only properties to the example
        */
       renderReadOnly: { type: Boolean },
+      /**
+       * If enabled, the example panel would be closed
+       */
+      __collapseExamplePanel: { type: Boolean },
+      
     };
   }
 
@@ -326,7 +332,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.renderReadOnly = false;
     this._collapseExamplePanel = false;
     this._ensureJsonTable();
-    this.expandIcon = this._getTypeExpandIcon();
+    this.expandIcon = this._getIconTypeExpand();
   }
 
   connectedCallback() {
@@ -554,9 +560,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    /**
    * Returns icon to render for toggle button on header panel
    * it depends by this._collapseExamplePanel is true or false 
-   * @returns {Icons} 'expandMore' or 'expandLess' 
+   * @returns {Icon|String} 'expandMore' or 'expandLess' 
    */
-  _getTypeExpandIcon() {
+  _getIconTypeExpand() {
     return this._collapseExamplePanel ? 'expandLess' : 'expandMore'
   }
 
@@ -583,15 +589,17 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     }
     const label = this._computeExampleTitle(example);
     return html`
-    <div class="example-title" 
-      @click="${this._collapsePanel}"
-      ?compatibility="${compatibility}">
+    <div 
+      class="example-title" 
+      @click="${() => this._collapsePanel()}"
+      ?compatibility="${compatibility}"
+    >
       <span>${label}</span>
       <anypoint-icon-button
         class="expand-icon"
         data-action="collapse"
         title="Collapse panel">
-          <arc-icon icon="${this._getTypeExpandIcon()}"></arc-icon> 
+          <arc-icon icon="${this._getIconTypeExpand()}"></arc-icon> 
       </anypoint-icon-button>
     </div>`;
   }
