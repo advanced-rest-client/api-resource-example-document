@@ -61,6 +61,13 @@ export default css`
   flex: 1;
 }
 
+.info-icon {
+  margin: 0 12px;
+  fill: var(--api-example-accent-color, #FF9800);
+  width: 24px;
+  height: 24px;
+}
+
 anypoint-button {
   height: 28px;
   color: var(--api-resource-example-document-button-color);

@@ -571,6 +571,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   _collapsePanel() {
     const examplePanel = this.shadowRoot.querySelector('.renderer')
+    const icon = this.shadowRoot.querySelector('.expand-icon')
+    icon.classList.toggle('expand-icon-collapse')
     examplePanel.classList.toggle('collapse')
 
     this._collapseExamplePanel = !this._collapseExamplePanel
@@ -588,18 +590,19 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       return '';
     }
     const label = this._computeExampleTitle(example);
-    return html`
-    <div 
+    return html`<div
       class="example-title" 
       @click="${this._collapsePanel}"
+      @keyup="${this._collapsePanel}"
       ?compatibility="${compatibility}"
     >
       <span>${label}</span>
       <anypoint-icon-button
-        class="expand-icon"
+        class="expand-icon-wrapper"
         data-action="collapse"
-        title="Collapse panel">
-          <arc-icon icon="${this._getIconTypeExpand()}"></arc-icon> 
+        title="Collapse panel"
+      >
+          <arc-icon class="expand-icon" icon="expandLess"></arc-icon> 
       </anypoint-icon-button>
     </div>`;
   }
