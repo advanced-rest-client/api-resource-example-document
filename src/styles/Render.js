@@ -8,7 +8,7 @@ export default css`
 
 .code-wrapper {
   padding: 0px;
-  margin-left: 60px;
+  margin-left: 42px;
 }
 
 [hidden] {
@@ -56,7 +56,8 @@ export default css`
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  margin: auto 10px;
+  margin: 0;
+  margin-right: 10px;
   flex-wrap: wrap;
   flex: 1;
 }
@@ -78,6 +79,6 @@ anypoint-button {
 json-table {
   overflow: auto;
   max-width: 100%;
-  margin-left: 80px;
+  margin-left: 50px;
 }
 `;

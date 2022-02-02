@@ -25,8 +25,7 @@ export default css`
   padding: 0 10px 0px 10px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
-  border-top-right-radius: 2px;
-  border-top-left-radius: 2px;
+  border-radius: 0px 2px 0px 0px;
   display: flex;
   justify-content: space-between;
   align-items: center;
