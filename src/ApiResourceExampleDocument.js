@@ -563,7 +563,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    * @returns {Icon|String} 'expandMore' or 'expandLess' 
    */
   _getIconTypeExpand() {
-    return this._collapseExamplePanel ? 'expandLess' : 'expandMore'
+    return this._collapseExamplePanel ? 'expandMore' : 'expandLess'
   }
 
   /**
@@ -571,7 +571,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   _collapsePanel() {
     const examplePanel = this.shadowRoot.querySelector('.renderer')
-    examplePanel.classList.toggle('close')
+    examplePanel.classList.toggle('collapse')
 
     this._collapseExamplePanel = !this._collapseExamplePanel
     this.requestUpdate('hasExamples')

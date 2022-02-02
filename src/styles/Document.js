@@ -40,8 +40,11 @@ export default css`
 .renderer {
   padding: 8px 0;
   display: flex;
-  height: 100%;
-  transition: 200ms all 200ms;
+  max-height: 500px;
+  -webkit-transition: all 0.4s 0.1s ease-in-out;
+-moz-transition: all 0.4s 0.1s ease-in-out;
+-o-transition: all 0.4s 0.1s ease-in-out;
+transition: all 0.4s 0.1s ease-in-out;
 }
 
 .info-icon {
@@ -51,11 +54,15 @@ export default css`
   height: 24px;
 }
 
-.close {
-  height: 0%;
+.collapse {
+  max-height: 0;
   margin: 0;
+  overflow: hidden;
   padding: 0;
-  transition: 200ms all 200ms;
+  -webkit-transition: all 0.4s 0.1s ease-in-out;
+-moz-transition: all 0.4s 0.1s ease-in-out;
+-o-transition: all 0.4s 0.1s ease-in-out;
+transition: all 0.4s 0.1s ease-in-out;
 }
 
 api-example-render {
