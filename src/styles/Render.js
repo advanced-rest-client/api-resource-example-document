@@ -76,7 +76,8 @@ anypoint-button {
   font-weight: var(--api-resource-example-document-button-font-weight);
 }
 
-json-table {
+json-table,
+api-example-render {
   overflow: auto;
   max-width: 100%;
   margin-left: 50px;

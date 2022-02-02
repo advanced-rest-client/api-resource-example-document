@@ -9,7 +9,6 @@ import elementStyles from './styles/Document.js';
 
 /** @typedef {import('lit-element').TemplateResult} TemplateResult */
 /** @typedef {import('@advanced-rest-client/arc-types').FormTypes.Example} Example */
-/** @typedef {import('@advanced-rest-client/arc-icons').ARCIconElement} Icon */
 
 /**
  * `api-resource-example-document`
@@ -332,7 +331,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.renderReadOnly = false;
     this._collapseExamplePanel = false;
     this._ensureJsonTable();
-    this.expandIcon = this._getIconTypeExpand();
   }
 
   connectedCallback() {
@@ -555,15 +553,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
   _tableCHangedHandler(e) {
     this.table = e.detail.value;
-  }
-
-   /**
-   * Returns icon to render for toggle button on header panel
-   * it depends by this._collapseExamplePanel is true or false 
-   * @returns {Icon|String} 'expandMore' or 'expandLess' 
-   */
-  _getIconTypeExpand() {
-    return this._collapseExamplePanel ? 'expandMore' : 'expandLess'
   }
 
   /**
