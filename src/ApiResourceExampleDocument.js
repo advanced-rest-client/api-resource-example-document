@@ -591,13 +591,13 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   _titleTemplate(example) {
     const { compatibility } = this;
-    
+
     if (example.isScalar) {
       return '';
     }
     const label = this._computeExampleTitle(example);
     return html`<div
-      class="example-title" 
+      class="example-title"
       @click="${this._handleCollapsePanel}"
       @keyup="${this._handleCollapsePanel}"
       ?compatibility="${compatibility}"
