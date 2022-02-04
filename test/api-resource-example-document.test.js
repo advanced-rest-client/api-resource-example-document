@@ -563,7 +563,7 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(expandIconCollapsed);
         });
 
-        it('test toggle example panel when example title is clicked',  async () => {
+        it('should expand example panel on click ',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
           await aTimeout(100);
