@@ -8,6 +8,7 @@ export default css`
 
 .code-wrapper {
   padding: 0px;
+  margin-left: 42px;
 }
 
 [hidden] {
@@ -54,26 +55,31 @@ export default css`
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
+  margin: 0;
+  margin-right: 10px;
   flex-wrap: wrap;
   flex: 1;
 }
 
+.info-icon {
+  margin: 0 12px;
+  fill: var(--api-example-accent-color, #FF9800);
+  width: 24px;
+  height: 24px;
+}
+
 anypoint-button {
-  margin-bottom: 8px;
   height: 28px;
   color: var(--api-resource-example-document-button-color);
   font-size: var(--api-resource-example-document-button-font-size);
   font-weight: var(--api-resource-example-document-button-font-weight);
 }
 
-api-example-render {
-  background-color: inherit;
-}
-
 json-table,
 api-example-render {
   overflow: auto;
   max-width: 100%;
+  margin-left: 50px;
 }
 `;

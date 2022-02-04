@@ -117,6 +117,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * read-only properties to the example
        */
       renderReadOnly: { type: Boolean },
+      /**
+       * If enabled, the example panel would be closed
+       */
+      _collapseExamplePanel: { type: Boolean, reflect: true },
     };
   }
 
@@ -313,6 +317,19 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     }));
   }
 
+  get _collapseExamplePanel() {
+    return this.__collapseExamplePanel
+  }
+
+  set _collapseExamplePanel(value) {
+    const old = this.__collapseExamplePanel;
+    if (old === value) {
+      return;
+    }
+    this.__collapseExamplePanel = value;
+    this.requestUpdate('_collapseExamplePanel', old);
+  }
+
   constructor() {
     super();
     this._onStorageChanged = this._onStorageChanged.bind(this);
@@ -324,6 +341,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this.hasExamples = false;
     this.compatibility = false;
     this.renderReadOnly = false;
+    this._collapseExamplePanel = false;
     this._ensureJsonTable();
   }
 
@@ -550,15 +568,43 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   /**
+   * Collapse the current example panel
+   */
+  _handleCollapsePanel() {
+    const examplePanel = this.shadowRoot.querySelector('.renderer')
+    const icon = this.shadowRoot.querySelector('.expand-icon')
+    icon.classList.toggle('expand-icon-collapse')
+    examplePanel.classList.toggle('collapse')
+
+    this._collapseExamplePanel = !this._collapseExamplePanel
+  }
+
+  /**
    * @param {Example} example
    * @returns {TemplateResult|string} 
    */
   _titleTemplate(example) {
+    const { compatibility } = this;
+
     if (example.isScalar) {
       return '';
     }
     const label = this._computeExampleTitle(example);
-    return html`<div class="example-title">${label}</div>`;
+    return html`<div
+      class="example-title"
+      @click="${this._handleCollapsePanel}"
+      @keyup="${this._handleCollapsePanel}"
+      ?compatibility="${compatibility}"
+    >
+      <span>${label}</span>
+      <anypoint-icon-button
+        class="expand-icon-wrapper"
+        data-action="collapse"
+        title="Collapse panel"
+      >
+          <arc-icon class="expand-icon" icon="expandLess"></arc-icon> 
+      </anypoint-icon-button>
+    </div>`;
   }
 
   /**
@@ -622,7 +668,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
       <div class="renderer">
-        <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
           exportParts="${parts}"
           class="example"

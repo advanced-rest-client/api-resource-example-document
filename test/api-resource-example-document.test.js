@@ -541,6 +541,39 @@ describe('ApiResourceExampleDocument', () => {
           assert.equal(titles[2].innerText.trim(), 'User 3');
           assert.equal(titles[3].innerText.trim(), 'User 4');
         });
+
+        it('should expand example panel when _handleCollapsePanel is called',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+          await aTimeout(100);
+
+          const examplePanelNoCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.collapse'));
+          assert.isNull(examplePanelNoCollapsed);
+          const expandIconNoCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.expand-icon-collapse'));
+          assert.isNull(expandIconNoCollapsed);
+
+          setTimeout(() => element._handleCollapsePanel());
+
+          const examplePanelCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.collapse'));
+          assert.isDefined(examplePanelCollapsed);
+          const expandIconCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.expand-icon-collapse'));
+          assert.isDefined(expandIconCollapsed);
+        });
+
+        it('should expand example panel on click ',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+          await aTimeout(100);
+
+          const examplePanel = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
+          examplePanel.click()
+          await aTimeout(100);
+
+          const examplePanelCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.collapse'));
+          const expandIconCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.expand-icon-collapse'));
+          assert.isDefined(examplePanelCollapsed);
+          assert.isDefined(expandIconCollapsed);
+        });
       });
     });
   });

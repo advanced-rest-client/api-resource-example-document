@@ -21,23 +21,67 @@ export default css`
   line-height: var(--arc-font-body1-line-height);
   font-size: 1rem;
   display: var(--api-example-title-display, block);
-  padding: 8px 12px;
+  min-height: 36px;
+  padding: 0 10px 0px 10px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
-  border-top-right-radius: 2px;
-  border-top-left-radius: 2px;
+  border-radius: 0px 2px 0px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.expand-icon {
+  height: 25px;
+  width: 25px;
+  -moz-transform:none;
+  -webkit-transform:none;
+  -o-transform:none;
+  -ms-transform:none;
+  transform:none;
+  -webkit-transition: transform 0.2s 0.2s ease;
+  -moz-transition: transform 0.2s 0.2s ease;
+  -o-transition: transform 0.2s 0.2s ease;
+  transition: transform 0.2s 0.2s ease;
+}
+
+.expand-icon-wrapper {
+  height: 30px;
+  width: 30px;
 }
 
 .renderer {
   padding: 8px 0;
   display: flex;
+  max-height: 500px;
+  -webkit-transition: all 0.4s 0.1s ease-in-out;
+  -moz-transition: all 0.4s 0.1s ease-in-out;
+  -o-transition: all 0.4s 0.1s ease-in-out;
+  transition: all 0.4s 0.1s ease-in-out;
 }
 
-.info-icon {
-  margin: 0 12px;
-  fill: var(--api-example-accent-color, #FF9800);
-  width: 24px;
-  height: 24px;
+.collapse {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  -webkit-transition: all 0.4s 0.1s ease-in-out;
+  -moz-transition: all 0.4s 0.1s ease-in-out;
+  -o-transition: all 0.4s 0.1s ease-in-out;
+  transition: all 0.4s 0.1s ease-in-out;
+}
+
+.expand-icon-collapse {
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  -webkit-transition: transform 0.2s 0.2s ease;
+  -moz-transition: transform 0.2s 0.2s ease;
+  -o-transition: transform 0.2s 0.2s ease;
+  transition: transform 0.2s 0.2s ease;
 }
 
 api-example-render {

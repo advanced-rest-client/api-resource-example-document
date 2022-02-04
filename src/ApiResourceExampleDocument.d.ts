@@ -216,4 +216,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   _computeExampleDescription(example: Example): string;
 
   _exampleTitleIsMediaType(example: Example): boolean;
+
+  _handleCollapsePanel(): void;
 }

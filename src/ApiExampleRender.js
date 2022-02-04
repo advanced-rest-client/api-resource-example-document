@@ -410,15 +410,17 @@ export class ApiExampleRender extends LitElement {
     const isJson = this._computeIsJson(this.isJson, example.value);
     return html`
     <div class="example-actions">
-      <anypoint-button
-        part="content-action-button, code-content-action-button"
-        class="action-button"
-        data-action="copy"
-        @click="${this._copyToClipboard}"
-        ?compatibility="${compatibility}"
-        title="Copy example to clipboard"
-      >Copy</anypoint-button>
-      ${isJson ? html`
+    <arc-icon class="info-icon" icon="code"></arc-icon>
+      <div>
+        <anypoint-button
+          part="content-action-button, code-content-action-button"
+          class="action-button"
+          data-action="copy"
+          @click="${this._copyToClipboard}"
+          ?compatibility="${compatibility}"
+          title="Copy example to clipboard"
+        >Copy</anypoint-button>
+        ${isJson ? html`
         <anypoint-button
           part="content-action-button, code-content-action-button"
           class="action-button"
@@ -429,17 +431,18 @@ export class ApiExampleRender extends LitElement {
           ?compatibility="${compatibility}"
           title="Toggle between table and JSON view"
         >Table view</anypoint-button>` : ''}
-      ${hasRaw ? html`
-        <anypoint-button
-          part="content-action-button, code-content-action-button"
-          class="action-button"
-          data-action="code"
-          toggles
-          .active="${this.sourceOpened}"
-          @active-changed="${this._toggleSourceOpened}"
-          ?compatibility="${compatibility}"
-          title="Toggle between JSON and example source view"
-        >Source view</anypoint-button>` : ''}
+        ${hasRaw ? html`
+          <anypoint-button
+            part="content-action-button, code-content-action-button"
+            class="action-button"
+            data-action="code"
+            toggles
+            .active="${this.sourceOpened}"
+            @active-changed="${this._toggleSourceOpened}"
+            ?compatibility="${compatibility}"
+            title="Toggle between JSON and example source view"
+          >Source view</anypoint-button>` : ''}
+      </div>
     </div>`;
   }
 
