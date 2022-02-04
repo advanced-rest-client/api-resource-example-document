@@ -542,7 +542,7 @@ describe('ApiResourceExampleDocument', () => {
           assert.equal(titles[3].innerText.trim(), 'User 4');
         });
 
-        it('test method _handleCollapsePanel for toggle panel',  async () => {
+        it('should expand example panel when _handleCollapsePanel is called',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
           await aTimeout(100);
