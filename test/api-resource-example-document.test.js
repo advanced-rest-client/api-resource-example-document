@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
-import { fixture, assert, nextFrame, aTimeout, html, oneEvent } from '@open-wc/testing';
+import { fixture, assert, nextFrame, aTimeout, html } from '@open-wc/testing';
 import sinon from 'sinon';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
@@ -553,9 +553,6 @@ describe('ApiResourceExampleDocument', () => {
           assert.isNull(expandIconNoCollapsed);
 
           setTimeout(() => element._handleCollapsePanel());
-          const { detail } = await oneEvent(element, 'collapse-example-panel-changed');
-
-          assert.isTrue(detail.value);
 
           const examplePanelCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.collapse'));
           assert.isDefined(examplePanelCollapsed);

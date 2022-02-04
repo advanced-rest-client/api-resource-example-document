@@ -328,12 +328,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     }
     this.__collapseExamplePanel = value;
     this.requestUpdate('_collapseExamplePanel', old);
-    this.dispatchEvent(new CustomEvent('collapse-example-panel-changed', {
-      composed: true,
-      detail: {
-        value
-      }
-    }));
   }
 
   constructor() {
