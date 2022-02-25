@@ -121,6 +121,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * If enabled, the example panel would be closed
        */
       _collapseExamplePanel: { type: Boolean, reflect: true },
+      minHeight: '',
     };
   }
 
@@ -310,6 +311,28 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     this._hasExamples = value;
     this.requestUpdate('hasExamples', old);
     this.dispatchEvent(new CustomEvent('has-examples-changed', {
+      composed: true,
+      detail: {
+        value
+      }
+    }));
+  }
+
+  get minHeight() {
+    return this._minHeight;
+  }
+
+  /**
+   * @param {string} value
+   */
+  set minHeight(value) {
+    const old = this._minHeight;
+    if (old === value) {
+      return;
+    }
+    this._minHeight = value;
+    this.requestUpdate('minHeight', old);
+    this.dispatchEvent(new CustomEvent('min-height-changed', {
       composed: true,
       detail: {
         value
@@ -667,7 +690,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     <div class="item-container">
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
-      <div class="renderer">
+      <div class="renderer" style="min-height: ${this.minHeight}">
         <api-example-render
           exportParts="${parts}"
           class="example"

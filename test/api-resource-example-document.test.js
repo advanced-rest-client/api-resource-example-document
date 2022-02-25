@@ -560,6 +560,17 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(expandIconCollapsed);
         });
 
+        it('should change min-height panel when minHeight is setted',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+          element.minHeight = '300px';
+
+          await aTimeout(100);
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
+
+          assert.equal(wrraperExample.style.minHeight, '300px');
+        });
+
         it('should expand example panel on click ',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
