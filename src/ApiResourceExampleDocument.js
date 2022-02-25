@@ -36,8 +36,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   get styles() {
     return [
       css`
-        .customRedererMinHeight {
-          min-height: ${unsafeCSS(this.minHeight)};
+        .customMaxHeight {
+          max-height: ${unsafeCSS(this.maxHeight)};
         }
       `,
       elementStyles
@@ -129,9 +129,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        */
       _collapseExamplePanel: { type: Boolean, reflect: true },
       /**
-       * If has, the example panel would have a minHeigh setted
+       * If has, the example panel would have a maxHeight setted
        */
-      minHeight: { type: String },
+      maxHeight: { type: String },
     };
   }
 
@@ -328,21 +328,21 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     }));
   }
 
-  get minHeight() {
-    return this._minHeight;
+  get maxHeight() {
+    return this._maxHeight;
   }
 
   /**
    * @param {string} value
    */
-  set minHeight(value) {
-    const old = this._minHeight;
+  set maxHeight(value) {
+    const old = this._maxHeight;
     if (old === value) {
       return;
     }
-    this._minHeight = value;
-    this.requestUpdate('minHeight', old);
-    this.dispatchEvent(new CustomEvent('min-height-changed', {
+    this._maxHeight = value;
+    this.requestUpdate('maxHeight', old);
+    this.dispatchEvent(new CustomEvent('max-height-changed', {
       composed: true,
       detail: {
         value
@@ -696,13 +696,13 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-    const customRedererMinHeight = this.minHeight ? 'customRedererMinHeight' : '';
+    const customRedererMaxHeight = this.maxHeight ? 'customMaxHeight' : 'defaultMaxHeight';
 
     return examples.map((item) => html`
     <div class="item-container">
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
-      <div class="renderer ${customRedererMinHeight}">
+      <div class="renderer ${customRedererMaxHeight}">
         <api-example-render
           exportParts="${parts}"
           class="example"
