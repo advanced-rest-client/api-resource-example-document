@@ -62,6 +62,7 @@ export default css`
 }
 
 .collapse {
+  min-height: 0;
   max-height: 0;
   margin: 0;
   overflow: hidden;

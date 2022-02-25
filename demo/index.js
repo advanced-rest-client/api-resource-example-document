@@ -98,6 +98,7 @@ class ApiDemo extends ApiDemoPage {
     const mediaType = this.mediaTypes[index].label;
     const body = this.payloads[index];
     this.hasExamples = true;
+    this.minHeight = '200px';
     this.examples = body;
     this.mediaType = mediaType;
   }
@@ -126,7 +127,7 @@ class ApiDemo extends ApiDemoPage {
         .amf="${this.amf}"
         .examples="${this.examples}"
         mediatype="${this.mediaType}"
-        minHeight="600px"
+        minHeight="${this.minHeight}"
         ></api-resource-example-document>` :
       html`<p>Examples not found in selected method</p>`;
   }
