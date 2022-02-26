@@ -696,13 +696,13 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-    const customRedererMaxHeight = this.maxHeight ? 'customMaxHeight' : 'defaultMaxHeight';
+    const classMaxHeight = this.maxHeight ? 'customMaxHeight' : 'defaultMaxHeight';
 
     return examples.map((item) => html`
     <div class="item-container">
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
-      <div class="renderer ${customRedererMaxHeight}">
+      <div class="renderer ${classMaxHeight}">
         <api-example-render
           exportParts="${parts}"
           class="example"
