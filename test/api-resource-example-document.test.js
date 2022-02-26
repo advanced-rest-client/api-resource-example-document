@@ -560,15 +560,25 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(expandIconCollapsed);
         });
 
-        it('should change min-height panel when minHeight is setted',  async () => {
+        it('should change max-height panel when maxHeight is setted',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
-          element.minHeight = '300px';
+          element.maxHeight = '300px';
 
           await aTimeout(100);
-          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.customMaxHeight'));
 
-          assert.equal(wrraperExample.style.minHeight, '300px');
+          assert.isDefined(wrraperExample);
+        });
+
+        it('should don`t have max-height panel when maxHeight is setted',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+
+          await aTimeout(100);
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.defaultMaxHeight'));
+
+          assert.isDefined(wrraperExample);
         });
 
         it('should expand example panel on click ',  async () => {

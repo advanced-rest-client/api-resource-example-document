@@ -46,10 +46,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   mediaType: string;
   /**
-   * Minimium height of the example panel
+   * Maximum height of the example panel
    * @attribute
    */
-  minHeight: string;
+  maxHeight: string;
   /**
    * Type (model) name for which examples are generated for.
    * This is used by RAML to XML examples processor to wrap the example
