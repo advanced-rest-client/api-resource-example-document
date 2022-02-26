@@ -560,7 +560,7 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(expandIconCollapsed);
         });
 
-        it('should change max-height panel when maxHeight is setted',  async () => {
+        it('should change panel max-height when maxHeight property is settled with custom styles',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
           element.maxHeight = '300px';
@@ -571,7 +571,7 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(wrraperExample);
         });
 
-        it('should don`t have max-height panel when maxHeight is setted',  async () => {
+        it('should have max-height default when maxHeight property is not custom',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
 
