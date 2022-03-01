@@ -342,12 +342,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     }
     this._maxHeight = value;
     this.requestUpdate('maxHeight', old);
-    this.dispatchEvent(new CustomEvent('max-height-changed', {
-      composed: true,
-      detail: {
-        value
-      }
-    }));
   }
 
   get _collapseExamplePanel() {

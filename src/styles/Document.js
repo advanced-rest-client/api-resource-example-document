@@ -22,10 +22,10 @@ export default css`
   font-size: 1rem;
   display: var(--api-example-title-display, block);
   min-height: 36px;
-  padding: 0 10px 0px 10px;
+  padding: 0 10px 0 10px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
-  border-radius: 0px 2px 0px 0px;
+  border-radius: 0 2px 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,7 +61,7 @@ export default css`
 }
 
 .defaultMaxHeight {
-  max-height: 500px
+  max-height: var(--api-resource-example-document-max-height, 500px);
 }
 
 .collapse {
