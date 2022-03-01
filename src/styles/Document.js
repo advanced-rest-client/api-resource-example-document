@@ -54,14 +54,11 @@ export default css`
 .renderer {
   padding: 8px 0;
   display: flex;
+  max-height: var(--api-resource-example-document-max-height, 500px);
   -webkit-transition: all 0.4s 0.1s ease-in-out;
   -moz-transition: all 0.4s 0.1s ease-in-out;
   -o-transition: all 0.4s 0.1s ease-in-out;
   transition: all 0.4s 0.1s ease-in-out;
-}
-
-.defaultMaxHeight {
-  max-height: var(--api-resource-example-document-max-height, 500px);
 }
 
 .collapse {

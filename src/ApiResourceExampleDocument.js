@@ -36,8 +36,8 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   get styles() {
     return [
       css`
-        .customMaxHeight {
-          max-height: ${unsafeCSS(this.maxHeight)};
+        .renderer.customMaxHeight {
+          max-height: var(--api-resource-example-document-max-height, ${unsafeCSS(this.maxHeight)});
         }
       `,
       elementStyles
@@ -690,7 +690,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-    const classMaxHeight = this.maxHeight ? 'customMaxHeight' : 'defaultMaxHeight';
+    const classMaxHeight = this.maxHeight ? 'customMaxHeight' : '';
 
     return examples.map((item) => html`
     <div class="item-container">
