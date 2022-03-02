@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
-import {LitElement, html} from 'lit-element';
+import { LitElement, html } from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import { ExampleGenerator } from '@api-components/api-example-generator';
 import '@advanced-rest-client/arc-icons/arc-icon.js';
@@ -663,7 +663,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-
     return examples.map((item) => html`
     <div class="item-container">
       ${this._titleTemplate(item)}
