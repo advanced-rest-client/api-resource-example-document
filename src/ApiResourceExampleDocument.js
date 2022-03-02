@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
-import {LitElement, html, css, unsafeCSS} from 'lit-element';
+import {LitElement, html} from 'lit-element';
 import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import { ExampleGenerator } from '@api-components/api-example-generator';
 import '@advanced-rest-client/arc-icons/arc-icon.js';
@@ -34,14 +34,7 @@ import elementStyles from './styles/Document.js';
  */
 export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   get styles() {
-    return [
-      css`
-        .renderer.customMaxHeight {
-          max-height: var(--api-resource-example-document-max-height, ${unsafeCSS(this.maxHeight)});
-        }
-      `,
-      elementStyles
-    ];
+    return elementStyles;
   }
 
   static get properties() {
@@ -128,10 +121,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
        * If enabled, the example panel would be closed
        */
       _collapseExamplePanel: { type: Boolean, reflect: true },
-      /**
-       * If has, the example panel would have a maxHeight setted
-       */
-      maxHeight: { type: String },
     };
   }
 
@@ -326,22 +315,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
         value
       }
     }));
-  }
-
-  get maxHeight() {
-    return this._maxHeight;
-  }
-
-  /**
-   * @param {string} value
-   */
-  set maxHeight(value) {
-    const old = this._maxHeight;
-    if (old === value) {
-      return;
-    }
-    this._maxHeight = value;
-    this.requestUpdate('maxHeight', old);
   }
 
   get _collapseExamplePanel() {
@@ -690,13 +663,12 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-    const classMaxHeight = this.maxHeight ? 'customMaxHeight' : '';
 
     return examples.map((item) => html`
     <div class="item-container">
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
-      <div class="renderer ${classMaxHeight}">
+      <div class="renderer">
         <api-example-render
           exportParts="${parts}"
           class="example"

@@ -61,7 +61,7 @@ export default css`
   transition: all 0.4s 0.1s ease-in-out;
 }
 
-.collapse {
+.renderer.collapse {
   max-height: 0;
   margin: 0;
   overflow: hidden;
