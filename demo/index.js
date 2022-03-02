@@ -125,8 +125,7 @@ class ApiDemo extends ApiDemoPage {
       html`<api-resource-example-document
         .amf="${this.amf}"
         .examples="${this.examples}"
-        mediatype="${this.mediaType}"
-        ></api-resource-example-document>` :
+        mediatype="${this.mediaType}"></api-resource-example-document>` :
       html`<p>Examples not found in selected method</p>`;
   }
 
