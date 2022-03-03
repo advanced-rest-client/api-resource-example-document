@@ -563,22 +563,22 @@ describe('ApiResourceExampleDocument', () => {
         it('should have panel max-height when maxHeight property is settled with custom styles',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
-          element.maxHeight = '300px';
 
           await aTimeout(100);
-          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.customMaxHeight'));
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
 
-          assert.isDefined(wrraperExample);
+          assert.equal(getComputedStyle(wrraperExample).maxHeight, '500px');
         });
 
-        it('should have the maximum height that the client sets in the maxHight prop',  async () => {
+        it('should have panel max-height when maxHeight property is settled with custom styles variables',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
+          element.style.setProperty('--api-resource-example-document-max-height', '100px');
 
           await aTimeout(100);
-          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.defaultMaxHeight'));
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
 
-          assert.isDefined(wrraperExample);
+          assert.equal(getComputedStyle(wrraperExample).maxHeight, '100px');
         });
 
         it('should expand example panel on click ',  async () => {
