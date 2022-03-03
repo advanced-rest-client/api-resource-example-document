@@ -595,6 +595,13 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(examplePanelCollapsed);
           assert.isDefined(expandIconCollapsed);
         });
+
+        it('should render code icon', async () => {
+          const payloads = getPayload(element, amf, '/IncludedInType', 'post');
+          element.examples = payloads;
+          await nextFrame();
+          assert.exists(element.shadowRoot.querySelector('.info-icon'));
+        });
       });
     });
   });
