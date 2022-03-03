@@ -94,4 +94,11 @@ api-example-render {
 .example-description {
   padding: 10px 12px;
 }
+
+.info-icon {
+  margin: 0 12px;
+  fill: var(--api-example-accent-color, #FF9800);
+  width: 24px;
+  height: 24px;
+}
 `;

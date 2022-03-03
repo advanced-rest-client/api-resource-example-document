@@ -55,18 +55,10 @@ export default css`
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: space-between;
-  margin: 0;
-  margin-right: 10px;
+  justify-content: flex-end;
+  
   flex-wrap: wrap;
   flex: 1;
-}
-
-.info-icon {
-  margin: 0 12px;
-  fill: var(--api-example-accent-color, #FF9800);
-  width: 24px;
-  height: 24px;
 }
 
 anypoint-button {

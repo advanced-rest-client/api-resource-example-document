@@ -668,6 +668,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
       <div class="renderer">
+        <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
           exportParts="${parts}"
           class="example"
