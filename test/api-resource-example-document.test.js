@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
-import { fixture, assert, nextFrame, aTimeout, html } from '@open-wc/testing';
+import { fixture, assert, nextFrame, aTimeout, html, waitUntil } from '@open-wc/testing';
 import sinon from 'sinon';
 import { AmfLoader } from './amf-loader.js';
 import '../api-resource-example-document.js';
@@ -599,7 +599,7 @@ describe('ApiResourceExampleDocument', () => {
         it('should render code icon', async () => {
           const payloads = getPayload(element, amf, '/IncludedInType', 'post');
           element.examples = payloads;
-          await nextFrame();
+          await waitUntil( () => Boolean(element.shadowRoot.querySelector('.info-icon')));
           assert.exists(element.shadowRoot.querySelector('.info-icon'));
         });
       });
