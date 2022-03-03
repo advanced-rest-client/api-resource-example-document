@@ -560,6 +560,27 @@ describe('ApiResourceExampleDocument', () => {
           assert.isDefined(expandIconCollapsed);
         });
 
+        it('should have panel max-height when maxHeight property is settled with custom styles',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+
+          await aTimeout(100);
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
+
+          assert.equal(getComputedStyle(wrraperExample).maxHeight, '500px');
+        });
+
+        it('should have panel max-height when maxHeight property is settled with custom styles variables',  async () => {
+          const payloads = getPayload(element, amf, '/IncludedInline', 'post');
+          element.examples = payloads;
+          element.style.setProperty('--api-resource-example-document-max-height', '100px');
+
+          await aTimeout(100);
+          const wrraperExample = /** @type HTMLElement */ (element.shadowRoot.querySelector('.renderer'));
+
+          assert.equal(getComputedStyle(wrraperExample).maxHeight, '100px');
+        });
+
         it('should expand example panel on click ',  async () => {
           const payloads = getPayload(element, amf, '/IncludedInline', 'post');
           element.examples = payloads;
