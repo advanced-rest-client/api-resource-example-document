@@ -22,7 +22,7 @@ export default css`
   font-size: 1rem;
   display: var(--api-example-title-display, block);
   min-height: 36px;
-  padding: 0 10px 0 10px;
+  padding: 0px 12px;
   background-color: var(--api-example-title-background-color, #ff9800);
   color: var(--api-example-title-color, #000);
   border-radius: 0 2px 0 0;
@@ -93,5 +93,12 @@ api-example-render {
   
 .example-description {
   padding: 10px 12px;
+}
+
+.info-icon {
+  margin: 0 12px;
+  fill: var(--api-example-accent-color, #FF9800);
+  width: 24px;
+  height: 24px;
 }
 `;

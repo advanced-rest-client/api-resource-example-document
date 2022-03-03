@@ -584,8 +584,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    * @returns {TemplateResult|string} 
    */
   _titleTemplate(example) {
-    const { compatibility } = this;
-
     if (example.isScalar) {
       return '';
     }
@@ -594,7 +592,6 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       class="example-title"
       @click="${this._handleCollapsePanel}"
       @keyup="${this._handleCollapsePanel}"
-      ?compatibility="${compatibility}"
     >
       <span>${label}</span>
       <anypoint-icon-button
@@ -668,6 +665,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
       ${this._titleTemplate(item)}
       ${this._descriptionTemplate(item)}
       <div class="renderer">
+        <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
           exportParts="${parts}"
           class="example"
