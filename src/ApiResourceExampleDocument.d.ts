@@ -217,5 +217,5 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
   _exampleTitleIsMediaType(example: Example): boolean;
 
-  _handleCollapsePanel(): void;
+  _handleCollapsePanel(example: Example, index: Number): void;
 }
