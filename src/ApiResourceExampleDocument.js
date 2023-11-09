@@ -568,30 +568,32 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   /**
+   * @param {Example} example
+   * @param {number} index
    * Collapse the current example panel
    */
-  _handleCollapsePanel() {
-    const examplePanel = this.shadowRoot.querySelector('.renderer')
-    const icon = this.shadowRoot.querySelector('.expand-icon')
-    icon.classList.toggle('expand-icon-collapse')
-    examplePanel.classList.toggle('collapse')
-
-    this._collapseExamplePanel = !this._collapseExamplePanel
+  _handleCollapsePanel(example, index) {
+    const examplePanels = this.shadowRoot.querySelectorAll('.renderer')
+    const icons = this.shadowRoot.querySelectorAll('.expand-icon')
+    icons[index].classList.toggle('expand-icon-collapse')
+    examplePanels[index].classList.toggle('collapse')
+    example.opened = !example.opened
   }
 
   /**
    * @param {Example} example
-   * @returns {TemplateResult|string} 
+   * @param {number} index
+   * @returns {TemplateResult|string}
    */
-  _titleTemplate(example) {
+  _titleTemplate(example, index) {
     if (example.isScalar) {
       return '';
     }
     const label = this._computeExampleTitle(example);
     return html`<div
       class="example-title"
-      @click="${this._handleCollapsePanel}"
-      @keyup="${this._handleCollapsePanel}"
+      @click="${() => this._handleCollapsePanel(example, index)}"
+      @keyup="${() => this._handleCollapsePanel(example, index)}"
     >
       <span>${label}</span>
       <anypoint-icon-button
@@ -599,7 +601,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
         data-action="collapse"
         title="Collapse panel"
       >
-          <arc-icon class="expand-icon" icon="expandLess"></arc-icon> 
+          <arc-icon class="expand-icon" icon="expandLess"></arc-icon>
       </anypoint-icon-button>
     </div>`;
   }
@@ -630,7 +632,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
 
   /**
    * Returns title to render for example
-   * @param {Example} example 
+   * @param {Example} example
    * @returns {String} 'Example' or the example's title
    */
   _computeExampleTitle(example) {
@@ -643,7 +645,7 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   /**
    * Determines whether an example's title is just a variation
    * of the current media type + a number
-   * @param {Example} example 
+   * @param {Example} example
    * @returns {Boolean}
    */
   _exampleTitleIsMediaType(example) {
@@ -653,23 +655,27 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
   }
 
   /**
-   * @param {Example[]} examples
-   * @returns {TemplateResult[]} 
+   * @param {Example[]} initialExamples
+   * @returns {TemplateResult[]}
    */
-  _examplesTemplate(examples) {
+  _examplesTemplate(initialExamples) {
+    const examples = initialExamples.map(example => {
+      example.opened = !!this._collapseExamplePanel
+      return example
+    });
     let parts = 'content-action-button, code-content-action-button, content-action-button-disabled, ';
     parts += 'code-content-action-button-disabled content-action-button-active, ';
     parts += 'code-content-action-button-active, code-wrapper, example-code-wrapper, markdown-html';
-    return examples.map((item) => html`
+    return examples.map((example, index) => html`
     <div class="item-container">
-      ${this._titleTemplate(item)}
-      ${this._descriptionTemplate(item)}
+      ${this._titleTemplate(example, index)}
+      ${this._descriptionTemplate(example)}
       <div class="renderer">
         <arc-icon class="info-icon" icon="code"></arc-icon>
         <api-example-render
           exportParts="${parts}"
           class="example"
-          .example="${item}"
+          .example="${example}"
           .mediaType="${this.mediaType}"
           ?isJson="${this.isJson}"
           ?table="${this.table}"

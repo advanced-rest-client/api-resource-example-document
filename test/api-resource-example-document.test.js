@@ -552,7 +552,7 @@ describe('ApiResourceExampleDocument', () => {
           const expandIconNoCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.expand-icon-collapse'));
           assert.isNull(expandIconNoCollapsed);
 
-          setTimeout(() => element._handleCollapsePanel());
+          setTimeout(() => element._handleCollapsePanel(element.examples[0], 0));
 
           const examplePanelCollapsed = /** @type HTMLElement */ (element.shadowRoot.querySelector('.collapse'));
           assert.isDefined(examplePanelCollapsed);
