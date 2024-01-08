@@ -124,6 +124,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     };
   }
 
+  get isAsyncAPI () {
+    return this._isAsyncAPI(this.amf)
+  } 
+
   get hasLocalStorage() {
     return this._hasLocalStorage;
   }
@@ -184,12 +188,9 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
    */
   set mediaType(value) {
     const old = this._mediaType;
-    if (old === value) {
-      return;
-    }
-    this._mediaType = value;
+    this._mediaType = this.isAsyncAPI && !value ? 'application/json' : value
     this.requestUpdate('mediaType', old);
-    this.isJson = this._computeIsJson(value);
+    this.isJson = this.isAsyncAPI && !value ? true : this._computeIsJson(value)
     this._computeExamples();
   }
 
@@ -239,7 +240,11 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     if (old === value) {
       return;
     }
-    this._rawOnly = value;
+    // If async api, rawOnly is always false
+    // rawOnly is only used for json or xml payloads
+    // and async api payloads are not json or xml 
+    // payloads are messages with a schema
+    this._rawOnly = this.isAsyncAPI ? false : value;
     this.requestUpdate('rawOnly', old);
     this._computeExamples();
   }
