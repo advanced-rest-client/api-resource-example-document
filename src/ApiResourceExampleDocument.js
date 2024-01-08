@@ -240,6 +240,10 @@ export class ApiResourceExampleDocument extends AmfHelperMixin(LitElement) {
     if (old === value) {
       return;
     }
+    // If async api, rawOnly is always false
+    // rawOnly is only used for json or xml payloads
+    // and async api payloads are not json or xml 
+    // payloads are messages with a schema
     this._rawOnly = this.isAsyncAPI ? false : value;
     this.requestUpdate('rawOnly', old);
     this._computeExamples();
