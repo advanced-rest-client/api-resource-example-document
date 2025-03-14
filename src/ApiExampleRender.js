@@ -235,7 +235,7 @@ export class ApiExampleRender extends LitElement {
         // This just sanitizes the schema and renders unprocessed data.
         this._codeValue = value;
         // @ts-ignore
-      } else if (value || value === false || value === 0) {
+      } else if (value || value === false || value === 0 || value === '') {
         let lang;
         const type = this.mediaType;
         if (type) {
